@@ -1,0 +1,27 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
+
+namespace AccommodationBookingApp.DataAccess.Entities
+{
+    public class Accommodation
+    {
+        public int AccommodationId { get; set; }
+        [Required]
+        public string Name { get; set; }
+        [Required]
+        public string Address { get; set; }
+        [Required]
+        public int NumberOfBeds { get; set; }
+        [Required]
+        public int PricePerNight { get; set; }
+        [Required]
+        //require the booking to be confirmed by the host before its finalized
+        public bool RequireApproval { get; set; }
+        public virtual AccommodationType AccommodationType { get; set; }
+
+        public virtual ApplicationUser ApplicationUser { get; set; }
+        //to add: facilities (Wi-Fi, TV...)
+    }
+}

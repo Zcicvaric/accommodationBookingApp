@@ -1,0 +1,35 @@
+﻿@page
+@model AccommodationBookingApp.Pages.CreateAccommodationModel
+@{
+    ViewData["Title"] = "CreateAccommodation";
+}
+
+    <form method="post">
+        <div class="form-group">
+            <label>Name</label>
+            <input asp-for="Accommodation.Name" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>Address</label>
+            <input asp-for="Accommodation.Address" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>Number of beds</label>
+            <input asp-for="Accommodation.NumberOfBeds" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>Price per night</label>
+            <input asp-for="Accommodation.PricePerNight" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>Require your approval before booking is confirmed?</label>
+            <input asp-for="Accommodation.RequireApproval" class="form-control" />
+        </div>
+        <select asp-for="testId"
+                asp-items="@(new SelectList(Model.AccommodationTypes, "AccommodationTypeId", "Name"))">
+                <option>Please select the accomodation type</option>
+        </select>
+        <button type="submit" class="btn btn-primary">Create</button>
+
+    </form>
+
