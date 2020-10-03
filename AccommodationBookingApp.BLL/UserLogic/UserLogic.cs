@@ -10,15 +10,22 @@ namespace AccommodationBookingApp.BLL.UserLogic
 {
     public class UserLogic
     {
-        private IUserTest _user = new DataAccess.Functions.UserFunctions();
+        private IUserTest _user;
 
-        private readonly UserManager<ApplicationUser> userManager;
-        private readonly SignInManager<ApplicationUser> signInManager;
-
+        public UserLogic(UserManager<ApplicationUser> userManager,
+                        SignInManager<ApplicationUser> signInManager)
+        {
+            _user = new DataAccess.Functions.UserFunctions(userManager, signInManager);
+        }
 
         public async Task<bool> CreateNewUser(ApplicationUser user, string password)
         {
            return await _user.createNewUser(user, password);
+        }
+
+        public async Task<bool> SignInUser(ApplicationUser user, string password)
+        {
+            return await _user.signInUser(user, password);
         }
 
 

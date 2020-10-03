@@ -18,12 +18,12 @@ namespace AccommodationBookingApp.Pages
         [BindProperty]
         public string Password { get; set; }
 
-        private UserLogic userLogic = new UserLogic();
-        private readonly UserManager<ApplicationUser> userManager;
+        private UserLogic userLogic;
 
-        public RegisterModel(UserManager<ApplicationUser> userManager)
+        public RegisterModel(UserManager<ApplicationUser> userManager,
+                            SignInManager<ApplicationUser> signInManager)
         {
-            this.userManager = userManager;
+            this.userLogic = new UserLogic(userManager, signInManager);
         }
 
         public void OnGet()
@@ -34,13 +34,12 @@ namespace AccommodationBookingApp.Pages
         {
             if(ModelState.IsValid)
             {
-                //userLogic.CreateNewUser(User, Password);
-                Console.WriteLine("Its valid!");
                 User.UserName = User.Email;
-                var result = await userManager.CreateAsync(User, Password);
-                if(result.Succeeded)
+                var result = await userLogic.CreateNewUser(User, Password);
+
+                if(result)
                 {
-                    return RedirectToPage("/index");
+                     return RedirectToPage("/index");
                 }
                  
             }

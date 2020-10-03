@@ -9,5 +9,6 @@ namespace AccommodationBookingApp.DataAccess.Interfaces
     public interface IUserTest
     {
         Task<bool> createNewUser(ApplicationUser user, string password);
+        Task<bool> signInUser(ApplicationUser user, string password);
     }
 }

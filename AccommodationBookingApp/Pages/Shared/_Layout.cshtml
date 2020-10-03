@@ -18,8 +18,16 @@
                 <a class="nav-item nav-link" asp-page="/CreateAccommodation">Create new Accommodation</a>
             </div>
             <div class="navbar-nav ml-auto">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <li class="nav-item nav-link">Welcome @User.Identity.Name</li>
+                    <a class="nav-item nav-link" href="#">Log out</a>
+                } 
+                else
+                {
                 <a class="nav-item nav-link" asp-page="/LogIn">Log in</a>
                 <a class="nav-item nav-link" asp-page="/Register">Register</a>
+                }
             </div>
         </nav>
     </header>

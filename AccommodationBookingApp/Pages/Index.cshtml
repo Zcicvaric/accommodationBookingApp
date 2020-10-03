@@ -4,9 +4,8 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index new</h1>
-<h1>@Model.Accommodations[2].Name</h1>
-<h1>@Model.Accommodations[2].Address</h1>
-<h1>@Model.Accommodations[2].NumberOfBeds</h1>
-<h1>@Model.Accommodations[2].PricePerNight</h1>
 
+@if (User.Identity.IsAuthenticated)
+{
+    <p>Logged in!</p>
+}
