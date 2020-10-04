@@ -1,0 +1,22 @@
+﻿@page
+@model AccommodationBookingApp.Pages.SearchModel
+@{
+    <h4 class="mt-2">Filters:</h4>
+    <div class="mt-4">
+        <select asp-items="@(new SelectList(Model.AccommodationTypes, "AccommodationTypeId", "Name"))">
+            <option>Please select the accomodation type</option>
+        </select>
+    </div>
+
+    foreach (AccommodationBookingApp.DataAccess.Entities.Accommodation accommodation in Model.Accommodations)
+    {
+        
+        <div>
+            <h2>@accommodation.Name</h2>
+            <p>Number of beds: @accommodation.NumberOfBeds</p>
+            <p>Price per night: @accommodation.PricePerNight</p>
+            <p>Address: @accommodation.Address</p>
+            <p>Type: @accommodation.AccommodationTypeId</p>
+        </div>
+    }
+}

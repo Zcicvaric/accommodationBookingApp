@@ -8,7 +8,8 @@ namespace AccommodationBookingApp.DataAccess.Interfaces
 {
     public interface IUserTest
     {
-        Task<bool> createNewUser(ApplicationUser user, string password);
-        Task<bool> signInUser(ApplicationUser user, string password);
+        Task<bool> CreateNewUser(ApplicationUser user, string password);
+        Task<bool> SignInUser(ApplicationUser user, string password);
+        Task<bool> SignOutUser();
     }
 }

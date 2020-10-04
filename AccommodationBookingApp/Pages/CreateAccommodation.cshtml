@@ -1,7 +1,10 @@
 ﻿@page
 @model AccommodationBookingApp.Pages.CreateAccommodationModel
+@using Microsoft.AspNetCore.Identity;
+@inject UserManager<AccommodationBookingApp.DataAccess.Entities.ApplicationUser> UserManager;
 @{
     ViewData["Title"] = "CreateAccommodation";
+    var applicationUser = await UserManager.GetUserAsync(User);
 }
 
     <form method="post">
@@ -25,10 +28,11 @@
             <label>Require your approval before booking is confirmed?</label>
             <input asp-for="Accommodation.RequireApproval" class="form-control" />
         </div>
-        <select asp-for="testId"
+        <select asp-for="Accommodation.AccommodationTypeId"
                 asp-items="@(new SelectList(Model.AccommodationTypes, "AccommodationTypeId", "Name"))">
                 <option>Please select the accomodation type</option>
         </select>
+        <input type="hidden" asp-for="Accommodation.ApplicationUserId" value="@applicationUser.Id" />
         <button type="submit" class="btn btn-primary">Create</button>
 
     </form>

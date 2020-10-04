@@ -13,7 +13,7 @@
             <div class="navbar-nav">
                 <a class="nav-item nav-link pr-4" asp-page="/Index">Home Page</a>
                 <a class="nav-item nav-link" asp-page="/Search">Search</a>
-                <a class="nav-item nav-link" asp-page="/Accomodation">Accomodation</a>
+                <a class="nav-item nav-link" asp-page="/Accommodation">Accomodation</a>
                 <a class="nav-item nav-link" asp-page="/Bookings">Bookings</a>
                 <a class="nav-item nav-link" asp-page="/CreateAccommodation">Create new Accommodation</a>
             </div>
@@ -21,7 +21,7 @@
                 @if (User.Identity.IsAuthenticated)
                 {
                     <li class="nav-item nav-link">Welcome @User.Identity.Name</li>
-                    <a class="nav-item nav-link" href="#">Log out</a>
+                    <a class="nav-item nav-link" asp-page="/LogOut">Log out</a>
                 } 
                 else
                 {

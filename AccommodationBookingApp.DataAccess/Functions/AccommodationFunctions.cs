@@ -4,6 +4,7 @@ using AccommodationBookingApp.DataAccess.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -29,6 +30,19 @@ namespace AccommodationBookingApp.DataAccess.Functions
             using (var context = new DatabaseContext(DatabaseContext.optionsBuild.dbContextOptions))
             {
                 accommodations = await context.Accommodations.ToListAsync();
+            }
+
+            return accommodations;
+        }
+
+        public async Task<List<Accommodation>> GetAccommodationsWithUserIdAsync(string userId)
+        {
+            List<Accommodation> accommodations;
+
+            using (var context = new DatabaseContext(DatabaseContext.optionsBuild.dbContextOptions))
+            {
+                accommodations = await context.Accommodations.Where(accommodation => 
+                                                              accommodation.ApplicationUserId == userId).ToListAsync();
             }
 
             return accommodations;

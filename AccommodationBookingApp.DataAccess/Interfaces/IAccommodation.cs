@@ -9,7 +9,7 @@ namespace AccommodationBookingApp.DataAccess.Interfaces
     public interface IAccommodation
     {
         Task<Accommodation> CreateAccommodation(Accommodation accommodation);
-
+        Task<List<Accommodation>> GetAccommodationsWithUserIdAsync(string userId);
         Task<List<Accommodation>> GetAllAccommodations();
     }
 }

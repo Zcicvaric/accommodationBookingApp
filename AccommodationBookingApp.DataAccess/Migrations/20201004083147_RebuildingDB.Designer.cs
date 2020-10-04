@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AccommodationBookingApp.DataAccess.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20200726121418_merge to new database")]
-    partial class mergetonewdatabase
+    [Migration("20201004083147_RebuildingDB")]
+    partial class RebuildingDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -28,12 +28,18 @@ namespace AccommodationBookingApp.DataAccess.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("AccommodationTypeId")
+                    b.Property<int>("AccommodationTypeId")
                         .HasColumnType("int");
 
                     b.Property<string>("Address")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ApplicationUserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ApplicationUserId1")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -48,14 +54,11 @@ namespace AccommodationBookingApp.DataAccess.Migrations
                     b.Property<bool>("RequireApproval")
                         .HasColumnType("bit");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("AccommodationId");
 
                     b.HasIndex("AccommodationTypeId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("ApplicationUserId1");
 
                     b.ToTable("Accommodations");
                 });
@@ -320,11 +323,13 @@ namespace AccommodationBookingApp.DataAccess.Migrations
                 {
                     b.HasOne("AccommodationBookingApp.DataAccess.Entities.AccommodationType", "AccommodationType")
                         .WithMany()
-                        .HasForeignKey("AccommodationTypeId");
+                        .HasForeignKey("AccommodationTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("AccommodationBookingApp.DataAccess.Entities.ApplicationUser", "User")
+                    b.HasOne("AccommodationBookingApp.DataAccess.Entities.ApplicationUser", "ApplicationUser")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("ApplicationUserId1");
                 });
 
             modelBuilder.Entity("AccommodationBookingApp.DataAccess.Entities.Booking", b =>

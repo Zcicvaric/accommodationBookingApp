@@ -20,12 +20,17 @@ namespace AccommodationBookingApp.BLL.UserLogic
 
         public async Task<bool> CreateNewUser(ApplicationUser user, string password)
         {
-           return await _user.createNewUser(user, password);
+           return await _user.CreateNewUser(user, password);
         }
 
         public async Task<bool> SignInUser(ApplicationUser user, string password)
         {
-            return await _user.signInUser(user, password);
+            return await _user.SignInUser(user, password);
+        }
+
+        public async Task<bool> SignOutUser()
+        {
+            return await _user.SignOutUser();
         }
 
 

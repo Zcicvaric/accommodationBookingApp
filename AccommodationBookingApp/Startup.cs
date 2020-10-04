@@ -26,7 +26,7 @@ namespace AccommodationBookingApp
 
             services.AddRazorPages();
             services.AddDbContext<DatabaseContext>(options =>
-            options.UseSqlServer(AppConfiguration.sqlConnectionString));
+            options.UseSqlServer("Server=DESKTOP-HJRJMK9\\SQLEXPRESS;Database=AccommodationBookingApp;Trusted_Connection=True;MultipleActiveResultSets=True"/*AppConfiguration.sqlConnectionString*/));
 
             services.AddIdentity<ApplicationUser, IdentityRole>(IdentityOptions =>
             {
@@ -35,12 +35,11 @@ namespace AccommodationBookingApp
             }).AddEntityFrameworkStores<DatabaseContext>()
                   .AddDefaultTokenProviders();
 
-            services.TryAddScoped<SignInManager<ApplicationUser>>();
+            //services.TryAddScoped<SignInManager<ApplicationUser>>();
             services.ConfigureApplicationCookie(config =>
             {
                 config.Cookie.Name = "AcommodationBookingAppCookie";
             });
-
             services.AddAuthenticationCore();
             services.AddAuthorizationCore();
             services.AddHttpContextAccessor();

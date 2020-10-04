@@ -38,5 +38,12 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
 
             return accommodations;
         }
+
+        public async Task<List<Accommodation>> GetAccommodationsWithUserId(string userId)
+        {
+            List<Accommodation> accommodations = await _accommodation.GetAccommodationsWithUserIdAsync(userId);
+
+            return accommodations;
+        }
     }
 }

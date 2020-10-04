@@ -26,7 +26,7 @@ namespace AccommodationBookingApp.DataAccess.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("AccommodationTypeId")
+                    b.Property<int>("AccommodationTypeId")
                         .HasColumnType("int");
 
                     b.Property<string>("Address")
@@ -34,6 +34,7 @@ namespace AccommodationBookingApp.DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ApplicationUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
@@ -318,11 +319,15 @@ namespace AccommodationBookingApp.DataAccess.Migrations
                 {
                     b.HasOne("AccommodationBookingApp.DataAccess.Entities.AccommodationType", "AccommodationType")
                         .WithMany()
-                        .HasForeignKey("AccommodationTypeId");
+                        .HasForeignKey("AccommodationTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("AccommodationBookingApp.DataAccess.Entities.ApplicationUser", "ApplicationUser")
                         .WithMany()
-                        .HasForeignKey("ApplicationUserId");
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("AccommodationBookingApp.DataAccess.Entities.Booking", b =>

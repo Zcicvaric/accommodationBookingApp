@@ -16,7 +16,7 @@ namespace AccommodationBookingApp.DataAccess.DataContext
             configBuilder.AddJsonFile(path, false);
             var root = configBuilder.Build();
             var appSetting = root.GetSection("ConnectionStrings:DefaultConnection");
-            Console.WriteLine(appSetting.Value);
+            Console.WriteLine("AppSettings:" + appSetting.Value);
             sqlConnectionString = appSetting.Value;
         }
         public static string sqlConnectionString { get; set; }

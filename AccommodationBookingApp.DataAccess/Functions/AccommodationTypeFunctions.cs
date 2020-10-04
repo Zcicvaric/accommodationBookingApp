@@ -17,7 +17,7 @@ namespace AccommodationBookingApp.DataAccess.Functions
 
             using (var context = new DatabaseContext(DatabaseContext.optionsBuild.dbContextOptions))
             {
-                accommodationTypes = await context.AccommodationTypes.ToListAsync();
+                accommodationTypes = await context.AccommodationType.ToListAsync();
             }
             return accommodationTypes;
         }

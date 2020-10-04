@@ -24,14 +24,14 @@ namespace AccommodationBookingApp.DataAccess.Functions
             this.signInManager = signInManager;
         }
 
-        public async Task<bool> createNewUser(ApplicationUser user, string password)
+        public async Task<bool> CreateNewUser(ApplicationUser user, string password)
         {
             var result = await userManager.CreateAsync(user, password);
 
             return result.Succeeded;
         }
 
-        public async Task<bool> signInUser(ApplicationUser user, string password)
+        public async Task<bool> SignInUser(ApplicationUser user, string password)
         {
             var userObject = await userManager.FindByEmailAsync(user.UserName);
 
@@ -48,6 +48,14 @@ namespace AccommodationBookingApp.DataAccess.Functions
             return false;
         }
 
-        
+        public async Task<bool> SignOutUser()
+        {
+            await signInManager.SignOutAsync();
+
+            return true;
+        }
+
+
+
     }
 }

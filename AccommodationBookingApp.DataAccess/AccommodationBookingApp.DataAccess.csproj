@@ -5,12 +5,21 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20200725124951_test.cs" />
-    <Compile Remove="Migrations\20200725124951_test.Designer.cs" />
-    <Compile Remove="Migrations\20200725125119_added Identity.cs" />
-    <Compile Remove="Migrations\20200725125119_added Identity.Designer.cs" />
-    <Compile Remove="Migrations\20200726121139_update.cs" />
-    <Compile Remove="Migrations\20200726121139_update.Designer.cs" />
+    <None Remove="appsettings.Development.json" />
+    <None Remove="appsettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="appsettings.Development.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

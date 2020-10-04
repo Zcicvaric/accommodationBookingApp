@@ -29,9 +29,8 @@ namespace AccommodationBookingApp.DataAccess.DataContext
 
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) { }
 
+        public DbSet<AccommodationType> AccommodationType { get; set; }
         public DbSet<Accommodation> Accommodations { get; set; }
         public DbSet<Booking> Bookings { get; set; }
-
-        public DbSet<AccommodationType> AccommodationTypes { get; set; }
     }
 }
