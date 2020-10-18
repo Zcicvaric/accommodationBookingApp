@@ -12,11 +12,20 @@ using System.Threading.Tasks;
 
 namespace AccommodationBookingApp.DataAccess.Functions
 {
-    public class UserFunctions : IUserTest
+    public class UserFunctions : IUser
     {
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
+        private readonly RoleManager<IdentityRole> roleManager;
 
+        public UserFunctions(UserManager<ApplicationUser> userManager,
+                            SignInManager<ApplicationUser> signInManager,
+                            RoleManager<IdentityRole> roleManager)
+        {
+            this.userManager = userManager;
+            this.signInManager = signInManager;
+            this.roleManager = roleManager;
+        }
         public UserFunctions(UserManager<ApplicationUser> userManager,
                             SignInManager<ApplicationUser> signInManager)
         {
@@ -24,9 +33,25 @@ namespace AccommodationBookingApp.DataAccess.Functions
             this.signInManager = signInManager;
         }
 
-        public async Task<bool> CreateNewUser(ApplicationUser user, string password)
+        public async Task<bool> CreateNewUser(ApplicationUser user, string password, bool registerAsHost)
         {
+            /*IdentityRole adminRole = new IdentityRole { Name = "Admin" };
+            IdentityRole userRole = new IdentityRole { Name = "User" };
+            IdentityRole hostRole = new IdentityRole { Name = "Host" };
+
+            IdentityResult resulttest = await roleManager.CreateAsync(adminRole);
+            IdentityResult result1 = await roleManager.CreateAsync(userRole);
+            IdentityResult result2 = await roleManager.CreateAsync(hostRole);*/
+            
+            //userManager.role
             var result = await userManager.CreateAsync(user, password);
+
+            if(registerAsHost)
+            {
+                await userManager.AddToRoleAsync(user, "Host");
+            }
+
+            await signInManager.PasswordSignInAsync(user, password, false, false);
 
             return result.Succeeded;
         }

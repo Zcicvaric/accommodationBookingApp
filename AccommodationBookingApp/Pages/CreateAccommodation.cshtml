@@ -7,31 +7,54 @@
     var applicationUser = await UserManager.GetUserAsync(User);
 }
 
-    <form method="post">
-        <div class="form-group">
+    <form enctype="multipart/form-data" method="post">
+        <div class="form-group row">
             <label>Name</label>
             <input asp-for="Accommodation.Name" class="form-control" />
         </div>
-        <div class="form-group">
+        <div class="form-group row">
             <label>Address</label>
             <input asp-for="Accommodation.Address" class="form-control" />
         </div>
-        <div class="form-group">
+        <div class="form-group row">
+            <label>City</label>
+            <input asp-for="Accommodation.City" class="form-control" />
+        </div>
+        <div class="form-group row">
             <label>Number of beds</label>
             <input asp-for="Accommodation.NumberOfBeds" class="form-control" />
         </div>
-        <div class="form-group">
+        <div class="form-group row">
             <label>Price per night</label>
             <input asp-for="Accommodation.PricePerNight" class="form-control" />
         </div>
-        <div class="form-group">
-            <label>Require your approval before booking is confirmed?</label>
+        <div class="form-group row">
+            <label asp-for="Accommodation.RequireApproval">Require your approval before booking is confirmed?</label>
             <input asp-for="Accommodation.RequireApproval" class="form-control" />
         </div>
-        <select asp-for="Accommodation.AccommodationTypeId"
-                asp-items="@(new SelectList(Model.AccommodationTypes, "AccommodationTypeId", "Name"))">
+        <div class="form-group row">
+            <label>Accommodation type:</label>
+            <select asp-for="Accommodation.AccommodationTypeId"
+                    asp-items="@(new SelectList(Model.AccommodationTypes, "AccommodationTypeId", "Name"))">
                 <option>Please select the accomodation type</option>
-        </select>
+            </select>
+        </div>
+        <div class="form-group row">
+            <label>Check-in time:</label>
+            <select asp-for="Accommodation.CheckInTime"
+                    asp-items="@(new SelectList(Model.TimesList))">
+                <option>Please select the check-in time</option>
+            </select>
+            <label>Check-out time:</label>
+            <select asp-for="Accommodation.CheckOutTime"
+                    asp-items="@(new SelectList(Model.TimesList))">
+                    <option>Please select the check-out time</option>
+            </select>
+        </div>
+        <div class="form-group row">
+            <label>Images</label>
+                <input asp-for="formFiles" multiple class="form-control" />
+        </div>
         <input type="hidden" asp-for="Accommodation.ApplicationUserId" value="@applicationUser.Id" />
         <button type="submit" class="btn btn-primary">Create</button>
 

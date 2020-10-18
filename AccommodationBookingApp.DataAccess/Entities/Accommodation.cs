@@ -12,6 +12,8 @@ namespace AccommodationBookingApp.DataAccess.Entities
         [Required]
         public string Name { get; set; }
         [Required]
+        public string City { get; set; }
+        [Required]
         public string Address { get; set; }
         [Required]
         public int NumberOfBeds { get; set; }
@@ -23,11 +25,15 @@ namespace AccommodationBookingApp.DataAccess.Entities
         [ForeignKey("AccommodationTypeId")]
         public int AccommodationTypeId { get; set; }
         public virtual AccommodationType AccommodationType { get; set; }
-
         [ForeignKey("ApplicationUserId")]
         [Required]
         public string ApplicationUserId { get; set; }
         public virtual ApplicationUser ApplicationUser { get; set; }
+        public string HeaderPhotoFileName { get; set; }
+        [Required]
+        public string CheckInTime { get; set; }
+        [Required]
+        public string CheckOutTime { get; set; }
         //to add: facilities (Wi-Fi, TV...)
     }
 }

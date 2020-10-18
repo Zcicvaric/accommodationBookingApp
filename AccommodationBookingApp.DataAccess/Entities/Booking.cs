@@ -16,7 +16,7 @@ namespace AccommodationBookingApp.DataAccess.Entities
         public DateTime DateOfArrival { get; set; }
         [Required]
         public int NumberOfDaysStaying { get; set; }
-        [Required]
+        [Required]//dodat in progress/approved/declined
         public bool approvalStatus { get; set; }
     }
 }

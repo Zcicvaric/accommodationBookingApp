@@ -13,9 +13,18 @@
             <div class="navbar-nav">
                 <a class="nav-item nav-link pr-4" asp-page="/Index">Home Page</a>
                 <a class="nav-item nav-link" asp-page="/Search">Search</a>
-                <a class="nav-item nav-link" asp-page="/Accommodation">Accomodation</a>
-                <a class="nav-item nav-link" asp-page="/Bookings">Bookings</a>
-                <a class="nav-item nav-link" asp-page="/CreateAccommodation">Create new Accommodation</a>
+                @if (User.IsInRole("Host"))
+                {
+                    <a class="nav-item nav-link" asp-page="/Accommodation">Accomodation</a>
+                }
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <a class="nav-item nav-link" asp-page="/Bookings">Bookings</a>
+                }
+                @if (User.IsInRole("Host"))
+                {
+                    <a class="nav-item nav-link" asp-page="/CreateAccommodation">Create new Accommodation</a>
+                }
             </div>
             <div class="navbar-nav ml-auto">
                 @if (User.Identity.IsAuthenticated)

@@ -11,5 +11,6 @@ namespace AccommodationBookingApp.DataAccess.Interfaces
         Task<Accommodation> CreateAccommodation(Accommodation accommodation);
         Task<List<Accommodation>> GetAccommodationsWithUserIdAsync(string userId);
         Task<List<Accommodation>> GetAllAccommodations();
+        Task<List<Accommodation>> GetFilteredAccommodations(string accommodationCity, int accommodationTypeId, int numberOfGuests);
     }
 }

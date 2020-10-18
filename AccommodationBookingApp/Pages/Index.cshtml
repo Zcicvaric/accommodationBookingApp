@@ -9,3 +9,8 @@
 {
     <p>Logged in!</p>
 }
+
+@if (User.IsInRole("User"))
+{
+    <p>You have the role of User!</p>
+}

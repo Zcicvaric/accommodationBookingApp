@@ -2,21 +2,28 @@
 @model AccommodationBookingApp.Pages.SearchModel
 @{
     <h4 class="mt-2">Filters:</h4>
-    <div class="mt-4">
-        <select asp-items="@(new SelectList(Model.AccommodationTypes, "AccommodationTypeId", "Name"))">
+    <form method="post" class="mt-4">
+        <input type="text" placeholder="City" asp-for="AccommodationCity"/>
+        <select asp-items="@(new SelectList(Model.AccommodationTypes, "AccommodationTypeId", "Name"))" asp-for="AccommodationTypeId">
             <option>Please select the accomodation type</option>
         </select>
-    </div>
+        <label>Number of guests: </label>
+        <input type="number" min="1" value="1" asp-for="NumberOfGuests"/>
+        <button type="submit">Search</button>
+        <input type="date" />
+    </form>
 
     foreach (AccommodationBookingApp.DataAccess.Entities.Accommodation accommodation in Model.Accommodations)
     {
-        
+        var imagePath = "~/accommodationImages/" + @accommodation.Name + "/" + accommodation.HeaderPhotoFileName;
+
         <div>
             <h2>@accommodation.Name</h2>
             <p>Number of beds: @accommodation.NumberOfBeds</p>
             <p>Price per night: @accommodation.PricePerNight</p>
             <p>Address: @accommodation.Address</p>
             <p>Type: @accommodation.AccommodationTypeId</p>
+            <img src="@imagePath" asp-append-version="true" />
         </div>
     }
 }

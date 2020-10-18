@@ -1,14 +1,20 @@
 ﻿@page
 @model AccommodationBookingApp.Pages.AccommodationModel
+
 @{
+}
+    
     @foreach(AccommodationBookingApp.DataAccess.Entities.Accommodation accommodation in Model.Accommodations)
     {
+        var imagePath = "~/accommodationImages/" + @accommodation.Name + "/" + accommodation.HeaderPhotoFileName;
         <div>
             <h1>@accommodation.Name</h1>
             <p>Number of beds: @accommodation.NumberOfBeds</p>
             <p>Price per night: @accommodation.PricePerNight</p>
             <p>Address: @accommodation.Address</p>
             <p>Type: @accommodation.AccommodationTypeId</p>
+            <img src="@imagePath" asp-append-version="true"/>
+            
         </div>
     }
-}
+
