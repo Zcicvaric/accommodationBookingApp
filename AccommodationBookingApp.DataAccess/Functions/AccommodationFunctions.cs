@@ -54,5 +54,15 @@ namespace AccommodationBookingApp.DataAccess.Functions
         }
 
         //TO-DO: dodat metodu za filtriranje smjestaja po svemu gore + po check-in check-out datumima
+
+        public async Task<Accommodation> GetAccommodationById(int accommodationId)
+        {
+            Accommodation accommodation;
+            accommodation = await Context.Accommodations.Where(accommodation =>
+                                                         accommodation.Id == accommodationId)
+                                                         .FirstOrDefaultAsync();
+
+            return accommodation;
+        }
     }
 }

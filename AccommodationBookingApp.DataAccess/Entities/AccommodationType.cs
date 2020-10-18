@@ -6,7 +6,7 @@ namespace AccommodationBookingApp.DataAccess.Entities
 {
     public class AccommodationType
     {
-        public int AccommodationTypeId { get; set; }
+        public int Id { get; set; }
 
         public string Name { get; set; }
     }

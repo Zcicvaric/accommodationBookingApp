@@ -24,8 +24,8 @@ namespace AccommodationBookingApp.Pages
         public int NumberOfGuests { get; set; }
         public async Task<IActionResult> OnGet()
         {
-            AccommodationLogic = new AccommodationLogic();
-            Accommodations = await AccommodationLogic.GetAccommodations();
+            //AccommodationLogic = new AccommodationLogic();
+            //Accommodations = await AccommodationLogic.GetAccommodations();
 
             AccommodationTypeLogic = new AccommodationTypeLogic();
             AccommodationTypes = await AccommodationTypeLogic.GetAccommodationTypes();

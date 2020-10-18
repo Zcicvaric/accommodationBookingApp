@@ -3,18 +3,20 @@
 
 @{
 }
-    
-    @foreach(AccommodationBookingApp.DataAccess.Entities.Accommodation accommodation in Model.Accommodations)
+@if (Model.Accommodations.Count > 0)
+{
+    @foreach (AccommodationBookingApp.DataAccess.Entities.Accommodation accommodation in Model.Accommodations)
     {
         var imagePath = "~/accommodationImages/" + @accommodation.Name + "/" + accommodation.HeaderPhotoFileName;
         <div>
-            <h1>@accommodation.Name</h1>
+            <h1><a asp-page="/AccommodationDetails" asp-route-accommodationId="@accommodation.Id">@accommodation.Name</a></h1>
             <p>Number of beds: @accommodation.NumberOfBeds</p>
             <p>Price per night: @accommodation.PricePerNight</p>
             <p>Address: @accommodation.Address</p>
             <p>Type: @accommodation.AccommodationTypeId</p>
-            <img src="@imagePath" asp-append-version="true"/>
-            
+            <img src="@imagePath" asp-append-version="true" />
+
         </div>
     }
+}
 

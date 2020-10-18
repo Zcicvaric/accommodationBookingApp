@@ -8,7 +8,7 @@ namespace AccommodationBookingApp.DataAccess.Entities
 {
     public class Accommodation
     {
-        public int AccommodationId { get; set; }
+        public int Id { get; set; }
         [Required]
         public string Name { get; set; }
         [Required]

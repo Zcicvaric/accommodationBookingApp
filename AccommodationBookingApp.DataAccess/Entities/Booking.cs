@@ -9,14 +9,18 @@ namespace AccommodationBookingApp.DataAccess.Entities
 {
     public class Booking
     {
-        public int BookingId { get; set; }
-        public virtual ApplicationUser User { get; set; }
-        public virtual Accommodation Accommodation { get; set; }
+        public int Id { get; set; }
+        [ForeignKey("ApplicationUserId")]
+        [Required]
+        public string ApplicationUserId { get; set; }
+        [ForeignKey("AccommodationId")]
+        [Required]
+        public int AccommodationId { get; set; }
         [Required]
         public DateTime DateOfArrival { get; set; }
         [Required]
         public int NumberOfDaysStaying { get; set; }
         [Required]//dodat in progress/approved/declined
-        public bool approvalStatus { get; set; }
+        public bool ApprovalStatus { get; set; }
     }
 }

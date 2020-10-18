@@ -4,14 +4,16 @@ using AccommodationBookingApp.DataAccess.DataContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AccommodationBookingApp.DataAccess.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20201018175117_updated pk naming on Accommodation")]
+    partial class updatedpknamingonAccommodation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -76,7 +78,7 @@ namespace AccommodationBookingApp.DataAccess.Migrations
 
             modelBuilder.Entity("AccommodationBookingApp.DataAccess.Entities.AccommodationType", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("AccommodationTypeId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -84,7 +86,7 @@ namespace AccommodationBookingApp.DataAccess.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("AccommodationTypeId");
 
                     b.ToTable("AccommodationType");
                 });
@@ -170,7 +172,7 @@ namespace AccommodationBookingApp.DataAccess.Migrations
 
             modelBuilder.Entity("AccommodationBookingApp.DataAccess.Entities.Booking", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("BookingId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -191,7 +193,7 @@ namespace AccommodationBookingApp.DataAccess.Migrations
                     b.Property<int>("NumberOfDaysStaying")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("BookingId");
 
                     b.ToTable("Bookings");
                 });

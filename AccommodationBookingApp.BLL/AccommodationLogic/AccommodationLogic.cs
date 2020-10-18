@@ -16,7 +16,7 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
             try
             {
                 var result = await _accommodation.CreateAccommodation(accommodation);
-                if(result.AccommodationId > 0)
+                if(result.Id > 0)
                 {
                     return true;
                 }
@@ -52,6 +52,11 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
             List<Accommodation> accommodations = await _accommodation.GetFilteredAccommodations(accommodationCity, accommodationTypeId, numberOfGuests);
 
             return accommodations;
+        }
+        
+        public async Task<Accommodation> GetAccommodationById(int accommodationId)
+        {
+            return await _accommodation.GetAccommodationById(accommodationId);
         }
     }
 }

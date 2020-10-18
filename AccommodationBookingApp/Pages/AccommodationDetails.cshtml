@@ -1,0 +1,36 @@
+﻿@page
+@model AccommodationBookingApp.Pages.AccommodationDetailsModel
+@{
+
+    
+    <img src="@Model.ImagePath" asp-append-version="true" />
+    <div>
+        <h4>Accommodation name:</h4>
+        <label>@Model.Accommodation.Name</label>
+        <h4>Number of beds:</h4>
+        <label>@Model.Accommodation.NumberOfBeds</label>
+        <h4>City:</h4>
+        <label>@Model.Accommodation.City</label>
+        <h4>Address</h4>
+        <label>@Model.Accommodation.Address</label>
+        <h4>Check-in time:</h4>
+        <label>@Model.Accommodation.CheckInTime</label>
+        <h4>Check-out time:</h4>
+        <label>@Model.Accommodation.CheckOutTime</label>
+        <h4>Number of beds</h4>
+        <label>@Model.Accommodation.NumberOfBeds</label>
+        <h4>Price per night</h4>
+        <label>@Model.Accommodation.PricePerNight</label>
+    </div>
+    @if(User.Identity.IsAuthenticated && (Model.CurrentUser.Id != Model.Accommodation.ApplicationUserId))
+    { 
+        <form method="post">
+            <button type="submit">Book</button>
+        </form>
+    }
+    @if(!User.Identity.IsAuthenticated)
+    {
+        <h2>Please <a asp-page="/Login">Login</a> or <a asp-page="/Register">Register</a> to book this</h2>
+    }
+
+}

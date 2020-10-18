@@ -3,27 +3,31 @@
 @{
     <h4 class="mt-2">Filters:</h4>
     <form method="post" class="mt-4">
-        <input type="text" placeholder="City" asp-for="AccommodationCity"/>
-        <select asp-items="@(new SelectList(Model.AccommodationTypes, "AccommodationTypeId", "Name"))" asp-for="AccommodationTypeId">
+        <input type="text" placeholder="City" asp-for="AccommodationCity" />
+        <select asp-items="@(new SelectList(Model.AccommodationTypes, "Id", "Name"))" asp-for="AccommodationTypeId">
             <option>Please select the accomodation type</option>
         </select>
         <label>Number of guests: </label>
-        <input type="number" min="1" value="1" asp-for="NumberOfGuests"/>
+        <input type="number" min="1" value="1" asp-for="NumberOfGuests" />
         <button type="submit">Search</button>
         <input type="date" />
     </form>
 
-    foreach (AccommodationBookingApp.DataAccess.Entities.Accommodation accommodation in Model.Accommodations)
+    @if (Model.Accommodations != null)
     {
-        var imagePath = "~/accommodationImages/" + @accommodation.Name + "/" + accommodation.HeaderPhotoFileName;
+        foreach (AccommodationBookingApp.DataAccess.Entities.Accommodation accommodation in Model.Accommodations)
+        {
+            var imagePath = "~/accommodationImages/" + @accommodation.Name + "/" + accommodation.HeaderPhotoFileName;
 
-        <div>
-            <h2>@accommodation.Name</h2>
-            <p>Number of beds: @accommodation.NumberOfBeds</p>
-            <p>Price per night: @accommodation.PricePerNight</p>
-            <p>Address: @accommodation.Address</p>
-            <p>Type: @accommodation.AccommodationTypeId</p>
-            <img src="@imagePath" asp-append-version="true" />
-        </div>
+            <div>
+                <h2><a asp-page="/AccommodationDetails" asp-route-accommodationId="@accommodation.Id">@accommodation.Name</a></h2>
+                <p>Number of beds: @accommodation.NumberOfBeds</p>
+                <p>Price per night: @accommodation.PricePerNight</p>
+                <p>Address: @accommodation.Address</p>
+                <p>City: @accommodation.City</p>
+                <p>Type: @accommodation.AccommodationTypeId</p>
+                <a asp-page="/AccommodationDetails" asp-route-accommodationId="@accommodation.Id"><img src="@imagePath" asp-append-version="true" /></a>
+            </div>
+        }
     }
 }
