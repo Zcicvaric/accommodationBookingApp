@@ -4,14 +4,16 @@ using AccommodationBookingApp.DataAccess.DataContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AccommodationBookingApp.DataAccess.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20201024113348_updated Accommodation table to contain FK to Bookings table")]
+    partial class updatedAccommodationtabletocontainFKtoBookingstable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -180,10 +182,10 @@ namespace AccommodationBookingApp.DataAccess.Migrations
 
                     b.Property<string>("ApplicationUserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ApprovalStatus")
-                        .HasColumnType("int");
+                    b.Property<bool>("ApprovalStatus")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("DateOfArrival")
                         .HasColumnType("datetime2");
@@ -194,8 +196,6 @@ namespace AccommodationBookingApp.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AccommodationId");
-
-                    b.HasIndex("ApplicationUserId");
 
                     b.ToTable("Bookings");
                 });
@@ -351,12 +351,6 @@ namespace AccommodationBookingApp.DataAccess.Migrations
                     b.HasOne("AccommodationBookingApp.DataAccess.Entities.Accommodation", "Accommodation")
                         .WithMany("Bookings")
                         .HasForeignKey("AccommodationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AccommodationBookingApp.DataAccess.Entities.ApplicationUser", "ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("ApplicationUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

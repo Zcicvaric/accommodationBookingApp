@@ -21,8 +21,13 @@
         <label>@Model.Accommodation.NumberOfBeds</label>
         <h4>Price per night</h4>
         <label>@Model.Accommodation.PricePerNight</label>
+        @if(Model.Accommodation.RequireApproval)
+        {
+            <br />
+            <label>This accommodation requires approval from host before booking is finalised</label>
+        }
     </div>
-    @if(User.Identity.IsAuthenticated && (Model.CurrentUser.Id != Model.Accommodation.ApplicationUserId))
+    @if(User.Identity.IsAuthenticated && (Model.CurrentUser.Id != Model.Accommodation.ApplicationUser.Id))
     { 
         <form method="post">
             <button type="submit">Book</button>

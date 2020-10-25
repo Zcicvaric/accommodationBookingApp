@@ -19,7 +19,7 @@
                 }
                 @if (User.Identity.IsAuthenticated)
                 {
-                    <a class="nav-item nav-link" asp-page="/Bookings">Bookings</a>
+                    <a class="nav-item nav-link" asp-page="/Bookings">Your Bookings</a>
                 }
                 @if (User.IsInRole("Host"))
                 {

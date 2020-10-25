@@ -45,7 +45,7 @@ namespace AccommodationBookingApp.Pages
         {
             CurrentUser = await userManager.GetUserAsync(User);
             await BookingLogic.CreateNewBooking(AccommodationId, CurrentUser.Id);
-            return Page();
+            return RedirectToPage("/Bookings");
         }
     }
 }

@@ -18,23 +18,26 @@ namespace AccommodationBookingApp.Pages
         [BindProperty]
         public Accommodation Accommodation { get; set; }
         public object WebRootPath { get; private set; }
-
         public List<IFormFile> formFiles { get; set; }
         public IWebHostEnvironment WebHostEnvironment { get; }
         public List<string> TimesList { get; set; }
+        [BindProperty]
+        public int AccommodationTypeId { get; set; }
 
         private AccommodationLogic AccommodationLogic = new AccommodationLogic();
         private AccommodationTypeLogic AccommodationTypeLogic = new AccommodationTypeLogic();
         public List<AccommodationType> AccommodationTypes;
+        private readonly UserManager<ApplicationUser> userManager;
 
-        public CreateAccommodationModel(IWebHostEnvironment webHostEnvironment)
+        public CreateAccommodationModel(IWebHostEnvironment webHostEnvironment,
+                                        UserManager<ApplicationUser> userManager)
         {
             WebHostEnvironment = webHostEnvironment;
+            this.userManager = userManager;
             TimesList = new List<string>();
         }
         public async Task<IActionResult> OnGet()
         {
-            //var test  = await AccommodationTypeLogic.GetAccommodationTypes();
             if (!User.IsInRole("Host"))
             {
                 return RedirectToPage("/Login");
@@ -52,33 +55,32 @@ namespace AccommodationBookingApp.Pages
 
         public async Task<IActionResult> OnPost()
         {
-            if(ModelState.IsValid)
+            ApplicationUser applicationUser = await userManager.GetUserAsync(User);
+
+            string headerImageFileName = null;
+            if (formFiles != null && formFiles.Count > 0)
             {
-                string headerImageFileName = null;
-                if (formFiles != null && formFiles.Count > 0)
-                {
-                    string accommodationImagesFolder = Path.Combine(WebHostEnvironment.WebRootPath, "accommodationImages");
-                    string directoryPath = Path.Combine(accommodationImagesFolder, Accommodation.Name);
-                    System.IO.Directory.CreateDirectory(directoryPath);
+                string accommodationImagesFolder = Path.Combine(WebHostEnvironment.WebRootPath, "accommodationImages");
+                string directoryPath = Path.Combine(accommodationImagesFolder, Accommodation.Name);
+                System.IO.Directory.CreateDirectory(directoryPath);
 
-                    foreach (IFormFile formFile in formFiles)
-                    {
-                        headerImageFileName = Guid.NewGuid().ToString() + "_" + formFile.FileName;
-                        string filePath = Path.Combine(accommodationImagesFolder, Accommodation.Name, headerImageFileName);
-                        formFile.CopyTo(new FileStream(filePath, FileMode.Create));
-                        Accommodation.HeaderPhotoFileName = headerImageFileName;
-                    }
-                    
+                foreach (IFormFile formFile in formFiles)
+                {
+                    headerImageFileName = Guid.NewGuid().ToString() + "_" + formFile.FileName;
+                    string filePath = Path.Combine(accommodationImagesFolder, Accommodation.Name, headerImageFileName);
+                    formFile.CopyTo(new FileStream(filePath, FileMode.Create));
+                    Accommodation.HeaderPhotoFileName = headerImageFileName;
                 }
-
-                var result = await AccommodationLogic.CreateNewAccomodation(Accommodation);
-
-                if(result)
-                {
-                    RedirectToPage("/CreateAccommodation");
-                }    
             }
-            return RedirectToPage("/index");
+            
+           var result = await AccommodationLogic.CreateNewAccomodation(Accommodation, 
+                                                                       AccommodationTypeId, 
+                                                                       applicationUser.Id);
+           if(!result)
+           {
+                return RedirectToPage("/CreateAccommodation");
+           }    
+           return RedirectToPage("/index");
         }
     }
 }

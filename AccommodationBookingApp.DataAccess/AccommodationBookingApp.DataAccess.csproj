@@ -9,6 +9,22 @@
     <Compile Remove="Migrations\20201018170522_updated booking model.Designer.cs" />
     <Compile Remove="Migrations\20201018173324_Updated the booking model fix.cs" />
     <Compile Remove="Migrations\20201018173324_Updated the booking model fix.Designer.cs" />
+    <Compile Remove="Migrations\20201024111503_added FK Accommodation to Booking table.cs" />
+    <Compile Remove="Migrations\20201024111503_added FK Accommodation to Booking table.Designer.cs" />
+    <Compile Remove="Migrations\20201024114726_test Without virtual.cs" />
+    <Compile Remove="Migrations\20201024114726_test Without virtual.Designer.cs" />
+    <Compile Remove="Migrations\20201024120757_refactoring FK on Booking model.cs" />
+    <Compile Remove="Migrations\20201024120757_refactoring FK on Booking model.Designer.cs" />
+    <Compile Remove="Migrations\20201024124341_refactoring FK on Accommodation model.cs" />
+    <Compile Remove="Migrations\20201024124341_refactoring FK on Accommodation model.Designer.cs" />
+    <Compile Remove="Migrations\20201024135353_refactoring FK on AccommodationType model.cs" />
+    <Compile Remove="Migrations\20201024135353_refactoring FK on AccommodationType model.Designer.cs" />
+    <Compile Remove="Migrations\20201024142137_refactoring FK on AccommodationType model.cs" />
+    <Compile Remove="Migrations\20201024142137_refactoring FK on AccommodationType model.Designer.cs" />
+    <Compile Remove="Migrations\20201024142527_refactoring FK on AccommodationType model.cs" />
+    <Compile Remove="Migrations\20201024142527_refactoring FK on AccommodationType model.Designer.cs" />
+    <Compile Remove="Migrations\20201024143016_refactoring FK on AccommodationType model.cs" />
+    <Compile Remove="Migrations\20201024143016_refactoring FK on AccommodationType model.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

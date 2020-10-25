@@ -7,20 +7,22 @@ using System.Text;
 
 namespace AccommodationBookingApp.DataAccess.Entities
 {
+    public enum ApprovalStatus
+    {
+        Approved, Pending, Declined
+    }
     public class Booking
     {
         public int Id { get; set; }
-        [ForeignKey("ApplicationUserId")]
         [Required]
-        public string ApplicationUserId { get; set; }
-        [ForeignKey("AccommodationId")]
+        public ApplicationUser ApplicationUser { get; set; }
         [Required]
-        public int AccommodationId { get; set; }
+        public Accommodation Accommodation { get; set; }
         [Required]
         public DateTime DateOfArrival { get; set; }
         [Required]
         public int NumberOfDaysStaying { get; set; }
-        [Required]//dodat in progress/approved/declined
-        public bool ApprovalStatus { get; set; }
+        [Required]
+        public ApprovalStatus ApprovalStatus { get; set; }
     }
 }

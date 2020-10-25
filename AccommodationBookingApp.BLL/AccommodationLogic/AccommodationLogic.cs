@@ -11,11 +11,13 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
     {
         private IAccommodation _accommodation = new DataAccess.Functions.AccommodationFunctions();
 
-        public async Task<Boolean> CreateNewAccomodation(Accommodation accommodation)
+        public async Task<Boolean> CreateNewAccomodation(Accommodation accommodation,
+                                                         int accommodationTypeId,
+                                                         string applicationUserId)
         {
             try
             {
-                var result = await _accommodation.CreateAccommodation(accommodation);
+                var result = await _accommodation.CreateAccommodation(accommodation,accommodationTypeId, applicationUserId);
                 if(result.Id > 0)
                 {
                     return true;

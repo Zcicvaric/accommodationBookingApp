@@ -8,7 +8,9 @@ namespace AccommodationBookingApp.DataAccess.Interfaces
 {
     public interface IAccommodation
     {
-        Task<Accommodation> CreateAccommodation(Accommodation accommodation);
+        Task<Accommodation> CreateAccommodation(Accommodation accommodation,
+                                                int accommodationTypeId,
+                                                string applicationUserId);
         Task<List<Accommodation>> GetAccommodationsWithUserIdAsync(string userId);
         Task<List<Accommodation>> GetAllAccommodations();
         Task<List<Accommodation>> GetFilteredAccommodations(string accommodationCity, int accommodationTypeId, int numberOfGuests);

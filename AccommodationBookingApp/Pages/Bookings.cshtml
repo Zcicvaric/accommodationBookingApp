@@ -1,5 +1,23 @@
 ﻿@page
 @model AccommodationBookingApp.Pages.BookingsModel
 @{
-    <p>This is the bookings page</p>
+    <div class="container">
+        <div class="row">
+            <h2 class="alert-info">
+                Previous stays
+            </h2>
+        </div>
+        <div class="row">
+            @foreach (AccommodationBookingApp.DataAccess.Entities.Booking booking in Model.PreviousStays)
+            {
+                <p>@booking.Accommodation.Name</p>
+                <p>@booking.ApprovalStatus</p>
+            }
+        </div>
+        <div class="row">
+            <h2 class="alert-info">
+                Upcoming bookings
+            </h2>
+        </div>
+    </div>
 }

@@ -50,8 +50,12 @@ namespace AccommodationBookingApp.DataAccess.Functions
             {
                 await userManager.AddToRoleAsync(user, "Host");
             }
+            else
+            {
+                await userManager.AddToRoleAsync(user, "User");
+            }
 
-            await signInManager.PasswordSignInAsync(user, password, false, false);
+            await signInManager.PasswordSignInAsync(user, password, true, false);
 
             return result.Succeeded;
         }
@@ -62,7 +66,7 @@ namespace AccommodationBookingApp.DataAccess.Functions
 
             if (userObject != null)
             {
-                var signInResult = await signInManager.PasswordSignInAsync(userObject, password, false, false);
+                var signInResult = await signInManager.PasswordSignInAsync(userObject, password, true, false);
 
                 if (signInResult.Succeeded)
                 {
