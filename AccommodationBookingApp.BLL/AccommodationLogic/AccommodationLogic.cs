@@ -49,9 +49,10 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
         }
 
         public async Task<List<Accommodation>> GetFilteredAccommodations(string accommodationCity,
-                             int accommodationTypeId, int numberOfGuests)
+                             int accommodationTypeId, int numberOfGuests, DateTime checkInDate, DateTime checkOutDate)
         {
-            List<Accommodation> accommodations = await _accommodation.GetFilteredAccommodations(accommodationCity, accommodationTypeId, numberOfGuests);
+            List<Accommodation> accommodations = await _accommodation.GetFilteredAccommodations(accommodationCity, accommodationTypeId, numberOfGuests,
+                                                                                                checkInDate, checkOutDate);
 
             return accommodations;
         }
@@ -59,6 +60,11 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
         public async Task<Accommodation> GetAccommodationById(int accommodationId)
         {
             return await _accommodation.GetAccommodationById(accommodationId);
+        }
+
+        public async Task<List<String>> GetDatesOccupiedForAccommodation(int accommodationId)
+        {
+            return await _accommodation.GetDatesOccupiedForAccommodation(accommodationId);
         }
     }
 }

@@ -180,7 +180,7 @@ namespace AccommodationBookingApp.DataAccess.Migrations
                     b.Property<int?>("AccommodationId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("DateOfArrival")
+                    b.Property<DateTime>("CheckInDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("NumberOfDaysStaying")

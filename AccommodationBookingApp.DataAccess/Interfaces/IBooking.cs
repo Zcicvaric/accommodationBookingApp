@@ -8,7 +8,7 @@ namespace AccommodationBookingApp.DataAccess.Interfaces
 {
     public interface IBooking
     {
-        Task<Booking> CreateBooking(int accommodationId, string userId);
+        Task<Booking> CreateBooking(int accommodationId, string userId, DateTime checkInDate, DateTime checkOutDate);
         Task <List<Booking>> GetAllPreviousStaysForUser(string userId);
         Task <List<Booking>> GetAllUpcomingStaysForUser(string userId);
     }

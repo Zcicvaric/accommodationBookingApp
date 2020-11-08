@@ -18,9 +18,9 @@ namespace AccommodationBookingApp.DataAccess.Functions
         {
             Context = new DatabaseContext(DatabaseContext.optionsBuild.dbContextOptions);
         }
-        public async Task<Booking> CreateBooking(int accommodationId, string userId)
-        {
-            //with the .include(FK entity) we include the objects related 
+        public async Task<Booking> CreateBooking(int accommodationId, string userId,
+                                                 DateTime checkInDate, DateTime checkOutDate)
+        { 
             Accommodation accommodation = await Context.Accommodations.Where(x => x.Id == accommodationId)
                                                                         .FirstOrDefaultAsync();
             ApplicationUser applicationUser = await Context.Users.Where(applicationUser => applicationUser.Id == userId)
@@ -28,8 +28,8 @@ namespace AccommodationBookingApp.DataAccess.Functions
             Booking booking = new Booking {
                 Accommodation = accommodation,
                 ApplicationUser = applicationUser,
-                DateOfArrival = DateTime.Now,
-                NumberOfDaysStaying = 2,
+                CheckInDate = checkInDate,
+                CheckOutDate = checkOutDate,
                 ApprovalStatus = accommodation.RequireApproval ? ApprovalStatus.Pending : ApprovalStatus.Approved
             };
             
@@ -41,18 +41,20 @@ namespace AccommodationBookingApp.DataAccess.Functions
 
         public async Task <List<Booking>> GetAllPreviousStaysForUser(string userId)
         {
+            //with the .include(FK entity) we include the objects related
             var allPreviousBookingWithUserId = await Context.Bookings.Include("Accommodation").Include("ApplicationUser").
                                                      Where(booking => booking.ApplicationUser.Id == userId
-                                                     && booking.DateOfArrival < DateTime.Now).ToListAsync();
+                                                     && booking.CheckInDate < DateTime.Now).ToListAsync();
 
             return allPreviousBookingWithUserId;
         }
 
         public async Task<List<Booking>> GetAllUpcomingStaysForUser(string userId)
         {
+            //with the .include(FK entity) we include the objects related
             var allUpcomingBookingsWithUserId = await Context.Bookings.Include("Accommodation").Include("ApplicationUser").
                                                 Where(booking => booking.ApplicationUser.Id == userId
-                                                && booking.DateOfArrival > DateTime.Now).ToListAsync();
+                                                && booking.CheckInDate > DateTime.Now).ToListAsync();
 
             return allUpcomingBookingsWithUserId;
         }

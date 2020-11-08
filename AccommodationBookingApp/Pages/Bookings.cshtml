@@ -3,21 +3,37 @@
 @{
     <div class="container">
         <div class="row">
-            <h2 class="alert-info">
+            <h2>
                 Previous stays
             </h2>
         </div>
-        <div class="row">
-            @foreach (AccommodationBookingApp.DataAccess.Entities.Booking booking in Model.PreviousStays)
-            {
-                <p>@booking.Accommodation.Name</p>
-                <p>@booking.ApprovalStatus</p>
-            }
-        </div>
-        <div class="row">
-            <h2 class="alert-info">
+        
+        @foreach (AccommodationBookingApp.DataAccess.Entities.Booking previousBooking in Model.PreviousStays)
+        {
+            <div class="row">
+                <p>@previousBooking.Accommodation.Name  </p>
+                <p> Status: @previousBooking.ApprovalStatus </p>
+                <p> Check-in Date: @previousBooking.CheckInDate.ToShortDateString() </p>
+                <p> Check-out Date: @previousBooking.CheckOutDate.ToShortDateString() </p>
+                <br />
+            </div>
+                
+        }
+       <div class="row">
+            <h2>
                 Upcoming bookings
             </h2>
-        </div>
+       </div>
+
+        @foreach (AccommodationBookingApp.DataAccess.Entities.Booking upcomingBooking in Model.UpcomingStays)
+        {
+            <div class="row">
+                <p>@upcomingBooking.Accommodation.Name  </p>
+                <p> Status: @upcomingBooking.ApprovalStatus </p>
+                <p> Check-in Date: @upcomingBooking.CheckInDate.ToShortDateString() </p>
+                <p> Check-out Date: @upcomingBooking.CheckOutDate.ToShortDateString() </p>
+                <br />
+            </div>
+         }
     </div>
 }

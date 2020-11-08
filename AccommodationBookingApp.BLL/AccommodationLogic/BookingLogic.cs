@@ -11,9 +11,11 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
     {
 
         IBooking _booking = new DataAccess.Functions.BookingFunctions();
-        public async Task<Booking> CreateNewBooking(int accommodationId, string applicationUserId)
+        public async Task<Booking> CreateNewBooking(int accommodationId, string applicationUserId,
+                                                    DateTime checkInDate, DateTime checkOutDate)
         {
-            var booking = await _booking.CreateBooking(accommodationId, applicationUserId);
+            var booking = await _booking.CreateBooking(accommodationId, applicationUserId,
+                                                       checkInDate, checkOutDate);
 
             return booking;
         }

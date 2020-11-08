@@ -185,11 +185,11 @@ namespace AccommodationBookingApp.DataAccess.Migrations
                     b.Property<int>("ApprovalStatus")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("DateOfArrival")
+                    b.Property<DateTime>("CheckInDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("NumberOfDaysStaying")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("CheckOutDate")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 

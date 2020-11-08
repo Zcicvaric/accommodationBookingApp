@@ -56,6 +56,14 @@ namespace AccommodationBookingApp.Pages
         public async Task<IActionResult> OnPost()
         {
             ApplicationUser applicationUser = await userManager.GetUserAsync(User);
+            
+           var result = await AccommodationLogic.CreateNewAccomodation(Accommodation, 
+                                                                       AccommodationTypeId, 
+                                                                       applicationUser.Id);
+           if(!result)
+           {
+                return RedirectToPage("/CreateAccommodation");
+           }
 
             string headerImageFileName = null;
             if (formFiles != null && formFiles.Count > 0)
@@ -72,15 +80,8 @@ namespace AccommodationBookingApp.Pages
                     Accommodation.HeaderPhotoFileName = headerImageFileName;
                 }
             }
-            
-           var result = await AccommodationLogic.CreateNewAccomodation(Accommodation, 
-                                                                       AccommodationTypeId, 
-                                                                       applicationUser.Id);
-           if(!result)
-           {
-                return RedirectToPage("/CreateAccommodation");
-           }    
-           return RedirectToPage("/index");
+
+            return RedirectToPage("/index");
         }
     }
 }

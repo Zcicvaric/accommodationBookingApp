@@ -2,7 +2,6 @@
 @model AccommodationBookingApp.Pages.AccommodationDetailsModel
 @{
 
-    
     <img src="@Model.ImagePath" asp-append-version="true" />
     <div>
         <h4>Accommodation name:</h4>
@@ -21,21 +20,119 @@
         <label>@Model.Accommodation.NumberOfBeds</label>
         <h4>Price per night</h4>
         <label>@Model.Accommodation.PricePerNight</label>
-        @if(Model.Accommodation.RequireApproval)
-        {
-            <br />
-            <label>This accommodation requires approval from host before booking is finalised</label>
-        }
     </div>
-    @if(User.Identity.IsAuthenticated && (Model.CurrentUser.Id != Model.Accommodation.ApplicationUser.Id))
-    { 
+    @if (User.Identity.IsAuthenticated && (Model.CurrentUser.Id != Model.Accommodation.ApplicationUser.Id))
+    {
         <form method="post">
+            <h4>Check-in date:</h4>
+            <input data-provide="datepicker" asp-for="CheckInDateString" onchange="clickedOnTheCalendar(this.value)" class="checkInDatepicker" autocomplete="off"/>
+            <h4>Check-out date:</h4>
+            <input data-provide="datepicker" asp-for="CheckOutDateString" class="checkOutDatepicker" autocomplete="off"/>
             <button type="submit">Book</button>
         </form>
     }
-    @if(!User.Identity.IsAuthenticated)
+    @if (Model.Accommodation.RequireApproval)
+    {
+        <br />
+        <label>This accommodation requires approval from host before booking is finalised</label>
+    }
+    @if (!User.Identity.IsAuthenticated)
     {
         <h2>Please <a asp-page="/Login">Login</a> or <a asp-page="/Register">Register</a> to book this</h2>
     }
+    <button id="testButton">Click this</button>
 
+    <script>
+        var datesToDisableArray;
+        $(document).ready(function () {
+            datesToDisableArray = @Html.Raw(Json.Serialize(Model.DatesOccupiedArray));
+            $('.checkInDatepicker').datepicker({
+                timepicker: false,
+                datepicker: true,
+                format: "dd.mm.yyyy.",
+                startDate: new Date(),
+                datesDisabled: datesToDisableArray
+            });
+            $('.checkOutDatepicker').datepicker({
+                timepicker: false,
+                datepicker: true,
+                format: "dd.mm.yyyy.",
+                startDate: '+1d',
+                datesDisabled: datesToDisableArray
+            });
+        })
+
+        function clickedOnTheCalendar(dateInput) {
+            
+            //finds the first booking after the selected check in date and sets the
+            //check out date to that next booking check in date
+            //and sets the check-out min date to day after selected check-in
+            //the flag is being used so that we can find the first date in the dates occupied array
+            //that is later than the desired check in date and then we can determine that our latest check out
+            //is the first next date after that
+            var flag = false;
+
+            
+            for (var i = 0; i < datesToDisableArray.length; i++) {
+                console.log("test:" + datesToDisableArray[i]);
+                if (!compareDateStrings(dateInput, datesToDisableArray[i]) && !flag) {
+                    flag = true;
+                    console.log("flag set!");
+                }
+                else if (!compareDateStrings(dateInput, datesToDisableArray[i]) && flag) {
+
+                    datesToDisableForCheckout = datesToDisableArray.splice(i+1);
+
+                    $('.checkOutDatepicker').datepicker('setDatesDisabled', datesToDisableForCheckout);
+                    $('.checkOutDatepicker').datepicker('setEndDate', datesToDisableArray[i]);
+                    let dateInputSplit = dateInput.split(".");
+                    let checkInDateSelected = new Date(dateInputSplit[1] + "-" + dateInputSplit[0] + "-" + dateInputSplit[2]);
+                    $('checkOutDatepicker').datepicker('setStartDate', checkInDateSelected.getTime() + 1);
+                    break;
+                }
+            }
+            
+
+            if (compareDateStrings(dateInput, datesToDisableArray[datesToDisableArray.length - 1]) === true) {
+                //wrap the split in another function to convert from dd.mm.yyyy string to js time object
+                let dateInputSplit = dateInput.split(".");
+                let checkInDateSelected = new Date(dateInputSplit[1] + "-" + dateInputSplit[0] + "-" + dateInputSplit[2]);
+                $('.checkOutDatepicker').datepicker('setStartDate', checkInDateSelected.getTime() + 1);
+                $('.checkOutDatepicker').datepicker('setEndDate', '');
+            }
+            if (compareDateStrings(dateInput, datesToDisableArray[datesToDisableArray.length - 1]) === null) {
+                let dateInputSplit = dateInput.split(".");
+                let checkInDateSelected = new Date(dateInputSplit[1] + "-" + dateInputSplit[0] + "-" + dateInputSplit[2]);
+                $('.checkOutDatepicker').datepicker('setStartDate', checkInDateSelected.getTime() + 1);
+                $('.checkOutDatepicker').datepicker('setEndDate', '');
+            }
+
+            
+        }
+
+        //accepts two date dd.mm.yyyy. formated strings and returns true if dateString is 
+        //later than dateStringToCompareAgainst or null if they are the same
+        function compareDateStrings(dateString, dateStringToCompareAgainst) {
+
+            if (dateString === dateStringToCompareAgainst) {
+                return null;
+            }
+            var dateStringSplit = dateString.split(".");
+            var dateStringToCompareAgainstSplit = dateStringToCompareAgainst.split(".");
+
+
+            if (dateStringSplit[2] === dateStringToCompareAgainstSplit[2]) {
+                if (dateStringSplit[1] === dateStringToCompareAgainstSplit[1]) {
+                    return dateStringSplit[0] > dateStringToCompareAgainstSplit[0];
+                }
+                else {
+                    return dateStringSplit[1] > dateStringToCompareAgainstSplit[1];
+                }
+            }
+            else {
+                return dateStringSplit[2] > dateStringToCompareAgainstSplit[2];
+            }
+            
+        }
+    </script>
 }

@@ -25,6 +25,8 @@
     <Compile Remove="Migrations\20201024142527_refactoring FK on AccommodationType model.Designer.cs" />
     <Compile Remove="Migrations\20201024143016_refactoring FK on AccommodationType model.cs" />
     <Compile Remove="Migrations\20201024143016_refactoring FK on AccommodationType model.Designer.cs" />
+    <Compile Remove="Migrations\20201103162134_Renamed DateOfArrival to CheckInDate.cs" />
+    <Compile Remove="Migrations\20201103162134_Renamed DateOfArrival to CheckInDate.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -59,6 +61,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.6" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 
 </Project>

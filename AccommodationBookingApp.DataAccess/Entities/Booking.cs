@@ -19,9 +19,9 @@ namespace AccommodationBookingApp.DataAccess.Entities
         [Required]
         public Accommodation Accommodation { get; set; }
         [Required]
-        public DateTime DateOfArrival { get; set; }
+        public DateTime CheckInDate { get; set; }
         [Required]
-        public int NumberOfDaysStaying { get; set; }
+        public DateTime CheckOutDate { get; set; }
         [Required]
         public ApprovalStatus ApprovalStatus { get; set; }
     }

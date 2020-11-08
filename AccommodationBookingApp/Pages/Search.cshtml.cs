@@ -22,11 +22,19 @@ namespace AccommodationBookingApp.Pages
         public int AccommodationTypeId { get; set; }
         [BindProperty]
         public int NumberOfGuests { get; set; }
+        [BindProperty]
+        public String CheckInDateString { get; set; }
+        [BindProperty]
+        public String CheckOutDateString { get; set; }
         public async Task<IActionResult> OnGet()
         {
             //AccommodationLogic = new AccommodationLogic();
             //Accommodations = await AccommodationLogic.GetAccommodations();
 
+            //you can't format this bellow to dd/mm/yyyy!!!!
+            //maybe convert it everywhere to dd.mm.yyyy?
+            CheckInDateString = DateTime.Today.ToShortDateString();
+            CheckOutDateString = DateTime.Today.AddDays(1).ToShortDateString();
             AccommodationTypeLogic = new AccommodationTypeLogic();
             AccommodationTypes = await AccommodationTypeLogic.GetAccommodationTypes();
             return Page();
@@ -37,9 +45,12 @@ namespace AccommodationBookingApp.Pages
             AccommodationTypeLogic = new AccommodationTypeLogic();
             AccommodationTypes = await AccommodationTypeLogic.GetAccommodationTypes();
 
+            DateTime checkInDate = DateTime.Parse(CheckInDateString);
+            DateTime checkOutDate = DateTime.Parse(CheckOutDateString);
+
             AccommodationLogic = new AccommodationLogic();
             Accommodations = await AccommodationLogic.GetFilteredAccommodations(AccommodationCity,
-                             AccommodationTypeId, NumberOfGuests);
+                             AccommodationTypeId, NumberOfGuests, checkInDate, checkOutDate);
             return Page();
         }
     }

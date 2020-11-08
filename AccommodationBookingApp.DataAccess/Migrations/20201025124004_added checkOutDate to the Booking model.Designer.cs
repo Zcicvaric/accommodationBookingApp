@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AccommodationBookingApp.DataAccess.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20201024150743_refactoring FK on Booking model")]
-    partial class refactoringFKonBookingmodel
+    [Migration("20201025124004_added checkOutDate to the Booking model")]
+    partial class addedcheckOutDatetotheBookingmodel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -184,14 +184,14 @@ namespace AccommodationBookingApp.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<bool>("ApprovalStatus")
-                        .HasColumnType("bit");
+                    b.Property<int>("ApprovalStatus")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CheckOutDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("CheckInDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("NumberOfDaysStaying")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

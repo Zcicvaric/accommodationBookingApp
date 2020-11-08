@@ -184,7 +184,7 @@ namespace AccommodationBookingApp.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("DateOfArrival")
+                    b.Property<DateTime>("CheckInDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("NumberOfDaysStaying")

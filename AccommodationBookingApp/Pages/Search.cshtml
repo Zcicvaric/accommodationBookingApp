@@ -9,8 +9,11 @@
         </select>
         <label>Number of guests: </label>
         <input type="number" min="1" value="1" asp-for="NumberOfGuests" />
+        <label>Check-in date:</label>
+        <input data-provide="datepicker" asp-for="CheckInDateString" class="checkInDatepicker" autocomplete="off" />
+        <label>Check-out date:</label>
+        <input data-provide="datepicker" asp-for="CheckOutDateString" class="checkOutDatepicker" autocomplete="off" />
         <button type="submit">Search</button>
-        <input type="date" />
     </form>
 
     @if (Model.Accommodations != null)
@@ -20,13 +23,32 @@
             var imagePath = "~/accommodationImages/" + @accommodation.Name + "/" + accommodation.HeaderPhotoFileName;
 
             <div>
-                <h2><a asp-page="/AccommodationDetails" asp-route-accommodationId="@accommodation.Id">@accommodation.Name</a></h2>
+                <h2><a asp-page="/AccommodationDetails" asp-route-accommodationId="@accommodation.Id"
+                       asp-route-checkInDate="@Model.CheckInDateString" asp-route-checkOutDate="@Model.CheckOutDateString">@accommodation.Name</a></h2>
                 <p>Number of beds: @accommodation.NumberOfBeds</p>
                 <p>Price per night: @accommodation.PricePerNight</p>
                 <p>Address: @accommodation.Address</p>
                 <p>City: @accommodation.City</p>
-                <a asp-page="/AccommodationDetails" asp-route-accommodationId="@accommodation.Id"><img src="@imagePath" asp-append-version="true" /></a>
+                <a asp-page="/AccommodationDetails" asp-route-accommodationId="@accommodation.Id"
+                   asp-route-checkInDate="@Model.CheckInDateString" asp-route-checkOutDate="@Model.CheckOutDateString"><img src="@imagePath" asp-append-version="true" /></a>
             </div>
         }
     }
+
+    <script>
+        $(document).ready(function () {
+            $('.checkInDatepicker').datepicker({
+                datepicker: true,
+                timepicker: false,
+                startDate: new Date(),
+                format: "dd.mm.yyyy.",
+            });
+            $('.checkOutDatepicker').datepicker({
+                datepicker: true,
+                timepicker: false,
+                startDate: '+1d',
+                format: "dd.mm.yyyy.",
+            });
+        })
+    </script>
 }
