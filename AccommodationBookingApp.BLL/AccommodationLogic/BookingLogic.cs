@@ -33,5 +33,12 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
 
             return upcomingStays;
         }
+
+        public async Task <List<Booking>> GetAllBookingsForAccommodation(int accommodationId)
+        {
+            var bookings = await _booking.GetAllBookingsForAccommodation(accommodationId);
+
+            return bookings;
+        }
     }
 }

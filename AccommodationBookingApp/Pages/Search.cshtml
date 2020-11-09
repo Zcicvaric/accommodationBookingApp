@@ -10,7 +10,7 @@
         <label>Number of guests: </label>
         <input type="number" min="1" value="1" asp-for="NumberOfGuests" />
         <label>Check-in date:</label>
-        <input data-provide="datepicker" asp-for="CheckInDateString" class="checkInDatepicker" autocomplete="off" />
+        <input data-provide="datepicker" asp-for="CheckInDateString" onchange="checkInCalendarClicked()" class="checkInDatepicker" autocomplete="off" />
         <label>Check-out date:</label>
         <input data-provide="datepicker" asp-for="CheckOutDateString" class="checkOutDatepicker" autocomplete="off" />
         <button type="submit">Search</button>
@@ -42,13 +42,23 @@
                 timepicker: false,
                 startDate: new Date(),
                 format: "dd.mm.yyyy.",
+                weekStart: 1
             });
             $('.checkOutDatepicker').datepicker({
                 datepicker: true,
                 timepicker: false,
                 startDate: '+1d',
                 format: "dd.mm.yyyy.",
+                weekStart: 1
             });
         })
+        function checkInCalendarClicked() {
+            let checkInDateSelected = $('.checkInDatepicker').datepicker('getDate');
+            let checkOutDateSelected = $('.checkOutDatepicker').datepicker('getDate');
+
+            if (checkInDateSelected >= checkOutDateSelected) {
+                $('.checkOutDatepicker').datepicker('clearDates');
+            }
+        }
     </script>
 }

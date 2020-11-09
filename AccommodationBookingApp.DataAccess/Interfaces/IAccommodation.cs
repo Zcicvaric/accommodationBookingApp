@@ -16,6 +16,5 @@ namespace AccommodationBookingApp.DataAccess.Interfaces
         Task<List<Accommodation>> GetFilteredAccommodations(string accommodationCity, int accommodationTypeId, int numberOfGuests,
                                                             DateTime checkInDate, DateTime checkOutDate);
         Task<Accommodation> GetAccommodationById(int accommodationId);
-        Task<List<String>> GetDatesOccupiedForAccommodation(int accommodationId);
     }
 }

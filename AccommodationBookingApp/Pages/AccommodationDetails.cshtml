@@ -51,14 +51,16 @@
                 datepicker: true,
                 format: "dd.mm.yyyy.",
                 startDate: new Date(),
-                datesDisabled: datesToDisableArray
+                datesDisabled: datesToDisableArray,
+                weekStart: 1
             });
             $('.checkOutDatepicker').datepicker({
                 timepicker: false,
                 datepicker: true,
                 format: "dd.mm.yyyy.",
                 startDate: '+1d',
-                datesDisabled: datesToDisableArray
+                datesDisabled: datesToDisableArray,
+                weekStart: 1
             });
         })
 
@@ -72,42 +74,40 @@
             //is the first next date after that
             var flag = false;
 
-            
+            //has to be reintialized every this function loads beacuse of splice method
+            datesToDisableArray = @Html.Raw(Json.Serialize(Model.DatesOccupiedArray));
+
+            let checkInDateSelected = $('.checkInDatepicker').datepicker('getDate');
+            let minCheckoutDate = addDaysToDate(checkInDateSelected, 1);
+            $('.checkOutDatepicker').datepicker('setStartDate', minCheckoutDate);
+            let checkOutDateSelected = $('.checkOutDatepicker').datepicker('getDate');
+
+            if (checkInDateSelected > checkOutDateSelected) {
+                $('.checkOutDatepicker').datepicker('clearDates');
+            }
+
             for (var i = 0; i < datesToDisableArray.length; i++) {
-                console.log("test:" + datesToDisableArray[i]);
                 if (!compareDateStrings(dateInput, datesToDisableArray[i]) && !flag) {
                     flag = true;
-                    console.log("flag set!");
                 }
                 else if (!compareDateStrings(dateInput, datesToDisableArray[i]) && flag) {
+                    datesToDisableForCheckout = datesToDisableArray.splice(i + 1);
 
-                    datesToDisableForCheckout = datesToDisableArray.splice(i+1);
-
+                    //in the checkout datepicker disable all of the dates after the first avaliable the next booking's
+                    //check out date so that another free date that is after the following booking can't be selected
                     $('.checkOutDatepicker').datepicker('setDatesDisabled', datesToDisableForCheckout);
                     $('.checkOutDatepicker').datepicker('setEndDate', datesToDisableArray[i]);
-                    let dateInputSplit = dateInput.split(".");
-                    let checkInDateSelected = new Date(dateInputSplit[1] + "-" + dateInputSplit[0] + "-" + dateInputSplit[2]);
-                    $('checkOutDatepicker').datepicker('setStartDate', checkInDateSelected.getTime() + 1);
-                    break;
+                    
+                    return;
                 }
             }
             
 
-            if (compareDateStrings(dateInput, datesToDisableArray[datesToDisableArray.length - 1]) === true) {
-                //wrap the split in another function to convert from dd.mm.yyyy string to js time object
-                let dateInputSplit = dateInput.split(".");
-                let checkInDateSelected = new Date(dateInputSplit[1] + "-" + dateInputSplit[0] + "-" + dateInputSplit[2]);
-                $('.checkOutDatepicker').datepicker('setStartDate', checkInDateSelected.getTime() + 1);
-                $('.checkOutDatepicker').datepicker('setEndDate', '');
-            }
-            if (compareDateStrings(dateInput, datesToDisableArray[datesToDisableArray.length - 1]) === null) {
-                let dateInputSplit = dateInput.split(".");
-                let checkInDateSelected = new Date(dateInputSplit[1] + "-" + dateInputSplit[0] + "-" + dateInputSplit[2]);
-                $('.checkOutDatepicker').datepicker('setStartDate', checkInDateSelected.getTime() + 1);
-                $('.checkOutDatepicker').datepicker('setEndDate', '');
-            }
+            if (compareDateStrings(dateInput, datesToDisableArray[datesToDisableArray.length - 1]) === true
+                || compareDateStrings(dateInput, datesToDisableArray[datesToDisableArray.length - 1]) === null) {
 
-            
+                $('.checkOutDatepicker').datepicker('setEndDate', '');
+            }
         }
 
         //accepts two date dd.mm.yyyy. formated strings and returns true if dateString is 
@@ -132,7 +132,12 @@
             else {
                 return dateStringSplit[2] > dateStringToCompareAgainstSplit[2];
             }
-            
+        }
+
+        function addDaysToDate(date, numberOfDays) {
+            let newDate = new Date(date);
+            newDate.setDate(newDate.getDate() + numberOfDays);
+            return newDate;
         }
     </script>
 }

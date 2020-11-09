@@ -2,6 +2,7 @@
 using AccommodationBookingApp.DataAccess.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,6 +11,7 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
     public class AccommodationLogic
     {
         private IAccommodation _accommodation = new DataAccess.Functions.AccommodationFunctions();
+        private BookingLogic bookingLogic = new BookingLogic();
 
         public async Task<Boolean> CreateNewAccomodation(Accommodation accommodation,
                                                          int accommodationTypeId,
@@ -28,7 +30,7 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
                 }
 
             }
-            catch (Exception error)
+            catch (Exception e)
             {
                 return false;
             }
@@ -51,8 +53,30 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
         public async Task<List<Accommodation>> GetFilteredAccommodations(string accommodationCity,
                              int accommodationTypeId, int numberOfGuests, DateTime checkInDate, DateTime checkOutDate)
         {
+            List<Accommodation> accommodationsToRemove = new List<Accommodation>();
             List<Accommodation> accommodations = await _accommodation.GetFilteredAccommodations(accommodationCity, accommodationTypeId, numberOfGuests,
                                                                                                 checkInDate, checkOutDate);
+
+            //obavezno provjerit rubne slucajeve npr kad gleda zadnju rezervaciju i sl++ (search dobro radi, problem sa check-in i check-out datumima na details stranici)
+            foreach (Accommodation accommodation in accommodations)
+            {
+                var bookingsForAccommodation = await bookingLogic.GetAllBookingsForAccommodation(accommodation.Id);
+                if (bookingsForAccommodation.Count != 0)
+                {
+                    foreach (Booking booking in bookingsForAccommodation)
+                    {
+                        if (checkInDate < booking.CheckOutDate && checkOutDate > booking.CheckInDate)
+                        {
+                            accommodationsToRemove.Add(accommodation);
+                        }
+                    }
+                }
+            }
+
+            foreach (Accommodation accommodationToRemove in accommodationsToRemove)
+            {
+                accommodations.Remove(accommodationToRemove);
+            }
 
             return accommodations;
         }
@@ -64,7 +88,20 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
 
         public async Task<List<String>> GetDatesOccupiedForAccommodation(int accommodationId)
         {
-            return await _accommodation.GetDatesOccupiedForAccommodation(accommodationId);
+            List<string> listOFDatesOccupied = new List<string>();
+
+            var bookings = await bookingLogic.GetAllBookingsForAccommodation(accommodationId);
+            var bookingsSorted = bookings.OrderBy(booking => booking.CheckInDate);
+
+            foreach(Booking booking in bookingsSorted)
+            {
+                for (var currentDate = booking.CheckInDate; currentDate < booking.CheckOutDate; currentDate = currentDate.AddDays(1))
+                {
+                    listOFDatesOccupied.Add(currentDate.ToShortDateString());
+                }
+            }
+
+            return listOFDatesOccupied;
         }
     }
 }
