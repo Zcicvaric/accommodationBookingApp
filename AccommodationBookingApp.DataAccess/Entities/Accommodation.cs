@@ -6,6 +6,10 @@ using System.Text;
 
 namespace AccommodationBookingApp.DataAccess.Entities
 {
+    public enum Currency
+    {
+        HRK, EUR, USD, GBP
+    }
     public class Accommodation
     {
         public int Id { get; set; }
@@ -20,6 +24,8 @@ namespace AccommodationBookingApp.DataAccess.Entities
         [Required]
         public int PricePerNight { get; set; }
         [Required]
+        public Currency Currency { get; set; }
+        [Required]
         //require the booking to be confirmed by the host before its finalized
         public bool RequireApproval { get; set; }
         [Required]
@@ -31,7 +37,8 @@ namespace AccommodationBookingApp.DataAccess.Entities
         public string CheckInTime { get; set; }
         [Required]
         public string CheckOutTime { get; set; }
-        public ICollection<Booking> Bookings { get; set; }
+        [Required]
+        public bool UserCanCancelBooking { get; set; }
         //to add: facilities (Wi-Fi, TV...)
     }
 }

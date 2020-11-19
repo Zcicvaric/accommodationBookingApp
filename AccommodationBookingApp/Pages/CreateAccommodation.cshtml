@@ -25,11 +25,18 @@
     </div>
     <div class="form-group row">
         <label>Price per night</label>
-        <input asp-for="Accommodation.PricePerNight" class="form-control" />
+        <input asp-for="Accommodation.PricePerNight" class="form-control mr-1" style="width: 80%;" />
+        <select asp-for="Accommodation.Currency"
+                asp-items="@Html.GetEnumSelectList<AccommodationBookingApp.DataAccess.Entities.Currency>()">
+        </select>
     </div>
     <div class="form-group row">
         <label asp-for="Accommodation.RequireApproval">Require your approval before booking is confirmed?</label>
         <input asp-for="Accommodation.RequireApproval" class="form-control" />
+    </div>
+    <div class="form-group row">
+        <label asp-for="Accommodation.UserCanCancelBooking">Allow the users to cancel their booking before arrival?</label>
+        <input asp-for="Accommodation.UserCanCancelBooking" class="form-control" />
     </div>
     <div class="form-group row">
         <label>Accommodation type:</label>

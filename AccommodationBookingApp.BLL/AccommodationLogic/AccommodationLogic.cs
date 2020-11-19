@@ -65,7 +65,9 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
                 {
                     foreach (Booking booking in bookingsForAccommodation)
                     {
-                        if (checkInDate < booking.CheckOutDate && checkOutDate > booking.CheckInDate)
+                        if (checkInDate < booking.CheckOutDate && checkOutDate > booking.CheckInDate
+                            && booking.ApprovalStatus != ApprovalStatus.Cancelled
+                            && booking.ApprovalStatus != ApprovalStatus.CancelledByUser)
                         {
                             accommodationsToRemove.Add(accommodation);
                         }
@@ -95,6 +97,11 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
 
             foreach(Booking booking in bookingsSorted)
             {
+                if(booking.ApprovalStatus == ApprovalStatus.Cancelled || booking.ApprovalStatus == ApprovalStatus.Declined
+                   || booking.ApprovalStatus == ApprovalStatus.CancelledByUser)
+                {
+                    continue;
+                }
                 for (var currentDate = booking.CheckInDate; currentDate < booking.CheckOutDate; currentDate = currentDate.AddDays(1))
                 {
                     listOFDatesOccupied.Add(currentDate.ToShortDateString());

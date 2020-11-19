@@ -19,7 +19,7 @@
         <h4>Number of beds</h4>
         <label>@Model.Accommodation.NumberOfBeds</label>
         <h4>Price per night</h4>
-        <label>@Model.Accommodation.PricePerNight</label>
+        <label>@Model.Accommodation.PricePerNight @Model.Accommodation.Currency</label>
     </div>
     @if (User.Identity.IsAuthenticated && (Model.CurrentUser.Id != Model.Accommodation.ApplicationUser.Id))
     {
@@ -40,7 +40,6 @@
     {
         <h2>Please <a asp-page="/Login">Login</a> or <a asp-page="/Register">Register</a> to book this</h2>
     }
-    <button id="testButton">Click this</button>
 
     <script>
         var datesToDisableArray;

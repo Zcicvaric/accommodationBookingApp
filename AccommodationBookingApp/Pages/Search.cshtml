@@ -26,7 +26,7 @@
                 <h2><a asp-page="/AccommodationDetails" asp-route-accommodationId="@accommodation.Id"
                        asp-route-checkInDate="@Model.CheckInDateString" asp-route-checkOutDate="@Model.CheckOutDateString">@accommodation.Name</a></h2>
                 <p>Number of beds: @accommodation.NumberOfBeds</p>
-                <p>Price per night: @accommodation.PricePerNight</p>
+                <p>Price per night: @accommodation.PricePerNight @accommodation.Currency</p>
                 <p>Address: @accommodation.Address</p>
                 <p>City: @accommodation.City</p>
                 <a asp-page="/AccommodationDetails" asp-route-accommodationId="@accommodation.Id"
@@ -55,10 +55,13 @@
         function checkInCalendarClicked() {
             let checkInDateSelected = $('.checkInDatepicker').datepicker('getDate');
             let checkOutDateSelected = $('.checkOutDatepicker').datepicker('getDate');
+            let dayAfterCheckInDate = new Date();
+            dayAfterCheckInDate.setDate(checkInDateSelected.getDate() + 1);
 
             if (checkInDateSelected >= checkOutDateSelected) {
                 $('.checkOutDatepicker').datepicker('clearDates');
             }
+            $('.checkOutDatepicker').datepicker('setStartDate', dayAfterCheckInDate);
         }
     </script>
 }

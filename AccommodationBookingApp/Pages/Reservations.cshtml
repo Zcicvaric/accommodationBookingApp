@@ -1,0 +1,120 @@
+﻿@page
+@model AccommodationBookingApp.Pages.ReservationsModel
+@{
+    <div class="row">
+        <h2>Pending reservations:</h2>
+    </div>
+    @if (Model.PendingReservations == null)
+    {
+        <div class="row">
+            <p>No pending reservations.</p>
+        </div>
+    }
+    else
+    {
+        @foreach (AccommodationBookingApp.DataAccess.Entities.Booking booking in Model.PendingReservations)
+        {
+            <div class="row">
+                <p>@booking.Accommodation.Name</p>
+                <p>@booking.CheckInDate.Date.ToShortDateString()</p>
+                <p>@booking.CheckOutDate.Date.ToShortDateString()</p>
+                <p>@booking.ApplicationUser.UserName</p>
+                <form method="post">
+                    <button type="submit" class="btn btn-sm btn-success" asp-page-handler="ApproveBooking" asp-route-BookingId="@booking.Id">Approve</button>
+                    <button type="submit" class="btn btn-sm btn-danger" asp-page-handler="DeclineBooking" asp-route-BookingId="@booking.Id">Decline</button>
+                </form>
+            </div>
+        }
+    }
+
+    <div class="row">
+        <h2>Approved reservations:</h2>
+    </div>
+    @if (Model.ApprovedReservations == null)
+    {
+        <div class="row">
+            <p>No approved reservations.</p>
+        </div>
+    }
+    else
+    {
+        @foreach (AccommodationBookingApp.DataAccess.Entities.Booking booking in Model.ApprovedReservations)
+        {
+            <div class="row">
+                <p>@booking.Accommodation.Name</p>
+                <p>@booking.CheckInDate.Date.ToShortDateString()</p>
+                <p>@booking.CheckOutDate.Date.ToShortDateString()</p>
+                <p>@booking.ApplicationUser.UserName</p>
+                <form method="post">
+                    <button type="submit" class="btn btn-sm btn-danger" asp-page-handler="CancelBooking" asp-route-BookingId="@booking.Id">Cancel</button>
+                </form>
+            </div>
+        }
+    }
+
+    <div class="row">
+        <h2>Previous reservations:</h2>
+    </div>
+    @if (Model.PreviousReservations == null)
+    {
+        <div class="row">
+            <p>No previous reservations.</p>
+        </div>
+    }
+    else
+    {
+        @foreach (AccommodationBookingApp.DataAccess.Entities.Booking booking in Model.PreviousReservations)
+        {
+            <div class="row">
+                <p>@booking.Accommodation.Name</p>
+                <p>@booking.CheckInDate.Date.ToShortDateString()</p>
+                <p>@booking.CheckOutDate.Date.ToShortDateString()</p>
+                <p>@booking.ApplicationUser.UserName</p>
+            </div>
+        }
+    }
+
+    <div class="row">
+        <h2>Declined reservations:</h2>
+    </div>
+    @if (Model.DeclinedReservations == null)
+    {
+        <div class="row">
+            <p>No declined reservations.</p>
+        </div>
+    }
+    else
+    {
+        @foreach (AccommodationBookingApp.DataAccess.Entities.Booking booking in Model.DeclinedReservations)
+        {
+            <div class="row">
+                <p>@booking.Accommodation.Name</p>
+                <p>@booking.CheckInDate.Date.ToShortDateString()</p>
+                <p>@booking.CheckOutDate.Date.ToShortDateString()</p>
+                <p>@booking.ApplicationUser.UserName</p>
+            </div>
+        }
+    }
+
+    <div class="row">
+        <h2>Cancelled reservations:</h2>
+    </div>
+    @if (Model.CancelledReservations == null)
+    {
+        <div class="row">
+            <p>No canceled reservations.</p>
+        </div>
+    }
+    else
+    {
+        @foreach (AccommodationBookingApp.DataAccess.Entities.Booking booking in Model.CancelledReservations)
+        {
+            <div class="row">
+                <p>@booking.Accommodation.Name</p>
+                <p>@booking.CheckInDate.Date.ToShortDateString()</p>
+                <p>@booking.CheckOutDate.Date.ToShortDateString()</p>
+                <p>@booking.ApplicationUser.UserName</p>
+            </div>
+        }
+    }
+}

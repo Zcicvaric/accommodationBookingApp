@@ -15,7 +15,6 @@
                 <p> Status: @previousBooking.ApprovalStatus </p>
                 <p> Check-in Date: @previousBooking.CheckInDate.ToShortDateString() </p>
                 <p> Check-out Date: @previousBooking.CheckOutDate.ToShortDateString() </p>
-                <br />
             </div>
                 
         }
@@ -32,8 +31,46 @@
                 <p> Status: @upcomingBooking.ApprovalStatus </p>
                 <p> Check-in Date: @upcomingBooking.CheckInDate.ToShortDateString() </p>
                 <p> Check-out Date: @upcomingBooking.CheckOutDate.ToShortDateString() </p>
-                <br />
+                @if(upcomingBooking.Accommodation.UserCanCancelBooking || upcomingBooking.ApprovalStatus == DataAccess.Entities.ApprovalStatus.Pending)
+                {
+                    <form method="post">
+                        <button type="submit" class="btn btn-sm btn-danger"
+                                asp-page-handler="UserCancelBooking" asp-route-bookingId="@upcomingBooking.Id">Cancel booking</button>
+                    </form>
+                }
             </div>
          }
+
+        <div class="row">
+            <h2>
+                Declined stays
+            </h2>
+        </div>
+
+        @foreach (AccommodationBookingApp.DataAccess.Entities.Booking declinedBooking in Model.DeclinedStays)
+        {
+            <div class="row">
+                <p>@declinedBooking.Accommodation.Name</p>
+                <p>@declinedBooking.ApprovalStatus</p>
+                <p>@declinedBooking.CheckInDate.ToShortDateString()</p>
+                <p>@declinedBooking.CheckOutDate.ToShortDateString()</p>
+            </div>
+        }
+
+        <div class="row">
+            <h2>
+                Cancelled stays
+            </h2>
+        </div>
+
+        @foreach (AccommodationBookingApp.DataAccess.Entities.Booking cancelledBooking in Model.CancelledStays)
+        {
+            <div class="row">
+                <p>@cancelledBooking.Accommodation.Name</p>
+                <p>@cancelledBooking.ApprovalStatus</p>
+                <p>@cancelledBooking.CheckInDate.ToShortDateString()</p>
+                <p>@cancelledBooking.CheckOutDate.ToShortDateString()</p>
+            </div>
+        }
     </div>
 }

@@ -56,14 +56,7 @@ namespace AccommodationBookingApp.Pages
         public async Task<IActionResult> OnPost()
         {
             ApplicationUser applicationUser = await userManager.GetUserAsync(User);
-            
-           var result = await AccommodationLogic.CreateNewAccomodation(Accommodation, 
-                                                                       AccommodationTypeId, 
-                                                                       applicationUser.Id);
-           if(!result)
-           {
-                return RedirectToPage("/CreateAccommodation");
-           }
+
 
             string headerImageFileName = null;
             if (formFiles != null && formFiles.Count > 0)
@@ -78,6 +71,14 @@ namespace AccommodationBookingApp.Pages
                     string filePath = Path.Combine(accommodationImagesFolder, Accommodation.Name, headerImageFileName);
                     formFile.CopyTo(new FileStream(filePath, FileMode.Create));
                     Accommodation.HeaderPhotoFileName = headerImageFileName;
+                }
+
+                var result = await AccommodationLogic.CreateNewAccomodation(Accommodation,
+                                                                       AccommodationTypeId,
+                                                                       applicationUser.Id);
+                if (!result)
+                {
+                    return RedirectToPage("/CreateAccommodation");
                 }
             }
 

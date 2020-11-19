@@ -20,7 +20,7 @@
                 <a class="nav-item nav-link" asp-page="/Search">Search</a>
                 @if (User.IsInRole("Host"))
                 {
-                    <a class="nav-item nav-link" asp-page="/Accommodation">Accomodation</a>
+                    <a class="nav-item nav-link" asp-page="/Accommodation">Your Accomodations</a>
                 }
                 @if (User.Identity.IsAuthenticated)
                 {
@@ -29,6 +29,7 @@
                 @if (User.IsInRole("Host"))
                 {
                     <a class="nav-item nav-link" asp-page="/CreateAccommodation">Create new Accommodation</a>
+                    <a class="nav-item nav-link" asp-page="/Reservations">Reservations Summary</a>
                 }
             </div>
             <div class="navbar-nav ml-auto">

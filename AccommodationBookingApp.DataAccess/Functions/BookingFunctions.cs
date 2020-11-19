@@ -44,7 +44,8 @@ namespace AccommodationBookingApp.DataAccess.Functions
             //with the .include(FK entity) we include the objects related
             var allPreviousBookingWithUserId = await Context.Bookings.Include("Accommodation").Include("ApplicationUser").
                                                      Where(booking => booking.ApplicationUser.Id == userId
-                                                     && booking.CheckInDate < DateTime.Now).ToListAsync();
+                                                     && booking.CheckInDate < DateTime.Now
+                                                     && booking.ApprovalStatus == ApprovalStatus.Approved).ToListAsync();
 
             return allPreviousBookingWithUserId;
         }
@@ -54,9 +55,30 @@ namespace AccommodationBookingApp.DataAccess.Functions
             //with the .include(FK entity) we include the objects related
             var allUpcomingBookingsWithUserId = await Context.Bookings.Include("Accommodation").Include("ApplicationUser").
                                                 Where(booking => booking.ApplicationUser.Id == userId
-                                                && booking.CheckInDate > DateTime.Now).ToListAsync();
+                                                && booking.CheckInDate > DateTime.Now
+                                                && (booking.ApprovalStatus == ApprovalStatus.Pending
+                                                || booking.ApprovalStatus == ApprovalStatus.Approved)).ToListAsync();
 
             return allUpcomingBookingsWithUserId;
+        }
+        
+        public async Task<List<Booking>> GetAllDeclinedStaysForUser(string userId)
+        {
+            var allDeclinedBookingsWithUserId = await Context.Bookings.Include("Accommodation").Include("ApplicationUser").
+                                                Where(booking => booking.ApplicationUser.Id == userId
+                                                && booking.ApprovalStatus == ApprovalStatus.Declined).ToListAsync();
+
+            return allDeclinedBookingsWithUserId;
+        }
+
+        public async Task<List<Booking>> GetAllCancelledStaysForUser(string userId)
+        {
+            var allCancelledStaysForUser = await Context.Bookings.Include("Accommodation").Include("ApplicationUser").
+                                           Where(booking => booking.ApplicationUser.Id == userId
+                                           && (booking.ApprovalStatus == ApprovalStatus.Cancelled ||
+                                               booking.ApprovalStatus == ApprovalStatus.CancelledByUser)).ToListAsync();
+
+            return allCancelledStaysForUser;
         }
 
         public async Task<List<Booking>> GetAllBookingsForAccommodation(int accommodationId)
@@ -65,6 +87,25 @@ namespace AccommodationBookingApp.DataAccess.Functions
                                            Where(booking => booking.Accommodation.Id == accommodationId).ToListAsync();
 
             return bookingsForAccommodation;
+        }
+        public async Task<List<Booking>> GetAllBookingsForHost(string userId)
+        {
+            var allBookingsWithHostId = await Context.Bookings.Include("Accommodation").Include("ApplicationUser").
+                                        Where(booking => booking.Accommodation.ApplicationUser.Id == userId).ToListAsync();
+
+            return allBookingsWithHostId;
+        }
+        public async Task<Booking> UpdateBookingStatus(int bookingId, ApprovalStatus newApprovalStatus)
+        {
+            var booking = await Context.Bookings.FindAsync(bookingId);
+            if(booking != null)
+            {
+                booking.ApprovalStatus = newApprovalStatus;
+
+                await Context.SaveChangesAsync();
+
+            }
+            return booking;
         }
     }
 }

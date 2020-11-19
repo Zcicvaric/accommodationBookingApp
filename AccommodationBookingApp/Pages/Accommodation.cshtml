@@ -11,7 +11,7 @@
         <div>
             <h1><a asp-page="/AccommodationDetails" asp-route-accommodationId="@accommodation.Id">@accommodation.Name</a></h1>
             <p>Number of beds: @accommodation.NumberOfBeds</p>
-            <p>Price per night: @accommodation.PricePerNight</p>
+            <p>Price per night: @accommodation.PricePerNight @accommodation.Currency</p>
             <p>Address: @accommodation.Address</p>
             <img src="@imagePath" asp-append-version="true" />
 

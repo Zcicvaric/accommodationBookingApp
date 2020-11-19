@@ -27,6 +27,8 @@
     <Compile Remove="Migrations\20201024143016_refactoring FK on AccommodationType model.Designer.cs" />
     <Compile Remove="Migrations\20201103162134_Renamed DateOfArrival to CheckInDate.cs" />
     <Compile Remove="Migrations\20201103162134_Renamed DateOfArrival to CheckInDate.Designer.cs" />
+    <Compile Remove="Migrations\20201110163436_Updated ApprovalStatus on Booking Model and updated Accommodation model.cs" />
+    <Compile Remove="Migrations\20201110163436_Updated ApprovalStatus on Booking Model and updated Accommodation model.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

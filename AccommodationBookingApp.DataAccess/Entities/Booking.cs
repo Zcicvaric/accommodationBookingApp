@@ -9,7 +9,7 @@ namespace AccommodationBookingApp.DataAccess.Entities
 {
     public enum ApprovalStatus
     {
-        Approved, Pending, Declined
+        Approved, Pending, Declined, Cancelled, CancelledByUser
     }
     public class Booking
     {
