@@ -20,7 +20,7 @@
     {
         foreach (AccommodationBookingApp.DataAccess.Entities.Accommodation accommodation in Model.Accommodations)
         {
-            var imagePath = "~/accommodationImages/" + @accommodation.Name + "/" + accommodation.HeaderPhotoFileName;
+            var imagePath = "~/accommodationPhotos/" + @accommodation.Name + "/Header/" + accommodation.HeaderPhotoFileName;
 
             <div>
                 <h2><a asp-page="/AccommodationDetails" asp-route-accommodationId="@accommodation.Id"

@@ -7,15 +7,16 @@
 {
     @foreach (AccommodationBookingApp.DataAccess.Entities.Accommodation accommodation in Model.Accommodations)
     {
-        var imagePath = "~/accommodationImages/" + @accommodation.Name + "/" + accommodation.HeaderPhotoFileName;
-        <div>
-            <h1><a asp-page="/AccommodationDetails" asp-route-accommodationId="@accommodation.Id">@accommodation.Name</a></h1>
-            <p>Number of beds: @accommodation.NumberOfBeds</p>
-            <p>Price per night: @accommodation.PricePerNight @accommodation.Currency</p>
-            <p>Address: @accommodation.Address</p>
-            <img src="@imagePath" asp-append-version="true" />
+        var imagePath = "~/accommodationPhotos/" + @accommodation.Name + "/Header/" + accommodation.HeaderPhotoFileName;
+<div>
+    <h1><a asp-page="/AccommodationDetails" asp-route-accommodationId="@accommodation.Id">@accommodation.Name</a></h1>
+    <p>Number of beds: @accommodation.NumberOfBeds</p>
+    <p>Price per night: @accommodation.PricePerNight @accommodation.Currency</p>
+    <p>Address: @accommodation.Address</p>
+    <img src="@imagePath" asp-append-version="true" />
+    <a asp-page="/Reservations" asp-page-handler="ForAccommodation" asp-route-accommodationId="@accommodation.Id">See all reservations</a>
 
-        </div>
+</div>
     }
 }
 

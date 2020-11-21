@@ -44,6 +44,32 @@ namespace AccommodationBookingApp.Pages
 
             return Page();
         }
+
+        public async Task<IActionResult> OnGetForAccommodation(int accommodationId)
+        {
+            if(!User.IsInRole("Host"))
+            {
+                return RedirectToPage("/Login");
+            }
+            var accommodationLogic = new AccommodationLogic();
+            var accommodation = await accommodationLogic.GetAccommodationById(accommodationId);
+
+            CurrentUser = await UserManager.GetUserAsync(User);
+
+            if (accommodation.ApplicationUser.Id != CurrentUser.Id)
+            {
+                return RedirectToPage("/Login");
+            }
+
+            PendingReservations = await BookingLogic.GetAllPendingReservationsForAccommodation(accommodationId);
+            ApprovedReservations = await BookingLogic.GetAllApprovedReservationsForAccommodation(accommodationId);
+            PreviousReservations = await BookingLogic.GetAllPreviousReservationsForAccommodation(accommodationId);
+            DeclinedReservations = await BookingLogic.GetAllDeclinedReservationsForAccommodation(accommodationId);
+            CancelledReservations = await BookingLogic.GetAllCancelledReservationsForAccommodation(accommodationId);
+
+            return Page();
+            
+        }
         public async Task<IActionResult> OnPostApproveBooking(int bookingId)
         {
             var result = await BookingLogic.ApproveBooking(bookingId);

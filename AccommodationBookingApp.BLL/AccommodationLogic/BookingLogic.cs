@@ -172,5 +172,53 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
 
             return false;
         }
+        public async Task <List<Booking>> GetAllPendingReservationsForAccommodation(int accommodationId)
+        {
+            List<Booking> allBookingsForAccommodation = await _booking.GetAllBookingsForAccommodation(accommodationId);
+
+            List<Booking> pendingBookings = allBookingsForAccommodation.Where(booking => booking.ApprovalStatus == ApprovalStatus.Pending)
+                                                                             .ToList();
+
+            return pendingBookings;
+        }
+
+        public async Task<List<Booking>> GetAllApprovedReservationsForAccommodation(int accommodationId)
+        {
+            List<Booking> allBookingsForAccommodation = await _booking.GetAllBookingsForAccommodation(accommodationId);
+
+            List<Booking> approvedBookings = allBookingsForAccommodation.Where(booking => booking.ApprovalStatus == ApprovalStatus.Approved)
+                                                                     .ToList();
+            return approvedBookings;
+        }
+
+        public async Task<List<Booking>> GetAllPreviousReservationsForAccommodation(int accommodationId)
+        {
+            List<Booking> allBookingsForAccommodation = await _booking.GetAllBookingsForAccommodation(accommodationId);
+
+            List<Booking> previousBookings = allBookingsForAccommodation.Where(booking => booking.ApprovalStatus == ApprovalStatus.Approved
+                                                                               && booking.CheckInDate < DateTime.Now)
+                                                                               .ToList();
+            return previousBookings;
+        }
+
+        public async Task<List<Booking>> GetAllDeclinedReservationsForAccommodation(int accommodationId)
+        {
+            List<Booking> allBookingsForAccommodation = await _booking.GetAllBookingsForAccommodation(accommodationId);
+
+            List<Booking> declinedBookings = allBookingsForAccommodation.Where(booking => booking.ApprovalStatus == ApprovalStatus.Declined)
+                                                                              .ToList();
+
+            return declinedBookings;
+        }
+
+        public async Task<List<Booking>> GetAllCancelledReservationsForAccommodation(int accommodationId)
+        {
+            List<Booking> allBookingsForAccommodation = await _booking.GetAllBookingsForAccommodation(accommodationId);
+
+            List<Booking> declinedBookings = allBookingsForAccommodation.Where(booking => booking.ApprovalStatus == ApprovalStatus.Declined)
+                                                                              .ToList();
+
+            return declinedBookings;
+        }
     }
 }

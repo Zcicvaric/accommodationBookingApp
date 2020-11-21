@@ -2,7 +2,15 @@
 @model AccommodationBookingApp.Pages.AccommodationDetailsModel
 @{
 
-    <img src="@Model.ImagePath" asp-append-version="true" />
+    <img src="@Model.HeaderPhotoPath" asp-append-version="true" />
+    <div class="row">
+        @foreach(string imagePath in Model.AccommodationPhotos)
+        {
+            //cleaning wwwroot prefix
+            var imagePathCleaned = imagePath.Remove(0, 7);
+            <img src="@imagePathCleaned" />
+        }
+    </div>
     <div>
         <h4>Accommodation name:</h4>
         <label>@Model.Accommodation.Name</label>
@@ -61,6 +69,17 @@
                 datesDisabled: datesToDisableArray,
                 weekStart: 1
             });
+
+            //clear the check-in and check-out date inputs if dates that are occupied are sent as GET request parameters
+            let checkInDate = @Html.Raw(Json.Serialize(Model.CheckInDateString));
+            let checkOutDate = @Html.Raw(Json.Serialize(Model.CheckOutDateString));
+
+            if (typeof datesToDisableArray === "undefined") {
+                if (datesToDisableArray.includes(checkInDate) || datesToDisableArray.contains(checkOutDate)) {
+                    $('.checkInDatepicker').datepicker('clearDates');
+                    $('.checkOutDatepicker').datepicker('clearDates');
+                }
+            }
         })
 
         function clickedOnTheCalendar(dateInput) {
@@ -75,6 +94,10 @@
 
             //has to be reintialized every this function loads beacuse of splice method
             datesToDisableArray = @Html.Raw(Json.Serialize(Model.DatesOccupiedArray));
+
+            if (typeof datesToDisableArray === "undefined") {
+                return;
+            }
 
             let checkInDateSelected = $('.checkInDatepicker').datepicker('getDate');
             let minCheckoutDate = addDaysToDate(checkInDateSelected, 1);
@@ -95,7 +118,7 @@
                     //in the checkout datepicker disable all of the dates after the first avaliable the next booking's
                     //check out date so that another free date that is after the following booking can't be selected
                     $('.checkOutDatepicker').datepicker('setDatesDisabled', datesToDisableForCheckout);
-                    $('.checkOutDatepicker').datepicker('setEndDate', datesToDisableArray[i]);
+                    $('.checkOutDatepicker').datepicker('setEndDate', datesToDisableArray[i-1]);
                     
                     return;
                 }

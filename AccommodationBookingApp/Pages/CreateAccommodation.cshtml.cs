@@ -18,7 +18,8 @@ namespace AccommodationBookingApp.Pages
         [BindProperty]
         public Accommodation Accommodation { get; set; }
         public object WebRootPath { get; private set; }
-        public List<IFormFile> formFiles { get; set; }
+        public List<IFormFile> AcommodationPhotos { get; set; }
+        public IFormFile AccommodationHeaderPhoto { get; set; }
         public IWebHostEnvironment WebHostEnvironment { get; }
         public List<string> TimesList { get; set; }
         [BindProperty]
@@ -57,29 +58,35 @@ namespace AccommodationBookingApp.Pages
         {
             ApplicationUser applicationUser = await userManager.GetUserAsync(User);
 
+            string accommodationImagesFolder = Path.Combine(WebHostEnvironment.WebRootPath, "accommodationPhotos");
+            string directoryPath = Path.Combine(accommodationImagesFolder, Accommodation.Name);
+            string headerFolderPath = Path.Combine(directoryPath, "Header");
+            Directory.CreateDirectory(directoryPath);
+            Directory.CreateDirectory(headerFolderPath);
 
-            string headerImageFileName = null;
-            if (formFiles != null && formFiles.Count > 0)
+            if (AccommodationHeaderPhoto != null)
             {
-                string accommodationImagesFolder = Path.Combine(WebHostEnvironment.WebRootPath, "accommodationImages");
-                string directoryPath = Path.Combine(accommodationImagesFolder, Accommodation.Name);
-                System.IO.Directory.CreateDirectory(directoryPath);
-
-                foreach (IFormFile formFile in formFiles)
+                var headerPhotoFileName = Guid.NewGuid().ToString() + "_" + AccommodationHeaderPhoto.FileName;
+                string filePath = Path.Combine(headerFolderPath, headerPhotoFileName);
+                await AccommodationHeaderPhoto.CopyToAsync(new FileStream(filePath, FileMode.Create));
+                Accommodation.HeaderPhotoFileName = headerPhotoFileName;
+            }
+            if (AcommodationPhotos != null && AcommodationPhotos.Count > 0)
+            {
+                foreach (IFormFile formFile in AcommodationPhotos)
                 {
-                    headerImageFileName = Guid.NewGuid().ToString() + "_" + formFile.FileName;
-                    string filePath = Path.Combine(accommodationImagesFolder, Accommodation.Name, headerImageFileName);
-                    formFile.CopyTo(new FileStream(filePath, FileMode.Create));
-                    Accommodation.HeaderPhotoFileName = headerImageFileName;
+                    var photoFileName = Guid.NewGuid().ToString() + "_" + formFile.FileName;
+                    string filePath = Path.Combine(accommodationImagesFolder, Accommodation.Name, photoFileName);
+                    await formFile.CopyToAsync(new FileStream(filePath, FileMode.Create));
                 }
+            }
 
-                var result = await AccommodationLogic.CreateNewAccomodation(Accommodation,
+            var result = await AccommodationLogic.CreateNewAccomodation(Accommodation,
                                                                        AccommodationTypeId,
                                                                        applicationUser.Id);
-                if (!result)
-                {
-                    return RedirectToPage("/CreateAccommodation");
-                }
+            if (!result)
+            {
+                return RedirectToPage("/CreateAccommodation");
             }
 
             return RedirectToPage("/index");

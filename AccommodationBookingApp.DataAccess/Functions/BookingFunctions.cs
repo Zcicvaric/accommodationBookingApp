@@ -83,7 +83,7 @@ namespace AccommodationBookingApp.DataAccess.Functions
 
         public async Task<List<Booking>> GetAllBookingsForAccommodation(int accommodationId)
         {
-            var bookingsForAccommodation = await Context.Bookings.Include("Accommodation").
+            var bookingsForAccommodation = await Context.Bookings.Include("Accommodation").Include("ApplicationUser").
                                            Where(booking => booking.Accommodation.Id == accommodationId).ToListAsync();
 
             return bookingsForAccommodation;

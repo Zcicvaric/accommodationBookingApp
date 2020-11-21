@@ -29,6 +29,12 @@
     <Compile Remove="Migrations\20201103162134_Renamed DateOfArrival to CheckInDate.Designer.cs" />
     <Compile Remove="Migrations\20201110163436_Updated ApprovalStatus on Booking Model and updated Accommodation model.cs" />
     <Compile Remove="Migrations\20201110163436_Updated ApprovalStatus on Booking Model and updated Accommodation model.Designer.cs" />
+    <Compile Remove="Migrations\20201121111956_Added CancelledByUser and TimeOfCancellation to Booking model.cs" />
+    <Compile Remove="Migrations\20201121111956_Added CancelledByUser and TimeOfCancellation to Booking model.Designer.cs" />
+    <Compile Remove="Migrations\20201121112651_updated accommodation Model ApplicationUser to AcommodationOwner.cs" />
+    <Compile Remove="Migrations\20201121112651_updated accommodation Model ApplicationUser to AcommodationOwner.Designer.cs" />
+    <Compile Remove="Migrations\20201121112851_Added CancelledByUser and TimeOfCancellation to Booking model.cs" />
+    <Compile Remove="Migrations\20201121112851_Added CancelledByUser and TimeOfCancellation to Booking model.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
