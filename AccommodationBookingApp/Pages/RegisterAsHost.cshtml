@@ -1,0 +1,48 @@
+﻿@page
+@model AccommodationBookingApp.Pages.RegisterAsHostModel
+@{
+    ViewData["Title"] = "Host Registration";
+}
+<form method="post" class="mt-2">
+    <div class="form-group">
+        <label>First name</label>
+        <input asp-for="ApplicationUser.FirstName" class="form-control"/>
+        <span asp-validation-for="ApplicationUser.FirstName" class="text-warning"></span>
+    </div>
+    <div class="form-group">
+        <label>Last Name</label>
+        <input asp-for="ApplicationUser.LastName" class="form-control" />
+        <span asp-validation-for="ApplicationUser.LastName" class="text-warning"></span>
+    </div>
+    <div class="form-group">
+        <label>Email</label>
+        <input type="email" required asp-for="ApplicationUser.Email" class="form-control" />
+        <span asp-validation-for="ApplicationUser.Email" class="text-warning"></span>
+    </div>
+    <div class="form-group">
+        <label>Address</label>
+        <input required asp-for="ApplicationUser.Address" class="form-control" />
+        <span asp-validation-for="ApplicationUser.Address" class="text-warning"></span>
+    </div>
+    <div class="form-group">
+        <label>Phone number</label>
+        <input required asp-for="ApplicationUser.PhoneNumber" class="form-control" />
+        <span asp-validation-for="ApplicationUser.PhoneNumber" class="text-warning"></span>
+    </div>
+    <div class="form-group">
+        <label>City</label>
+        <input required asp-for="ApplicationUser.City" class="form-control" />
+        <span asp-validation-for="ApplicationUser.City" class="text-warning"></span>
+    </div>
+    <div class="form-group">
+        <label>Country</label>
+        <input required asp-for="ApplicationUser.Country" class="form-control" />
+        <span asp-validation-for="ApplicationUser.Country" class="text-warning"></span>
+    </div>
+    <div class="form-group">
+        <label>Password</label>
+        <input type="password" required asp-for="Password" class="form-control" />
+        <span asp-validation-for="Password" class="text-warning"></span>
+    </div>
+    <button type="submit" class="btn btn-primary mt-4">Register</button>
+</form>

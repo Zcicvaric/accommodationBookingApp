@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,9 +10,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace AccommodationBookingApp.Pages
 {
-    public class RegisterModel : PageModel
+    public class RegisterAsHostModel : PageModel
     {
-        
         [BindProperty]
         public ApplicationUser ApplicationUser { get; set; }
         [BindProperty]
@@ -20,33 +19,32 @@ namespace AccommodationBookingApp.Pages
 
         private UserLogic userLogic;
 
-        public RegisterModel(UserManager<ApplicationUser> userManager,
-                            SignInManager<ApplicationUser> signInManager,
-                            RoleManager<IdentityRole> roleManager)
+        public RegisterAsHostModel(UserManager<ApplicationUser> userManager,
+                                   SignInManager<ApplicationUser> signInManager,
+                                   RoleManager<IdentityRole> roleManager)
         {
-            this.userLogic = new UserLogic(userManager, signInManager, roleManager);
+            userLogic = new UserLogic(userManager, signInManager, roleManager);
         }
 
         public void OnGet()
         {
-            
+
         }
+
         public async Task<IActionResult> OnPost()
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 ApplicationUser.UserName = ApplicationUser.Email;
-                var result = await userLogic.CreateNewUser(ApplicationUser, Password, false);
-
-                if(result)
+                var successfulRegistration = await userLogic.CreateNewUser(ApplicationUser, Password, true);
+                
+                if(successfulRegistration)
                 {
-                     return RedirectToPage("/index");
+                    return RedirectToPage("/Index");
                 }
-                 
             }
 
-            return RedirectToPage("/register");
-            
+            return RedirectToPage("/Register");
         }
     }
 }

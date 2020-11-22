@@ -1,7 +1,9 @@
 ﻿using AccommodationBookingApp.DataAccess.Entities;
 using AccommodationBookingApp.DataAccess.Interfaces;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,13 +17,33 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
 
         public async Task<Boolean> CreateNewAccomodation(Accommodation accommodation,
                                                          int accommodationTypeId,
-                                                         string applicationUserId)
+                                                         string applicationUserId,
+                                                         string accommodationImagesFolder,
+                                                         IFormFile AccommodationHeaderPhoto,
+                                                         List<IFormFile> AcommodationPhotos)
         {
             try
             {
+                var headerPhotoFileName = Guid.NewGuid().ToString() + "_" + AccommodationHeaderPhoto.FileName;
+                accommodation.HeaderPhotoFileName = headerPhotoFileName;
                 var result = await _accommodation.CreateAccommodation(accommodation,accommodationTypeId, applicationUserId);
                 if(result.Id > 0)
                 {
+                    string directoryPath = Path.Combine(accommodationImagesFolder, accommodation.Name);
+                    string headerFolderPath = Path.Combine(directoryPath, "Header");
+                    Directory.CreateDirectory(directoryPath);
+                    Directory.CreateDirectory(headerFolderPath);
+
+                    string headerPhotoFilePath = Path.Combine(headerFolderPath, headerPhotoFileName);
+                    await AccommodationHeaderPhoto.CopyToAsync(new FileStream(headerPhotoFilePath, FileMode.Create));
+
+                    foreach (IFormFile formFile in AcommodationPhotos)
+                    {
+                        var photoFileName = Guid.NewGuid().ToString() + "_" + formFile.FileName;
+                        string photoFilePath = Path.Combine(accommodationImagesFolder, accommodation.Name, photoFileName);
+                        await formFile.CopyToAsync(new FileStream(photoFilePath, FileMode.Create));
+                    }
+
                     return true;
                 }
                 else

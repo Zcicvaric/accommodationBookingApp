@@ -91,13 +91,21 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
 
             return declinedReservations;
         }
-        public async Task<List<Booking>> GetAllCanceledReservationsForHost(string userId)
+        public async Task<List<Booking>> GetAllCancelledReservationsForHost(string userId)
         {
             var bookingsForHost = await _booking.GetAllBookingsForHost(userId);
 
             var canceledReservations = bookingsForHost.Where(booking => booking.ApprovalStatus == ApprovalStatus.Cancelled).ToList();
 
             return canceledReservations;
+        }
+        public async Task<List<Booking>> GetAllCancelledByUserReservationsForHost(string userId)
+        {
+            var bookingsForHost = await _booking.GetAllBookingsForHost(userId);
+
+            var cancelledByUserReservations = bookingsForHost.Where(booking => booking.ApprovalStatus == ApprovalStatus.CancelledByUser).ToList();
+
+            return cancelledByUserReservations;
         }
         public async Task<Boolean> ApproveBooking(int bookingId)
         {
@@ -215,10 +223,19 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
         {
             List<Booking> allBookingsForAccommodation = await _booking.GetAllBookingsForAccommodation(accommodationId);
 
-            List<Booking> declinedBookings = allBookingsForAccommodation.Where(booking => booking.ApprovalStatus == ApprovalStatus.Declined)
+            List<Booking> cancelledBookings = allBookingsForAccommodation.Where(booking => booking.ApprovalStatus == ApprovalStatus.Declined)
                                                                               .ToList();
 
-            return declinedBookings;
+            return cancelledBookings;
+        }
+
+        public async Task<List<Booking>> GetAllCancelledByUserReservationsForAccommodation(int accommodationId)
+        {
+            List<Booking> allBookingsForAccommodation = await _booking.GetAllBookingsForAccommodation(accommodationId);
+
+            List<Booking> cancelledByUserBookings = allBookingsForAccommodation.Where(booking => booking.ApprovalStatus == ApprovalStatus.CancelledByUser).ToList();
+
+            return cancelledByUserBookings;
         }
     }
 }

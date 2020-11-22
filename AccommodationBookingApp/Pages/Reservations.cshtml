@@ -4,7 +4,7 @@
     <div class="row">
         <h2>Pending reservations:</h2>
     </div>
-    @if (Model.PendingReservations == null)
+    @if (Model.PendingReservations == null || Model.PendingReservations.Count == 0)
     {
         <div class="row">
             <p>No pending reservations.</p>
@@ -30,7 +30,7 @@
     <div class="row">
         <h2>Approved reservations:</h2>
     </div>
-    @if (Model.ApprovedReservations == null)
+    @if (Model.ApprovedReservations == null || Model.ApprovedReservations.Count == 0)
     {
         <div class="row">
             <p>No approved reservations.</p>
@@ -55,7 +55,7 @@
     <div class="row">
         <h2>Previous reservations:</h2>
     </div>
-    @if (Model.PreviousReservations == null)
+    @if (Model.PreviousReservations == null || Model.PreviousReservations.Count == 0)
     {
         <div class="row">
             <p>No previous reservations.</p>
@@ -77,7 +77,7 @@
     <div class="row">
         <h2>Declined reservations:</h2>
     </div>
-    @if (Model.DeclinedReservations == null)
+    @if (Model.DeclinedReservations == null || Model.DeclinedReservations.Count == 0)
     {
         <div class="row">
             <p>No declined reservations.</p>
@@ -99,7 +99,7 @@
     <div class="row">
         <h2>Cancelled reservations:</h2>
     </div>
-    @if (Model.CancelledReservations == null)
+    @if (Model.CancelledReservations == null || Model.CancelledReservations.Count == 0)
     {
         <div class="row">
             <p>No canceled reservations.</p>
@@ -113,6 +113,28 @@
                 <p>@booking.Accommodation.Name</p>
                 <p>@booking.CheckInDate.Date.ToShortDateString()</p>
                 <p>@booking.CheckOutDate.Date.ToShortDateString()</p>
+                <p>@booking.ApplicationUser.UserName</p>
+            </div>
+        }
+    }
+
+    <div class="row">
+        <h2>Cancelled by user reservations:</h2>
+    </div>
+    @if(Model.CancelledByUserReservations == null || Model.CancelledByUserReservations.Count == 0)
+    {
+        <div class="row">
+            <p>No cancelled by user reservations.</p>
+        </div>
+    }
+    else
+    {
+        @foreach (AccommodationBookingApp.DataAccess.Entities.Booking booking in Model.CancelledByUserReservations)
+        {
+            <div class="row">
+                <p>@booking.Accommodation.Name</p>
+                <p>@booking.CheckInDate.ToShortDateString()</p>
+                <p>@booking.CheckOutDate.ToShortDateString()</p>
                 <p>@booking.ApplicationUser.UserName</p>
             </div>
         }

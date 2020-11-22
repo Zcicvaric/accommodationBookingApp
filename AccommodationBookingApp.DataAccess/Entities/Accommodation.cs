@@ -20,8 +20,10 @@ namespace AccommodationBookingApp.DataAccess.Entities
         [Required]
         public string Address { get; set; }
         [Required]
+        [Display(Name = "Number of Beds")]
         public int NumberOfBeds { get; set; }
         [Required]
+        [Display(Name = "Price Per Night")]
         public int PricePerNight { get; set; }
         [Required]
         public Currency Currency { get; set; }

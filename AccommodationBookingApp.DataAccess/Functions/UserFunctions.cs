@@ -35,15 +35,6 @@ namespace AccommodationBookingApp.DataAccess.Functions
 
         public async Task<bool> CreateNewUser(ApplicationUser user, string password, bool registerAsHost)
         {
-            /*IdentityRole adminRole = new IdentityRole { Name = "Admin" };
-            IdentityRole userRole = new IdentityRole { Name = "User" };
-            IdentityRole hostRole = new IdentityRole { Name = "Host" };
-
-            IdentityResult resulttest = await roleManager.CreateAsync(adminRole);
-            IdentityResult result1 = await roleManager.CreateAsync(userRole);
-            IdentityResult result2 = await roleManager.CreateAsync(hostRole);*/
-            
-            //userManager.role
             var result = await userManager.CreateAsync(user, password);
 
             if(registerAsHost)
