@@ -1,4 +1,5 @@
 ﻿using AccommodationBookingApp.DataAccess.Entities;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,7 +9,7 @@ namespace AccommodationBookingApp.DataAccess.Interfaces
 {
     public interface IUser
     {
-        Task<bool> CreateNewUser(ApplicationUser user, string password, bool registerAsHost);
+        Task<IdentityResult> CreateNewUser(ApplicationUser user, string password, bool registerAsHost);
         Task<bool> SignInUser(ApplicationUser user, string password);
         Task<bool> SignOutUser();
     }

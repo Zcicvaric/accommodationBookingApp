@@ -59,15 +59,6 @@ namespace AccommodationBookingApp.Pages
 
             string accommodationImagesFolder = Path.Combine(WebHostEnvironment.WebRootPath, "accommodationPhotos");
 
-            if (AccommodationHeaderPhoto == null)
-            {
-                return RedirectToPage("/CreateAccommodation");
-            }
-            if (AccommodationPhotos == null || AccommodationPhotos.Count == 0)
-            {
-                return RedirectToPage("/CreateAccommodation");
-            }
-
             var result = await AccommodationLogic.CreateNewAccomodation(Accommodation,
                                                                        AccommodationTypeId,
                                                                        applicationUser.Id,

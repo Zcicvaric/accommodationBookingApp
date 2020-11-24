@@ -32,10 +32,10 @@ namespace AccommodationBookingApp
             {
                     IdentityOptions.Password.RequireNonAlphanumeric = false;
                     IdentityOptions.Password.RequiredUniqueChars = 0;
+                IdentityOptions.Password.RequiredLength = 8;
             }).AddEntityFrameworkStores<DatabaseContext>()
                   .AddDefaultTokenProviders();
 
-            //services.TryAddScoped<SignInManager<ApplicationUser>>();
             services.ConfigureApplicationCookie(config =>
             {
                 config.Cookie.Name = "AcommodationBookingAppCookie";

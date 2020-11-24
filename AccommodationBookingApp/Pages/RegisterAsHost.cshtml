@@ -4,6 +4,7 @@
     ViewData["Title"] = "Host Registration";
 }
 <form method="post" class="mt-2">
+    <div asp-validation-summary="All" class="text-warning"></div>
     <div class="form-group">
         <label>First name</label>
         <input asp-for="ApplicationUser.FirstName" class="form-control"/>
@@ -25,9 +26,9 @@
         <span asp-validation-for="ApplicationUser.Address" class="text-warning"></span>
     </div>
     <div class="form-group">
-        <label>Phone number</label>
-        <input required asp-for="ApplicationUser.PhoneNumber" class="form-control" />
-        <span asp-validation-for="ApplicationUser.PhoneNumber" class="text-warning"></span>
+        <label>Mobile phone number (Digits only)</label>
+        <input asp-for="MobilePhoneNumber" class="form-control" />
+        <span asp-validation-for="MobilePhoneNumber" class="text-warning"></span>
     </div>
     <div class="form-group">
         <label>City</label>
@@ -41,8 +42,13 @@
     </div>
     <div class="form-group">
         <label>Password</label>
-        <input type="password" required asp-for="Password" class="form-control" />
+        <input asp-for="Password" class="form-control" />
         <span asp-validation-for="Password" class="text-warning"></span>
+    </div>
+    <div class="form-group">
+        <label>Confirm password</label>
+        <input asp-for="ConfirmPassword" class="form-control" />
+        <span asp-validation-for="ConfirmPassword" class="text-warning"></span>
     </div>
     <button type="submit" class="btn btn-primary mt-4">Register</button>
 </form>

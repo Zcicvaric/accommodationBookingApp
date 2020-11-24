@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using AccommodationBookingApp.BLL.UserLogic;
@@ -15,7 +16,18 @@ namespace AccommodationBookingApp.Pages
         [BindProperty]
         public ApplicationUser ApplicationUser { get; set; }
         [BindProperty]
+        [Required]
+        [DataType(DataType.Password)]
         public string Password { get; set; }
+        [Required]
+        [DataType(DataType.Password)]
+        [Compare("Password", ErrorMessage = "Passwords must match!")]
+        public string ConfirmPassword { get; set; }
+        [BindProperty]
+        [Required]
+        [Display(Name = "Mobile Phone Number")]
+        [RegularExpression(@"^(\d{9,10})$", ErrorMessage = "Mobile phone number must have 9 or 10 digits")]
+        public string MobilePhoneNumber { get; set; }
 
         private UserLogic userLogic;
 
@@ -36,15 +48,21 @@ namespace AccommodationBookingApp.Pages
             if (ModelState.IsValid)
             {
                 ApplicationUser.UserName = ApplicationUser.Email;
-                var successfulRegistration = await userLogic.CreateNewUser(ApplicationUser, Password, true);
+                ApplicationUser.PhoneNumber = MobilePhoneNumber;
+                var result = await userLogic.CreateNewUser(ApplicationUser, Password, true);
                 
-                if(successfulRegistration)
+                if(result.Succeeded)
                 {
                     return RedirectToPage("/Index");
                 }
+
+                foreach(var registrationError in result.Errors)
+                {
+                    ModelState.AddModelError("", registrationError.Description);
+                }
             }
 
-            return RedirectToPage("/Register");
+            return Page();
         }
     }
 }

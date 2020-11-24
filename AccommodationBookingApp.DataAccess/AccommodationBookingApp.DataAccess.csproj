@@ -35,6 +35,8 @@
     <Compile Remove="Migrations\20201121112651_updated accommodation Model ApplicationUser to AcommodationOwner.Designer.cs" />
     <Compile Remove="Migrations\20201121112851_Added CancelledByUser and TimeOfCancellation to Booking model.cs" />
     <Compile Remove="Migrations\20201121112851_Added CancelledByUser and TimeOfCancellation to Booking model.Designer.cs" />
+    <Compile Remove="Migrations\20201122173526_updated the ApplicationUser Model to sup.cs" />
+    <Compile Remove="Migrations\20201122173526_updated the ApplicationUser Model to sup.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -20,7 +21,10 @@ namespace AccommodationBookingApp.Pages
         [BindProperty]
         public ApplicationUser User { get; set; }
         [BindProperty]
+        [Required]
+        [DataType(DataType.Password)]
         public string Password { get; set; }
+        public string ErrorMessage { get; set; }
 
         private UserLogic userLogic;
 
@@ -33,15 +37,18 @@ namespace AccommodationBookingApp.Pages
         {
 
         }
+
         public async Task<IActionResult> OnPost()
         {
             bool result = await userLogic.SignInUser(User, Password);
 
-            if (result)
+            if (!result)
             {
-                return RedirectToPage("/index");
+                ErrorMessage = "Invalid email and password combination!";
+                return Page();
             }
-            return RedirectToPage("/login");
+
+            return RedirectToPage("/Index");
         }
     }
 }

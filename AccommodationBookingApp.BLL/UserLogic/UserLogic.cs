@@ -24,7 +24,7 @@ namespace AccommodationBookingApp.BLL.UserLogic
             _user = new DataAccess.Functions.UserFunctions(userManager, signInManager);
         }
 
-        public async Task<bool> CreateNewUser(ApplicationUser user, string password, bool registerAsHost)
+        public async Task<IdentityResult> CreateNewUser(ApplicationUser user, string password, bool registerAsHost)
         {
            return await _user.CreateNewUser(user, password, registerAsHost);
         }

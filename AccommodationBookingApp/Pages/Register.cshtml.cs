@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using AccommodationBookingApp.BLL.UserLogic;
@@ -16,7 +17,13 @@ namespace AccommodationBookingApp.Pages
         [BindProperty]
         public ApplicationUser ApplicationUser { get; set; }
         [BindProperty]
+        [Required]
+        [DataType(DataType.Password)]
         public string Password { get; set; }
+        [Required]
+        [DataType(DataType.Password)]
+        [Compare("Password", ErrorMessage = "Passwords must match!")]
+        public string ConfirmPassword { get; set; }
 
         private UserLogic userLogic;
 
@@ -38,14 +45,18 @@ namespace AccommodationBookingApp.Pages
                 ApplicationUser.UserName = ApplicationUser.Email;
                 var result = await userLogic.CreateNewUser(ApplicationUser, Password, false);
 
-                if(result)
+                if(result.Succeeded)
                 {
                      return RedirectToPage("/index");
+                }
+                foreach (var registrationError in result.Errors)
+                {
+                    ModelState.AddModelError("", registrationError.Description);
                 }
                  
             }
 
-            return RedirectToPage("/register");
+            return Page();
             
         }
     }

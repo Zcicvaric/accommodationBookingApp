@@ -33,11 +33,13 @@ namespace AccommodationBookingApp.DataAccess.Functions
             this.signInManager = signInManager;
         }
 
-        public async Task<bool> CreateNewUser(ApplicationUser user, string password, bool registerAsHost)
+        public async Task<IdentityResult> CreateNewUser(ApplicationUser user, string password, bool registerAsHost)
         {
             var result = await userManager.CreateAsync(user, password);
 
-            if(registerAsHost)
+            if(result.Succeeded)
+            {
+                if(registerAsHost)
             {
                 await userManager.AddToRoleAsync(user, "Host");
             }
@@ -47,13 +49,14 @@ namespace AccommodationBookingApp.DataAccess.Functions
             }
 
             await signInManager.PasswordSignInAsync(user, password, true, false);
+            }
 
-            return result.Succeeded;
+            return result;
         }
 
         public async Task<bool> SignInUser(ApplicationUser user, string password)
         {
-            var userObject = await userManager.FindByEmailAsync(user.UserName);
+            var userObject = await userManager.FindByEmailAsync(user.Email);
 
             if (userObject != null)
             {

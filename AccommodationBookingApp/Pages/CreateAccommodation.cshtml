@@ -54,11 +54,13 @@
         <label>Check-in time:</label>
         <select asp-for="Accommodation.CheckInTime"
                 asp-items="@(new SelectList(Model.TimesList))">
+            <option value="" selected disabled hidden>Please select the check-in time</option>
         </select>
         <span asp-validation-for="Accommodation.CheckInTime" class="text-warning"></span>
         <label>Check-out time:</label>
         <select asp-for="Accommodation.CheckOutTime"
                 asp-items="@(new SelectList(Model.TimesList))">
+            <option value="" selected disabled hidden>Please select the check-out time</option>
         </select>
         <span asp-validation-for="Accommodation.CheckOutTime" class="text-warning"></span>
     </div>
