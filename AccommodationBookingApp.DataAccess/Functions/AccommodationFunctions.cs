@@ -19,12 +19,11 @@ namespace AccommodationBookingApp.DataAccess.Functions
             Context = new DatabaseContext(DatabaseContext.optionsBuild.dbContextOptions);
         }
         public async Task<Accommodation> CreateAccommodation(Accommodation accommodation,
-                                                             int accommodationTypeId,
                                                              string applicationUserId)
         {
 
             AccommodationType accommodationType = await Context.AccommodationType.Where(accommodationType =>
-                                                                                  accommodationType.Id == accommodationTypeId)
+                                                                                  accommodationType.Id == accommodation.AccommodationType.Id)
                                                                                   .FirstOrDefaultAsync();
 
             ApplicationUser applicationUser = await Context.Users.Where(applicationUser =>
@@ -59,15 +58,13 @@ namespace AccommodationBookingApp.DataAccess.Functions
         }
 
         //mos na ovo napravit prezentaciju kako radi 
-        public async Task<List<Accommodation>> GetFilteredAccommodations(string accommodationCity, int accommodationTypeId, int numberOfGuests,
-                                                                         DateTime checkInDate, DateTime checkOutDate)
+        public async Task<List<Accommodation>> GetFilteredAccommodations(string accommodationCity, int numberOfGuests)
         {
             List<Accommodation> accommodations;
             accommodations = await Context.Accommodations.Include("AccommodationType").Include("ApplicationUser")
                                                                 .Where(accommodation =>
                                                                 accommodation.City == accommodationCity &&
-                                                                accommodation.AccommodationType.Id == accommodationTypeId
-                                                                && accommodation.NumberOfBeds >= numberOfGuests).ToListAsync();
+                                                                accommodation.NumberOfBeds >= numberOfGuests).ToListAsync();
             
             return accommodations;
         }

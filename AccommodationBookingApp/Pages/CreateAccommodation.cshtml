@@ -1,7 +1,6 @@
 ﻿@page
 @model AccommodationBookingApp.Pages.CreateAccommodationModel
 @using Microsoft.AspNetCore.Identity;
-@inject UserManager<AccommodationBookingApp.DataAccess.Entities.ApplicationUser> UserManager;
 @{
     ViewData["Title"] = "CreateAccommodation";
 }
@@ -45,8 +44,9 @@
     </div>
     <div class="form-group row">
         <label>Accommodation type:</label>
-        <select asp-for="AccommodationTypeId"
+        <select asp-for="Accommodation.AccommodationType.Id"
                 asp-items="@(new SelectList(Model.AccommodationTypes, "Id", "Name"))">
+            <option selected disabled hidden>Please select the accommodation type</option>
         </select>
         <span asp-validation-for="Accommodation.AccommodationType" class="text-warning"></span>
     </div>
@@ -74,9 +74,9 @@
         <input required asp-for="AccommodationPhotos" multiple class="form-control" placeholder="Select multiple photos to upload..." />
         <span asp-validation-for="AccommodationPhotos" class="text-warning"></span>
     </div>
-    <!--
-        <input type="hidden" asp-for="Accommodation.ApplicationUser" value="currentUser" />
-    -->
+    
+        <input type="hidden" asp-for="Accommodation.ApplicationUser.UserName" value="@User.Identity.Name" />
+    
     <button type="submit" class="btn btn-primary">Create</button>
 
 </form>

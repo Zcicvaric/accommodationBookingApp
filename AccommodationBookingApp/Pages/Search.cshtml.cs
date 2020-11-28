@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using AccommodationBookingApp.BLL.AccommodationLogic;
@@ -16,16 +17,37 @@ namespace AccommodationBookingApp.Pages
         private AccommodationTypeLogic AccommodationTypeLogic;
         public List<Accommodation> Accommodations { get; set; }
         public List<AccommodationType> AccommodationTypes { get; set; }
+        [Required]
         [BindProperty]
         public string AccommodationCity { get; set; }
+        [Required]
+        [BindProperty]
+        public int NumberOfGuests { get; set; }
+        [Required]
+        [BindProperty]
+        public string CheckInDateString { get; set; }
+        [Required]
+        [BindProperty]
+        public string CheckOutDateString { get; set; }
+        public List<string> TimeOfTheDayList { get; set; }
         [BindProperty]
         public int AccommodationTypeId { get; set; }
         [BindProperty]
-        public int NumberOfGuests { get; set; }
+        public string LatestCheckInTime { get; set; }
         [BindProperty]
-        public String CheckInDateString { get; set; }
-        [BindProperty]
-        public String CheckOutDateString { get; set; }
+        public string EarliestCheckOutTime { get; set; }
+
+        public SearchModel()
+        {
+            TimeOfTheDayList = new List<string>();
+
+            for(int i = 0; i < 24; i++)
+            {
+                string timeOfTheDay = i.ToString() + ":00";
+                TimeOfTheDayList.Add(timeOfTheDay);
+            }
+        }
+
         public async Task<IActionResult> OnGet()
         {
             //AccommodationLogic = new AccommodationLogic();
@@ -40,8 +62,10 @@ namespace AccommodationBookingApp.Pages
             return Page();
         }
 
+
         public async Task<IActionResult> OnPost()
         {
+
             AccommodationTypeLogic = new AccommodationTypeLogic();
             AccommodationTypes = await AccommodationTypeLogic.GetAccommodationTypes();
 
@@ -49,8 +73,9 @@ namespace AccommodationBookingApp.Pages
             DateTime checkOutDate = DateTime.Parse(CheckOutDateString);
 
             AccommodationLogic = new AccommodationLogic();
-            Accommodations = await AccommodationLogic.GetFilteredAccommodations(AccommodationCity,
-                             AccommodationTypeId, NumberOfGuests, checkInDate, checkOutDate);
+            Accommodations = await AccommodationLogic.GetFilteredAccommodations(AccommodationCity, NumberOfGuests,
+                                                                                checkInDate, checkOutDate, AccommodationTypeId,
+                                                                                LatestCheckInTime, EarliestCheckOutTime);
             return Page();
         }
     }

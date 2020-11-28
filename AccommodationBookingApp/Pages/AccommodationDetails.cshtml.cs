@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -44,11 +45,34 @@ namespace AccommodationBookingApp.Pages
         {
             AccommodationId = accommodationId;
             Accommodation = await AccommodationLogic.GetAccommodationById(accommodationId);
+            if (Accommodation == null)
+            {
+                return NotFound();
+            }
             CurrentUser = await userManager.GetUserAsync(User);
             CheckInDateString = checkInDate;
             CheckOutDateString = checkOutDate;
-            CheckInDate = DateTime.Now;
-            CheckOutDate = DateTime.Now.AddDays(1);
+            string dateformat = "dd.MM.yyyy.";
+            try
+            {
+                CheckInDate = DateTime.ParseExact(checkInDate, dateformat, CultureInfo.InvariantCulture);
+                CheckOutDate = DateTime.ParseExact(checkOutDate, dateformat, CultureInfo.InvariantCulture);
+
+                if (CheckInDate < DateTime.Now.Date || CheckOutDate < DateTime.Now.AddDays(1).Date)
+                {
+                    throw new Exception("Invalid dates!");
+                }
+            }
+            catch
+            {
+                CheckInDate = DateTime.Now;
+                CheckOutDate = DateTime.Now.AddDays(1);
+
+                CheckInDateString = CheckInDate.ToString(dateformat);
+                CheckOutDateString = CheckOutDate.ToString(dateformat);
+            }
+            
+
             var ListOfDatesOccupied = await AccommodationLogic.GetDatesOccupiedForAccommodation(accommodationId);
 
             DatesOccupiedArray = ListOfDatesOccupied.ToArray();

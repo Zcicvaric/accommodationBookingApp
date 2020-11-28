@@ -1,23 +1,52 @@
 ﻿@page
 @model AccommodationBookingApp.Pages.SearchModel
 @{
-    <h4 class="mt-2">Filters:</h4>
+    <h4 class="mt-2">Search:</h4>
     <form method="post" class="mt-4">
         <input type="text" placeholder="City" asp-for="AccommodationCity" />
-        <select asp-items="@(new SelectList(Model.AccommodationTypes, "Id", "Name"))" asp-for="AccommodationTypeId">
-            <option>Please select the accomodation type</option>
-        </select>
+        <span asp-validation-for="AccommodationCity" class="text-warning"></span>
         <label>Number of guests: </label>
         <input type="number" min="1" value="1" asp-for="NumberOfGuests" />
+        <span asp-validation-for="NumberOfGuests" class="text-warning"></span>
         <label>Check-in date:</label>
         <input data-provide="datepicker" asp-for="CheckInDateString" onchange="checkInCalendarClicked()" class="checkInDatepicker" autocomplete="off" />
+        <span asp-validation-for="CheckInDateString" class="text-warning"></span>
         <label>Check-out date:</label>
         <input data-provide="datepicker" asp-for="CheckOutDateString" class="checkOutDatepicker" autocomplete="off" />
+        <span asp-validation-for="CheckOutDateString" class="text-warning"></span>
+        <p>
+            <a class="btn btn-primary" data-toggle="collapse" href="#moreFilters" role="button" aria-expanded="false" aria-controls="moreFilters">
+                More filters
+            </a>
+        </p>
+        <div class="collapse" id="moreFilters">
+            <div class="card">
+                <label>Accommodation type:</label>
+                <div class="input-group mb-2">
+                    <select asp-items="@(new SelectList(Model.AccommodationTypes, "Id", "Name"))" asp-for="AccommodationTypeId">
+                        <option selected disabled hidden>Please select the accommodation type</option>
+                    </select>
+                </div>
+                <label>Check-in time no later than:</label>
+                <div class="input-group mb-2">
+                    <select asp-items="@(new SelectList(Model.TimeOfTheDayList))" asp-for="LatestCheckInTime">
+                    <option selected disabled hidden>Latest check-in time</option>
+                    </select>
+                </div>
+                <label>Check-out time no earlier than:</label>
+                <div class="input-group mb-2">
+                    <select asp-items="@(new SelectList(Model.TimeOfTheDayList))" asp-for="EarliestCheckOutTime">
+                    <option selected disabled hidden>Earliest check-out time</option>
+                    </select>
+                </div>
+            </div>
+        </div>
         <button type="submit">Search</button>
     </form>
 
     @if (Model.Accommodations != null)
     {
+
         foreach (AccommodationBookingApp.DataAccess.Entities.Accommodation accommodation in Model.Accommodations)
         {
             var imagePath = "~/accommodationPhotos/" + @accommodation.Name + "/Header/" + accommodation.HeaderPhotoFileName;

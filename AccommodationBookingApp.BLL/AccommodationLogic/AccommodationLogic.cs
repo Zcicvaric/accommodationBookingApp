@@ -3,6 +3,7 @@ using AccommodationBookingApp.DataAccess.Interfaces;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -16,17 +17,18 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
         private BookingLogic bookingLogic = new BookingLogic();
 
         public async Task<Boolean> CreateNewAccomodation(Accommodation accommodation,
-                                                         int accommodationTypeId,
                                                          string applicationUserId,
                                                          string accommodationImagesFolder,
                                                          IFormFile AccommodationHeaderPhoto,
                                                          List<IFormFile> AcommodationPhotos)
         {
+            //convert accommodation city names to have first character in every word uppercase kastel stari => Kastel Stari
+            accommodation.City = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(accommodation.City);
             try
             {
                 var headerPhotoFileName = Guid.NewGuid().ToString() + "_" + AccommodationHeaderPhoto.FileName;
                 accommodation.HeaderPhotoFileName = headerPhotoFileName;
-                var result = await _accommodation.CreateAccommodation(accommodation,accommodationTypeId, applicationUserId);
+                var result = await _accommodation.CreateAccommodation(accommodation, applicationUserId);
                 if(result.Id > 0)
                 {
                     string directoryPath = Path.Combine(accommodationImagesFolder, accommodation.Name);
@@ -72,12 +74,21 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
             return accommodations;
         }
 
-        public async Task<List<Accommodation>> GetFilteredAccommodations(string accommodationCity,
-                             int accommodationTypeId, int numberOfGuests, DateTime checkInDate, DateTime checkOutDate)
+        public async Task<List<Accommodation>> GetFilteredAccommodations(string accommodationCity, int numberOfGuests,
+                                                                         DateTime checkInDate, DateTime checkOutDate,
+                                                                         int accommodationTypeId, string latestCheckInTime,
+                                                                         string earliestCheckOutTime)
         {
+            //convert accommodation city names to have every word's first character uppercase kastel stari => Kastel Stari
+            accommodationCity = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(accommodationCity);
             List<Accommodation> accommodationsToRemove = new List<Accommodation>();
-            List<Accommodation> accommodations = await _accommodation.GetFilteredAccommodations(accommodationCity, accommodationTypeId, numberOfGuests,
-                                                                                                checkInDate, checkOutDate);
+
+            List<Accommodation> accommodations = await _accommodation.GetFilteredAccommodations(accommodationCity, numberOfGuests);
+
+            if (accommodationTypeId != 0)
+            {
+                accommodations = accommodations.Where(accommodation => accommodation.AccommodationType.Id == accommodationTypeId).ToList();
+            }
 
             //obavezno provjerit rubne slucajeve npr kad gleda zadnju rezervaciju i sl++ (search dobro radi, problem sa check-in i check-out datumima na details stranici)
             foreach (Accommodation accommodation in accommodations)
@@ -92,6 +103,25 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
                             && booking.ApprovalStatus != ApprovalStatus.CancelledByUser)
                         {
                             accommodationsToRemove.Add(accommodation);
+                            continue;
+                        }
+                        if (latestCheckInTime != null)
+                        {
+                            int accommodationCheckInTimeInt = Int32.Parse(accommodation.CheckInTime.Split(":")[0]);
+                            if (accommodationCheckInTimeInt > Int32.Parse(latestCheckInTime.Split(":")[0]))
+                            {
+                                accommodationsToRemove.Add(accommodation);
+                                continue;
+                            }
+                        }
+                        if (earliestCheckOutTime != null)
+                        {
+                            int AccommodationCheckOutTimeInt = Int32.Parse(accommodation.CheckOutTime.Split(":")[0]);
+                            if (AccommodationCheckOutTimeInt < Int32.Parse(earliestCheckOutTime.Split(":")[0]))
+                            {
+                                accommodationsToRemove.Add(accommodation);
+                                continue;
+                            }
                         }
                     }
                 }
