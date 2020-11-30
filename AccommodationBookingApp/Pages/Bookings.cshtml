@@ -15,6 +15,7 @@
                 <p> Status: @previousBooking.ApprovalStatus </p>
                 <p> Check-in Date: @previousBooking.CheckInDate.ToShortDateString() </p>
                 <p> Check-out Date: @previousBooking.CheckOutDate.ToShortDateString() </p>
+                <a asp-page="/BookingDetails" asp-route-bookingId="@previousBooking.Id" asp-route-accommodationId="@previousBooking.Accommodation.Id">See details</a>
             </div>
                 
         }
@@ -31,7 +32,8 @@
                 <p> Status: @upcomingBooking.ApprovalStatus </p>
                 <p> Check-in Date: @upcomingBooking.CheckInDate.ToShortDateString() </p>
                 <p> Check-out Date: @upcomingBooking.CheckOutDate.ToShortDateString() </p>
-                @if(upcomingBooking.Accommodation.UserCanCancelBooking || upcomingBooking.ApprovalStatus == DataAccess.Entities.ApprovalStatus.Pending)
+                <a asp-page="/BookingDetails" asp-route-bookingId="@upcomingBooking.Id" asp-route-accommodationId="@upcomingBooking.Accommodation.Id">See details</a>
+                @if(upcomingBooking.Accommodation.UserCanCancelBooking && (upcomingBooking.ApprovalStatus == DataAccess.Entities.ApprovalStatus.Pending || upcomingBooking.ApprovalStatus == DataAccess.Entities.ApprovalStatus.Approved))
                 {
                     <form method="post">
                         <button type="submit" class="btn btn-sm btn-danger"
@@ -54,6 +56,7 @@
                 <p>@declinedBooking.ApprovalStatus</p>
                 <p>@declinedBooking.CheckInDate.ToShortDateString()</p>
                 <p>@declinedBooking.CheckOutDate.ToShortDateString()</p>
+                <a asp-page="/BookingDetails" asp-route-bookingId="@declinedBooking.Id" asp-route-accommodationId="@declinedBooking.Accommodation.Id">See details</a>
             </div>
         }
 
@@ -70,6 +73,7 @@
                 <p>@cancelledBooking.ApprovalStatus</p>
                 <p>@cancelledBooking.CheckInDate.ToShortDateString()</p>
                 <p>@cancelledBooking.CheckOutDate.ToShortDateString()</p>
+                <a asp-page="/BookingDetails" asp-route-bookingId="@cancelledBooking.Id" asp-route-accommodationId="@cancelledBooking.Accommodation.Id">See details</a>
             </div>
         }
     </div>

@@ -16,6 +16,7 @@ namespace AccommodationBookingApp.Pages
     {
         private BookingLogic BookingLogic = new BookingLogic();
         private UserManager<ApplicationUser> UserManager;
+        private ApplicationUser ApplicationUser;
         public List<Booking> PreviousStays { get; set; }
         public List<Booking> UpcomingStays { get; set; }
         public List<Booking> DeclinedStays { get; set; }
@@ -27,22 +28,37 @@ namespace AccommodationBookingApp.Pages
         }
         public async Task<IActionResult> OnGetAsync()
         {
-            ApplicationUser applicationUser = await UserManager.GetUserAsync(User);
-            PreviousStays = await BookingLogic.GetAllPreviousStaysForUser(applicationUser.Id);
-            UpcomingStays = await BookingLogic.GetAllUpcomingStaysForUser(applicationUser.Id);
-            DeclinedStays = await BookingLogic.GetAllDeclinedStaysForUser(applicationUser.Id);
-            CancelledStays = await BookingLogic.GetAllCancelledStaysForUser(applicationUser.Id);
+            ApplicationUser = await UserManager.GetUserAsync(User);
+            PreviousStays = await BookingLogic.GetAllPreviousStaysForUser(ApplicationUser.Id);
+            UpcomingStays = await BookingLogic.GetAllUpcomingStaysForUser(ApplicationUser.Id);
+            DeclinedStays = await BookingLogic.GetAllDeclinedStaysForUser(ApplicationUser.Id);
+            CancelledStays = await BookingLogic.GetAllCancelledStaysForUser(ApplicationUser.Id);
 
             return Page();
         }
 
         public async Task<IActionResult> OnPostUserCancelBooking (int bookingId)
         {
-            var result = await BookingLogic.CancelBookingAsUser(bookingId);
-
-            if(result)
+            if (ModelState.IsValid)
             {
-                return RedirectToPage("/Bookings");
+                Booking booking = await BookingLogic.GetBookingByIdAsync(bookingId);
+                
+                if (booking == null)
+                {
+                    return NotFound();
+                }
+
+                if (booking.ApplicationUser.UserName == User.Identity.Name)
+                {
+                    return Unauthorized();
+                }
+
+                var result = await BookingLogic.CancelBookingAsUser(bookingId);
+
+                if (result)
+                {
+                    return RedirectToPage("/Bookings");
+                }
             }
 
             return Page();

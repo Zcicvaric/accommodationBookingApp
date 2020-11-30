@@ -41,6 +41,7 @@ namespace AccommodationBookingApp.Pages
             this.userManager = userManager;
         }
 
+
         public async Task<IActionResult> OnGet(int accommodationId, string checkInDate, string checkOutDate)
         {
             AccommodationId = accommodationId;
@@ -49,6 +50,7 @@ namespace AccommodationBookingApp.Pages
             {
                 return NotFound();
             }
+
             CurrentUser = await userManager.GetUserAsync(User);
             CheckInDateString = checkInDate;
             CheckOutDateString = checkOutDate;

@@ -1,0 +1,64 @@
+﻿@page
+@model AccommodationBookingApp.Pages.BookingDetailsModel
+@{
+    <div class="container">
+        <div class="row">
+            <h2>Booking details</h2>
+        </div>
+        <div class="row">
+            <label>Accommodation name</label>
+            <p>@Model.Accommodation.Name</p>
+        </div>
+        <div class="row">
+            <label>Booking status</label>
+            <p>@Model.Booking.ApprovalStatus</p>
+        </div>
+        <div class="row">
+            <label>Check-in time</label>
+            <p>@Model.Booking.CheckInDate.ToShortDateString() at @Model.Accommodation.CheckInTime</p>
+        </div>
+        <div class="row">
+            <label>Check-out time</label>
+            <p>@Model.Booking.CheckOutDate.ToShortDateString() at @Model.Accommodation.CheckOutTime</p>
+        </div>
+        <div class="row">
+            <label>Address</label>
+            <p>@Model.Accommodation.Address</p>
+        </div>
+        
+        <div class="row">
+            <label>Host mobile phone number</label>
+            <p>@Model.Accommodation.ApplicationUser.PhoneNumber</p>
+        </div>
+
+        @if (@Model.Accommodation.UserCanCancelBooking && @Model.Booking.CheckInDate > DateTime.Now.Date &&
+            (@Model.Booking.ApprovalStatus == DataAccess.Entities.ApprovalStatus.Approved || @Model.Booking.ApprovalStatus == DataAccess.Entities.ApprovalStatus.Pending))
+        {
+            <div class="row">
+                <form method="post">
+                    <button type="submit" class="btn btn-danger" asp-page-handler="UserCancelBooking" asp-route-bookingId="@Model.Booking.Id">Cancel Booking</button>
+                </form>
+            </div>
+        }
+        @if (User.IsInRole("Host"))
+        {
+            @if (@Model.Accommodation.ApplicationUser.UserName == User.Identity.Name)
+            {
+                <div class="row">
+                    <p>Manage booking</p>
+                    <form method="post">
+                        @if (@Model.Booking.ApprovalStatus == DataAccess.Entities.ApprovalStatus.Pending)
+                        {
+                            <button type="submit" class="btn btn-success" asp-page-handler="HostApproveBooking" asp-route-bookingId="@Model.Booking.Id">Approve booking</button>
+                        }
+                    </form>
+                </div>
+            }
+        }
+
+        <div class="row">
+            <a asp-page="/AccommodationDetails" asp-route-accommodationId="@Model.Accommodation.Id" asp-route-checkInDate="@DateTime.Now.Date.ToShortDateString()"
+               asp-route-checkOutDate="@DateTime.Now.Date.AddDays(1).ToShortDateString()">Click here to go to the accommodation page</a>
+        </div>
+    </div>
+}

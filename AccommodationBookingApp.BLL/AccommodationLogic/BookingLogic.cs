@@ -22,6 +22,11 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
             return booking;
         }
 
+        public async Task<Booking> GetBookingByIdAsync(int bookingId)
+        {
+            return await _booking.GetBookingByIdAsync(bookingId);
+        }
+
         public async Task <List<Booking>> GetAllPreviousStaysForUser(string applicationUserId)
         {
             var previousStays = await _booking.GetAllPreviousStaysForUser(applicationUserId);

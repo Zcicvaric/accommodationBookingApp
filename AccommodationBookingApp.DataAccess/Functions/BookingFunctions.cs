@@ -39,6 +39,15 @@ namespace AccommodationBookingApp.DataAccess.Functions
             return booking;
         }
 
+        public async Task <Booking> GetBookingByIdAsync(int bookingId)
+        {
+            Booking booking = await Context.Bookings.Include("ApplicationUser").Include("Accommodation")
+                                                    .Where(booking => booking.Id == bookingId)
+                                                    .FirstOrDefaultAsync();
+
+            return booking;
+        }
+
         public async Task <List<Booking>> GetAllPreviousStaysForUser(string userId)
         {
             //with the .include(FK entity) we include the objects related
