@@ -1,0 +1,25 @@
+﻿@page
+@model AccommodationBookingApp.Pages.UpdateAccountModel
+@{
+    <div class="container">
+        <form method="post">
+            <div asp-validation-summary="All" class="text-warning"></div>
+            <div class="form-group">
+                <label>First Name</label>
+                <input asp-for="FirstName" value="@Model.ApplicationUser.FirstName" class="form-control"/>
+                <span asp-validation-for="FirstName" class="text-warning"></span>
+            </div>
+            <div class="form-group">
+                <label>Last Name</label>
+                <input asp-for="LastName" value="@Model.ApplicationUser.LastName" class="form-control"/>
+                <span asp-validation-for="LastName" class="text-warning"></span>
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input asp-for="Email" value="@Model.ApplicationUser.Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-warning"></span>
+            </div>
+            <button type="submit" class="btn btn-primary mt-4">Update</button>
+        </form>
+    </div>
+}

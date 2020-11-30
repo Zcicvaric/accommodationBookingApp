@@ -4,12 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using AccommodationBookingApp.BLL.AccommodationLogic;
 using AccommodationBookingApp.DataAccess.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace AccommodationBookingApp.Pages
 {
+    [Authorize (Roles = "Host")]
     public class ReservationsModel : PageModel
     {
         private UserManager<ApplicationUser> UserManager;
@@ -31,10 +33,6 @@ namespace AccommodationBookingApp.Pages
         }
         public async Task<IActionResult> OnGet()
         {
-            if(!User.IsInRole("Host"))
-            {
-                return RedirectToPage("/Login");
-            }
             CurrentUser = await UserManager.GetUserAsync(User);
             PendingReservations = await BookingLogic.GetAllPendingReservationsForHost(CurrentUser.Id);
             ApprovedReservations = await BookingLogic.GetAllApprovedReservationsForHost(CurrentUser.Id);
@@ -49,10 +47,6 @@ namespace AccommodationBookingApp.Pages
 
         public async Task<IActionResult> OnGetForAccommodation(int accommodationId)
         {
-            if(!User.IsInRole("Host"))
-            {
-                return RedirectToPage("/Login");
-            }
             var accommodationLogic = new AccommodationLogic();
             var accommodation = await accommodationLogic.GetAccommodationById(accommodationId);
 

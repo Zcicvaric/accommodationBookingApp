@@ -16,6 +16,9 @@ namespace AccommodationBookingApp.DataAccess.Entities
         [Required]
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
+        [Required]
+        [DataType (DataType.EmailAddress)]
+        public override string Email { get; set; }
         public string Address { get; set; }
         public string City { get; set; }
         public string Country { get; set; }

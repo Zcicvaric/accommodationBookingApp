@@ -32,13 +32,15 @@ namespace AccommodationBookingApp
             {
                     IdentityOptions.Password.RequireNonAlphanumeric = false;
                     IdentityOptions.Password.RequiredUniqueChars = 0;
-                IdentityOptions.Password.RequiredLength = 8;
+                    IdentityOptions.Password.RequiredLength = 8;
             }).AddEntityFrameworkStores<DatabaseContext>()
                   .AddDefaultTokenProviders();
 
             services.ConfigureApplicationCookie(config =>
             {
                 config.Cookie.Name = "AcommodationBookingAppCookie";
+                config.LoginPath = "/Login";
+                config.AccessDeniedPath = "/AccessDenied";
             });
             services.AddAuthenticationCore();
             services.AddAuthorizationCore();

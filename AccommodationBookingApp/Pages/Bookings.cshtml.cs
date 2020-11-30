@@ -4,12 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using AccommodationBookingApp.BLL.AccommodationLogic;
 using AccommodationBookingApp.DataAccess.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace AccommodationBookingApp.Pages
 {
+    [Authorize (Roles = "User, Host")]
     public class BookingsModel : PageModel
     {
         private BookingLogic BookingLogic = new BookingLogic();

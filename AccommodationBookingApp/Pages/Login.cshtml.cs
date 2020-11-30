@@ -38,7 +38,7 @@ namespace AccommodationBookingApp.Pages
 
         }
 
-        public async Task<IActionResult> OnPost()
+        public async Task<IActionResult> OnPost(string ReturnUrl)
         {
             bool result = await userLogic.SignInUser(User, Password);
 
@@ -46,6 +46,12 @@ namespace AccommodationBookingApp.Pages
             {
                 ErrorMessage = "Invalid email and password combination!";
                 return Page();
+            }
+
+            //redirect only to local pages in order to prevent open redirect vulnerability to be exploited
+            if(!string.IsNullOrEmpty(ReturnUrl) && Url.IsLocalUrl(ReturnUrl))
+            {
+                return Redirect(ReturnUrl);
             }
 
             return RedirectToPage("/Index");

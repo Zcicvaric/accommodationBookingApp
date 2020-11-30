@@ -37,6 +37,8 @@
     <Compile Remove="Migrations\20201121112851_Added CancelledByUser and TimeOfCancellation to Booking model.Designer.cs" />
     <Compile Remove="Migrations\20201122173526_updated the ApplicationUser Model to sup.cs" />
     <Compile Remove="Migrations\20201122173526_updated the ApplicationUser Model to sup.Designer.cs" />
+    <Compile Remove="Migrations\20201129171110_Made the email column of the users table required.cs" />
+    <Compile Remove="Migrations\20201129171110_Made the email column of the users table required.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

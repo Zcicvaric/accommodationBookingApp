@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using AccommodationBookingApp.BLL.AccommodationLogic;
 using AccommodationBookingApp.DataAccess.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -14,16 +16,24 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace AccommodationBookingApp.Pages
 {
+    [Authorize (Roles = "Host")]
     public class CreateAccommodationModel : PageModel
     {
         [BindProperty]
         public Accommodation Accommodation { get; set; }
         public object WebRootPath { get; private set; }
+        [BindProperty]
+        [Required]
+        [FileExtensions(Extensions = ".jpg,.jpeg,.png")]
         public List<IFormFile> AccommodationPhotos { get; set; }
+        [BindProperty]
+        [Required]
+        [FileExtensions(Extensions = ".jpg,.jpeg,.png")]
         public IFormFile AccommodationHeaderPhoto { get; set; }
         public IWebHostEnvironment WebHostEnvironment { get; }
         public List<string> TimesList { get; set; }
         [BindProperty]
+        [Required]
         public int AccommodationTypeId { get; set; }
 
         private AccommodationLogic AccommodationLogic = new AccommodationLogic();
@@ -46,11 +56,6 @@ namespace AccommodationBookingApp.Pages
         }
         public async Task<IActionResult> OnGet()
         {
-            if (!User.IsInRole("Host"))
-            {
-                return RedirectToPage("/Login");
-            }
-
             AccommodationTypes = await AccommodationTypeLogic.GetAccommodationTypes();
 
             return Page();

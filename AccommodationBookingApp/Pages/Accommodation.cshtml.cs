@@ -30,11 +30,6 @@ namespace AccommodationBookingApp.Pages
         }
         public async Task<IActionResult> OnGet()
         {
-
-            if (!User.IsInRole("Host"))
-            {
-                return RedirectToPage("/Login");
-            }
             var user = await UserManager.GetUserAsync(User);
             Accommodations = await AccommodationLogic.GetAccommodationsWithUserId(user.Id);
             //HeaderImageFolderPath = Path.Combine(WebHostEnvironment.WebRootPath, "accommodationImages/");
