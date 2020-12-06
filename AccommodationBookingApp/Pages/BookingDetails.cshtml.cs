@@ -27,9 +27,18 @@ namespace AccommodationBookingApp.Pages
         }
         public async Task<IActionResult> OnGet(int bookingId, int accommodationId)
         {
-
+            if (bookingId == 0 || accommodationId == 0)
+            {
+                return BadRequest();
+            }
+            
             Booking = await bookingLogic.GetBookingByIdAsync(bookingId);
             Accommodation = await accommodationLogic.GetAccommodationById(accommodationId);
+
+            if (Booking == null || Accommodation == null)
+            {
+                return NotFound();
+            }
 
             //check if a user is trying to accsess some other user's booking - in that case deny the request
             //but if a host is trying to see a booking for one of his accommodations, allow it
@@ -42,8 +51,6 @@ namespace AccommodationBookingApp.Pages
                 return Unauthorized();
             }
 
-             
-
             return Page();
         }
 
@@ -52,6 +59,10 @@ namespace AccommodationBookingApp.Pages
 
             if (ModelState.IsValid)
             {
+                if (!User.IsInRole("User"))
+                {
+                    return Unauthorized();
+                }
                 Booking = await bookingLogic.GetBookingByIdAsync(bookingId);
 
                 if (Booking == null)
@@ -64,15 +75,15 @@ namespace AccommodationBookingApp.Pages
                     return Unauthorized();
                 }
 
-                var result = await bookingLogic.CancelBookingAsUser(Booking.Id);
+                var cancelationSuccessful = await bookingLogic.CancelBookingAsUser(Booking.Id);
 
-                if (result)
+                if (cancelationSuccessful)
                 {
                     return RedirectToPage("/Bookings");
                 }
             }
 
-            return Page();
+            return NotFound();
         }
 
         public async Task<IActionResult> OnPostHostApproveBooking(int bookingId)
@@ -95,16 +106,84 @@ namespace AccommodationBookingApp.Pages
                         return Unauthorized();
                     }
 
-                    var approvalSuccesful = await bookingLogic.ApproveBooking(bookingId);
+                    var approvalSuccessful = await bookingLogic.ApproveBooking(bookingId);
 
-                    if(approvalSuccesful)
+                    if(approvalSuccessful)
                     {
-                        return RedirectToPage("/Bookings");
+                        return RedirectToPage("/Reservations");
                     }
                 }
             }
 
-            return Page();
+            return NotFound();
+        }
+
+        public async Task<IActionResult> OnPostHostDeclineBooking(int bookingId)
+        {
+            if (ModelState.IsValid)
+            {
+                if (!User.IsInRole("Host"))
+                {
+                    return Unauthorized();
+                }
+
+                Booking = await bookingLogic.GetBookingByIdAsync(bookingId);
+
+                if (Booking == null)
+                {
+                    return NotFound();
+                }
+
+                Accommodation = await accommodationLogic.GetAccommodationById(Booking.Accommodation.Id);
+
+                if (Accommodation.ApplicationUser.UserName != User.Identity.Name)
+                {
+                    return Unauthorized();
+                }
+
+                var declineSuccesful = await bookingLogic.DeclineBooking(bookingId);
+
+                if(declineSuccesful)
+                {
+                    return RedirectToPage("/Reservations");
+                }
+            }
+
+            return NotFound();
+        }
+
+        public async Task<IActionResult> OnPostHostCancelBooking(int bookingId)
+        {
+            if (ModelState.IsValid)
+            {
+                if (!User.IsInRole("Host"))
+                {
+                    return Unauthorized();
+                }
+
+                Booking = await bookingLogic.GetBookingByIdAsync(bookingId);
+
+                if (Booking == null)
+                {
+                    return NotFound();
+                }
+
+                Accommodation = await accommodationLogic.GetAccommodationById(Booking.Accommodation.Id);
+
+                if (Accommodation.ApplicationUser.UserName != User.Identity.Name)
+                {
+                    return Unauthorized();
+                }
+
+                var cancelationSucsessful = await bookingLogic.CancelBooking(bookingId);
+
+                if (cancelationSucsessful)
+                {
+                    return RedirectToPage("/Reservations");
+                }
+            }
+
+            return NotFound();
         }
     }
 }

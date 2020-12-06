@@ -51,13 +51,17 @@
 
     <script>
         var datesToDisableArray;
+
         $(document).ready(function () {
             datesToDisableArray = @Html.Raw(Json.Serialize(Model.DatesOccupiedArray));
+            let checkInDate = @Html.Raw(Json.Serialize(Model.CheckInDateString));
+            let checkOutDate = @Html.Raw(Json.Serialize(Model.CheckOutDateString));
+
             $('.checkInDatepicker').datepicker({
                 timepicker: false,
                 datepicker: true,
                 format: "dd.mm.yyyy.",
-                startDate: new Date(),
+                startDate: checkInDate,
                 datesDisabled: datesToDisableArray,
                 weekStart: 1
             });
@@ -65,16 +69,13 @@
                 timepicker: false,
                 datepicker: true,
                 format: "dd.mm.yyyy.",
-                startDate: '+1d',
+                startDate: checkOutDate,
                 datesDisabled: datesToDisableArray,
                 weekStart: 1
             });
 
-            //clear the check-in and check-out date inputs if dates that are occupied are sent as GET request parameters
-            let checkInDate = @Html.Raw(Json.Serialize(Model.CheckInDateString));
-            let checkOutDate = @Html.Raw(Json.Serialize(Model.CheckOutDateString));
-
-            if (typeof datesToDisableArray === "undefined") {
+            //clear the check-in and check-out date input if dates that are sent as GET request parameters are occupied
+            if (typeof datesToDisableArray !== "undefined") {
                 if (datesToDisableArray.includes(checkInDate) || datesToDisableArray.contains(checkOutDate)) {
                     $('.checkInDatepicker').datepicker('clearDates');
                     $('.checkOutDatepicker').datepicker('clearDates');
@@ -92,13 +93,6 @@
             //is the first next date after that
             var flag = false;
 
-            //has to be reintialized every this function loads beacuse of splice method
-            datesToDisableArray = @Html.Raw(Json.Serialize(Model.DatesOccupiedArray));
-
-            if (typeof datesToDisableArray === "undefined") {
-                return;
-            }
-
             let checkInDateSelected = $('.checkInDatepicker').datepicker('getDate');
             let minCheckoutDate = addDaysToDate(checkInDateSelected, 1);
             $('.checkOutDatepicker').datepicker('setStartDate', minCheckoutDate);
@@ -107,6 +101,13 @@
             if (checkInDateSelected > checkOutDateSelected) {
                 $('.checkOutDatepicker').datepicker('clearDates');
             }
+
+            //this has to be reinitialized every time this function loads beacuse of the splice method
+            datesToDisableArray = @Html.Raw(Json.Serialize(Model.DatesOccupiedArray));
+
+            if (typeof datesToDisableArray === "undefined") {
+                return;
+            } 
 
             for (var i = 0; i < datesToDisableArray.length; i++) {
                 if (!compareDateStrings(dateInput, datesToDisableArray[i]) && !flag) {

@@ -26,23 +26,34 @@
             <p>@Model.Accommodation.Address</p>
         </div>
         
-        <div class="row">
-            <label>Host mobile phone number</label>
-            <p>@Model.Accommodation.ApplicationUser.PhoneNumber</p>
-        </div>
-
-        @if (@Model.Accommodation.UserCanCancelBooking && @Model.Booking.CheckInDate > DateTime.Now.Date &&
-            (@Model.Booking.ApprovalStatus == DataAccess.Entities.ApprovalStatus.Approved || @Model.Booking.ApprovalStatus == DataAccess.Entities.ApprovalStatus.Pending))
-        {
+        @if (User.IsInRole("User"))
+        { 
             <div class="row">
-                <form method="post">
-                    <button type="submit" class="btn btn-danger" asp-page-handler="UserCancelBooking" asp-route-bookingId="@Model.Booking.Id">Cancel Booking</button>
-                </form>
+                <label>Host mobile phone number</label>
+                <p>@Model.Accommodation.ApplicationUser.PhoneNumber</p>
             </div>
+
+            @if (@Model.Accommodation.UserCanCancelBooking && @Model.Booking.CheckInDate > DateTime.Now.Date &&
+                (@Model.Booking.ApprovalStatus == DataAccess.Entities.ApprovalStatus.Approved || @Model.Booking.ApprovalStatus == DataAccess.Entities.ApprovalStatus.Pending))
+            {
+                <div class="row">
+                    <form method="post">
+                        <button type="submit" class="btn btn-danger" asp-page-handler="UserCancelBooking" asp-route-bookingId="@Model.Booking.Id">Cancel Booking</button>
+                    </form>
+                </div>
+            }
         }
         @if (User.IsInRole("Host"))
         {
-            @if (@Model.Accommodation.ApplicationUser.UserName == User.Identity.Name)
+            <div class="row">
+                <label>Guest</label>
+                <p>@Model.Booking.ApplicationUser.FirstName @Model.Booking.ApplicationUser.LastName</p>
+            </div>
+            <div class="row">
+                <label>Guest's Email</label>
+                <p>@Model.Booking.ApplicationUser.Email</p>
+            </div>
+            @if (@Model.Accommodation.ApplicationUser.UserName == User.Identity.Name && Model.Booking.CheckInDate >= DateTime.Now.Date)
             {
                 <div class="row">
                     <p>Manage booking</p>
@@ -50,6 +61,11 @@
                         @if (@Model.Booking.ApprovalStatus == DataAccess.Entities.ApprovalStatus.Pending)
                         {
                             <button type="submit" class="btn btn-success" asp-page-handler="HostApproveBooking" asp-route-bookingId="@Model.Booking.Id">Approve booking</button>
+                            <button type="submit" class="btn btn-warning" asp-page-handler="HostDeclineBooking" asp-route-bookingId="@Model.Booking.Id">Decline booking</button>
+                        }
+                        @if (Model.Booking.ApprovalStatus == DataAccess.Entities.ApprovalStatus.Approved)
+                        {
+                            <button type="submit" class="btn btn-danger" asp-page-handler="HostCancelBooking" asp-route-bookingId ="@Model.Booking.Id">Cancel booking</button>
                         }
                     </form>
                 </div>
@@ -57,8 +73,8 @@
         }
 
         <div class="row">
-            <a asp-page="/AccommodationDetails" asp-route-accommodationId="@Model.Accommodation.Id" asp-route-checkInDate="@DateTime.Now.Date.ToShortDateString()"
-               asp-route-checkOutDate="@DateTime.Now.Date.AddDays(1).ToShortDateString()">Click here to go to the accommodation page</a>
+            <!--Pobrisat checkin i checkout date-->
+            <a asp-page="/AccommodationDetails" asp-route-accommodationId="@Model.Accommodation.Id">Click here to go to the accommodation page</a>
         </div>
     </div>
 }

@@ -75,7 +75,7 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
             var bookingsForHost = await _booking.GetAllBookingsForHost(userId);
 
             var approvedReservations = bookingsForHost.Where(booking => booking.ApprovalStatus == ApprovalStatus.Approved
-                                                             && booking.CheckInDate > DateTime.Now).ToList();
+                                                             && booking.CheckInDate.Date >= DateTime.Now.Date).ToList();
 
             return approvedReservations;
         }
@@ -84,7 +84,7 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
             var bookingsForHost = await _booking.GetAllBookingsForHost(userId);
 
             var previousReservations = bookingsForHost.Where(booking => booking.ApprovalStatus == ApprovalStatus.Approved
-                                                             && booking.CheckOutDate < DateTime.Now).ToList();
+                                                             && booking.CheckOutDate.Date <= DateTime.Now.Date).ToList();
 
             return previousReservations;
         }
@@ -92,7 +92,8 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
         {
             var bookingsForHost = await _booking.GetAllBookingsForHost(userId);
 
-            var declinedReservations = bookingsForHost.Where(booking => booking.ApprovalStatus == ApprovalStatus.Declined).ToList();
+            var declinedReservations = bookingsForHost.Where(booking => booking.ApprovalStatus == ApprovalStatus.Declined)
+                                                            .ToList();
 
             return declinedReservations;
         }
@@ -100,7 +101,8 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
         {
             var bookingsForHost = await _booking.GetAllBookingsForHost(userId);
 
-            var canceledReservations = bookingsForHost.Where(booking => booking.ApprovalStatus == ApprovalStatus.Cancelled).ToList();
+            var canceledReservations = bookingsForHost.Where(booking => booking.ApprovalStatus == ApprovalStatus.Cancelled)
+                                                            .ToList();
 
             return canceledReservations;
         }
@@ -108,7 +110,8 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
         {
             var bookingsForHost = await _booking.GetAllBookingsForHost(userId);
 
-            var cancelledByUserReservations = bookingsForHost.Where(booking => booking.ApprovalStatus == ApprovalStatus.CancelledByUser).ToList();
+            var cancelledByUserReservations = bookingsForHost.Where(booking => booking.ApprovalStatus == ApprovalStatus.CancelledByUser)
+                                                                    .ToList();
 
             return cancelledByUserReservations;
         }
@@ -209,7 +212,7 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
             List<Booking> allBookingsForAccommodation = await _booking.GetAllBookingsForAccommodation(accommodationId);
 
             List<Booking> previousBookings = allBookingsForAccommodation.Where(booking => booking.ApprovalStatus == ApprovalStatus.Approved
-                                                                               && booking.CheckInDate < DateTime.Now)
+                                                                               && booking.CheckInDate.Date <= DateTime.Now.Date)
                                                                                .ToList();
             return previousBookings;
         }
@@ -238,7 +241,8 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
         {
             List<Booking> allBookingsForAccommodation = await _booking.GetAllBookingsForAccommodation(accommodationId);
 
-            List<Booking> cancelledByUserBookings = allBookingsForAccommodation.Where(booking => booking.ApprovalStatus == ApprovalStatus.CancelledByUser).ToList();
+            List<Booking> cancelledByUserBookings = allBookingsForAccommodation.Where(booking => booking.ApprovalStatus == ApprovalStatus.CancelledByUser)
+                                                                                    .ToList();
 
             return cancelledByUserBookings;
         }

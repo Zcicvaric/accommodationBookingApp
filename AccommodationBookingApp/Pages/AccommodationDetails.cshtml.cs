@@ -20,9 +20,7 @@ namespace AccommodationBookingApp.Pages
         public Accommodation Accommodation { get; set; }
         public string HeaderPhotoPath { get; set; }
         public List<String> AccommodationPhotos { get; set; }
-        [BindProperty]
         public DateTime CheckInDate { get; set; }
-        [BindProperty]
         public DateTime CheckOutDate { get; set; }
         [BindProperty]
         public string CheckInDateString { get; set; }
@@ -90,14 +88,30 @@ namespace AccommodationBookingApp.Pages
 
         public async Task<IActionResult> OnPost()
         {
-            CurrentUser = await userManager.GetUserAsync(User);
-            var test = await AccommodationLogic.GetDatesOccupiedForAccommodation(AccommodationId);
-            DatesOccupiedArray = test.ToArray();
-            CheckInDate = DateTime.Parse(CheckInDateString);
-            CheckOutDate = DateTime.Parse(CheckOutDateString);
-            await BookingLogic.CreateNewBooking(AccommodationId, CurrentUser.Id,
-                                                CheckInDate, CheckOutDate);
-            return RedirectToPage("/Bookings");
+            if (ModelState.IsValid)
+            {
+                CurrentUser = await userManager.GetUserAsync(User);
+                var datesOccupied = await AccommodationLogic.GetDatesOccupiedForAccommodation(AccommodationId);
+
+                if(datesOccupied.Contains(CheckInDateString) || datesOccupied.Contains(CheckOutDateString))
+                {
+                    return BadRequest();
+                }
+
+                CheckInDate = DateTime.Parse(CheckInDateString);
+                CheckOutDate = DateTime.Parse(CheckOutDateString);
+
+                var booking = await BookingLogic.CreateNewBooking(AccommodationId, CurrentUser.Id,
+                                                    CheckInDate, CheckOutDate);
+
+                if (booking.Id != 0)
+                {
+                    return RedirectToPage("/Bookings");
+                }
+
+            }
+
+            return NotFound();
         }
     }
 }

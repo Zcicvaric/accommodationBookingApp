@@ -77,7 +77,9 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
         public async Task<List<Accommodation>> GetFilteredAccommodations(string accommodationCity, int numberOfGuests,
                                                                          DateTime checkInDate, DateTime checkOutDate,
                                                                          int accommodationTypeId, string latestCheckInTime,
-                                                                         string earliestCheckOutTime)
+                                                                         string earliestCheckOutTime,
+                                                                         bool showOnlyAccommodationsWithInstantBooking,
+                                                                         bool showOnlyAccommodationsWhereUserCanCancelBooking)
         {
             //convert accommodation city names to have every word's first character uppercase kastel stari => Kastel Stari
             accommodationCity = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(accommodationCity);
@@ -88,6 +90,14 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
             if (accommodationTypeId != 0)
             {
                 accommodations = accommodations.Where(accommodation => accommodation.AccommodationType.Id == accommodationTypeId).ToList();
+            }
+            if (showOnlyAccommodationsWithInstantBooking)
+            {
+                accommodations = accommodations.Where(accommodation => accommodation.RequireApproval == false).ToList();
+            }
+            if (showOnlyAccommodationsWhereUserCanCancelBooking)
+            {
+                accommodations = accommodations.Where(accommodation => accommodation.UserCanCancelBooking == true).ToList();
             }
 
             //obavezno provjerit rubne slucajeve npr kad gleda zadnju rezervaciju i sl++ (search dobro radi, problem sa check-in i check-out datumima na details stranici)
@@ -143,6 +153,7 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
         public async Task<List<String>> GetDatesOccupiedForAccommodation(int accommodationId)
         {
             List<string> listOFDatesOccupied = new List<string>();
+            string dateFormat = "dd.MM.yyyy.";
 
             var bookings = await bookingLogic.GetAllBookingsForAccommodation(accommodationId);
             var bookingsSorted = bookings.OrderBy(booking => booking.CheckInDate);
@@ -156,7 +167,8 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
                 }
                 for (var currentDate = booking.CheckInDate; currentDate < booking.CheckOutDate; currentDate = currentDate.AddDays(1))
                 {
-                    listOFDatesOccupied.Add(currentDate.ToShortDateString());
+
+                    listOFDatesOccupied.Add(currentDate.ToString(dateFormat));
                 }
             }
 

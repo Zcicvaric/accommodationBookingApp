@@ -19,15 +19,19 @@ namespace AccommodationBookingApp.Pages
         public List<AccommodationType> AccommodationTypes { get; set; }
         [Required]
         [BindProperty]
+        [Display (Name = "City")]
         public string AccommodationCity { get; set; }
         [Required]
         [BindProperty]
+        [Display (Name = "Number of guests")]
         public int NumberOfGuests { get; set; }
         [Required]
         [BindProperty]
+        [Display (Name = "Check-in date")]
         public string CheckInDateString { get; set; }
         [Required]
         [BindProperty]
+        [Display (Name = "Check-out date")]
         public string CheckOutDateString { get; set; }
         public List<string> TimeOfTheDayList { get; set; }
         [BindProperty]
@@ -36,6 +40,11 @@ namespace AccommodationBookingApp.Pages
         public string LatestCheckInTime { get; set; }
         [BindProperty]
         public string EarliestCheckOutTime { get; set; }
+        [BindProperty]
+        public bool ShowOnlyAccommodationsWithInstantBooking { get; set; }
+        [BindProperty]
+        public bool ShowOnlyAccommodationsWhereUserCanCancelBooking { get; set; }
+        public string ErrorMessage { get; set; }
 
         public SearchModel()
         {
@@ -75,7 +84,14 @@ namespace AccommodationBookingApp.Pages
             AccommodationLogic = new AccommodationLogic();
             Accommodations = await AccommodationLogic.GetFilteredAccommodations(AccommodationCity, NumberOfGuests,
                                                                                 checkInDate, checkOutDate, AccommodationTypeId,
-                                                                                LatestCheckInTime, EarliestCheckOutTime);
+                                                                                LatestCheckInTime, EarliestCheckOutTime,
+                                                                                ShowOnlyAccommodationsWithInstantBooking,
+                                                                                ShowOnlyAccommodationsWhereUserCanCancelBooking);
+
+            if (Accommodations.Count == 0)
+            {
+                ErrorMessage = "Sorry, no accommodations found that match the given criteria";
+            }
             return Page();
         }
     }

@@ -53,8 +53,10 @@ namespace AccommodationBookingApp.DataAccess.Functions
             //with the .include(FK entity) we include the objects related
             var allPreviousBookingWithUserId = await Context.Bookings.Include("Accommodation").Include("ApplicationUser").
                                                      Where(booking => booking.ApplicationUser.Id == userId
-                                                     && booking.CheckInDate < DateTime.Now
-                                                     && booking.ApprovalStatus == ApprovalStatus.Approved).ToListAsync();
+                                                     && booking.CheckInDate.Date < DateTime.Now.Date
+                                                     && booking.ApprovalStatus == ApprovalStatus.Approved).
+                                                     OrderBy(booking => booking.CheckInDate).
+                                                     ToListAsync();
 
             return allPreviousBookingWithUserId;
         }
@@ -64,9 +66,11 @@ namespace AccommodationBookingApp.DataAccess.Functions
             //with the .include(FK entity) we include the objects related
             var allUpcomingBookingsWithUserId = await Context.Bookings.Include("Accommodation").Include("ApplicationUser").
                                                 Where(booking => booking.ApplicationUser.Id == userId
-                                                && booking.CheckInDate > DateTime.Now
+                                                && booking.CheckInDate.Date >= DateTime.Now.Date
                                                 && (booking.ApprovalStatus == ApprovalStatus.Pending
-                                                || booking.ApprovalStatus == ApprovalStatus.Approved)).ToListAsync();
+                                                || booking.ApprovalStatus == ApprovalStatus.Approved)).
+                                                OrderBy(booking => booking.CheckInDate).
+                                                ToListAsync();
 
             return allUpcomingBookingsWithUserId;
         }
@@ -75,7 +79,9 @@ namespace AccommodationBookingApp.DataAccess.Functions
         {
             var allDeclinedBookingsWithUserId = await Context.Bookings.Include("Accommodation").Include("ApplicationUser").
                                                 Where(booking => booking.ApplicationUser.Id == userId
-                                                && booking.ApprovalStatus == ApprovalStatus.Declined).ToListAsync();
+                                                && booking.ApprovalStatus == ApprovalStatus.Declined).
+                                                OrderBy(booking => booking.CheckInDate)
+                                                .ToListAsync();
 
             return allDeclinedBookingsWithUserId;
         }
@@ -85,7 +91,9 @@ namespace AccommodationBookingApp.DataAccess.Functions
             var allCancelledStaysForUser = await Context.Bookings.Include("Accommodation").Include("ApplicationUser").
                                            Where(booking => booking.ApplicationUser.Id == userId
                                            && (booking.ApprovalStatus == ApprovalStatus.Cancelled ||
-                                               booking.ApprovalStatus == ApprovalStatus.CancelledByUser)).ToListAsync();
+                                               booking.ApprovalStatus == ApprovalStatus.CancelledByUser)).
+                                               OrderBy(booking => booking.CheckInDate).
+                                               ToListAsync();
 
             return allCancelledStaysForUser;
         }
@@ -93,14 +101,18 @@ namespace AccommodationBookingApp.DataAccess.Functions
         public async Task<List<Booking>> GetAllBookingsForAccommodation(int accommodationId)
         {
             var bookingsForAccommodation = await Context.Bookings.Include("Accommodation").Include("ApplicationUser").
-                                           Where(booking => booking.Accommodation.Id == accommodationId).ToListAsync();
+                                           Where(booking => booking.Accommodation.Id == accommodationId).
+                                           OrderBy(booking => booking.CheckInDate).
+                                           ToListAsync();
 
             return bookingsForAccommodation;
         }
         public async Task<List<Booking>> GetAllBookingsForHost(string userId)
         {
             var allBookingsWithHostId = await Context.Bookings.Include("Accommodation").Include("ApplicationUser").
-                                        Where(booking => booking.Accommodation.ApplicationUser.Id == userId).ToListAsync();
+                                        Where(booking => booking.Accommodation.ApplicationUser.Id == userId)
+                                        .OrderBy(booking => booking.CheckInDate)
+                                        .ToListAsync();
 
             return allBookingsWithHostId;
         }

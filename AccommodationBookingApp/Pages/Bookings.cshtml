@@ -33,7 +33,8 @@
                 <p> Check-in Date: @upcomingBooking.CheckInDate.ToShortDateString() </p>
                 <p> Check-out Date: @upcomingBooking.CheckOutDate.ToShortDateString() </p>
                 <a asp-page="/BookingDetails" asp-route-bookingId="@upcomingBooking.Id" asp-route-accommodationId="@upcomingBooking.Accommodation.Id">See details</a>
-                @if(upcomingBooking.Accommodation.UserCanCancelBooking && (upcomingBooking.ApprovalStatus == DataAccess.Entities.ApprovalStatus.Pending || upcomingBooking.ApprovalStatus == DataAccess.Entities.ApprovalStatus.Approved))
+                @if(upcomingBooking.Accommodation.UserCanCancelBooking && (upcomingBooking.ApprovalStatus == DataAccess.Entities.ApprovalStatus.Pending
+                    || upcomingBooking.ApprovalStatus == DataAccess.Entities.ApprovalStatus.Approved) && upcomingBooking.CheckInDate.Date != DateTime.Today.Date)
                 {
                     <form method="post">
                         <button type="submit" class="btn btn-sm btn-danger"

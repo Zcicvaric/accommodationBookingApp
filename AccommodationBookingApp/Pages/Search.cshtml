@@ -3,6 +3,7 @@
 @{
     <h4 class="mt-2">Search:</h4>
     <form method="post" class="mt-4">
+        <label>City</label>
         <input type="text" placeholder="City" asp-for="AccommodationCity" />
         <span asp-validation-for="AccommodationCity" class="text-warning"></span>
         <label>Number of guests: </label>
@@ -39,6 +40,14 @@
                     <option selected disabled hidden>Earliest check-out time</option>
                     </select>
                 </div>
+                <label>Show only accommodations that don't require host's approval?</label>
+                <div class="input-group mb-2">
+                    <input asp-for="@Model.ShowOnlyAccommodationsWithInstantBooking" class="form-control"/>
+                </div>
+                <label>Cancelation allowed after booking is confirmed?</label>
+                <div class="input-group mb-2">
+                    <input asp-for="@Model.ShowOnlyAccommodationsWhereUserCanCancelBooking" class="form-control"/>
+                </div>
             </div>
         </div>
         <button type="submit">Search</button>
@@ -62,6 +71,12 @@
                    asp-route-checkInDate="@Model.CheckInDateString" asp-route-checkOutDate="@Model.CheckOutDateString"><img src="@imagePath" asp-append-version="true" /></a>
             </div>
         }
+    }
+    @if (Model.Accommodations != null && Model.Accommodations.Count == 0)
+    {
+        <div>
+            <h2>@Model.ErrorMessage</h2>
+        </div>
     }
 
     <script>
