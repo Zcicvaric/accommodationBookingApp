@@ -8,6 +8,7 @@ namespace AccommodationBookingApp.DataAccess.Interfaces
 {
     public interface IAccommodationType
     {
+        Task<AccommodationType> GetAccommodationTypeById(int accommodationTypeId);
         Task<List<AccommodationType>> GetAllAccommodationTypes();
     }
 }

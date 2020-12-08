@@ -17,6 +17,7 @@ namespace AccommodationBookingApp.Pages
         private AccommodationTypeLogic AccommodationTypeLogic;
         public List<Accommodation> Accommodations { get; set; }
         public List<AccommodationType> AccommodationTypes { get; set; }
+
         [Required]
         [BindProperty]
         [Display (Name = "City")]
@@ -59,11 +60,6 @@ namespace AccommodationBookingApp.Pages
 
         public async Task<IActionResult> OnGet()
         {
-            //AccommodationLogic = new AccommodationLogic();
-            //Accommodations = await AccommodationLogic.GetAccommodations();
-
-            //you can't format this bellow to dd/mm/yyyy!!!!
-            //maybe convert it everywhere to dd.mm.yyyy?
             CheckInDateString = DateTime.Today.ToShortDateString();
             CheckOutDateString = DateTime.Today.AddDays(1).ToShortDateString();
             AccommodationTypeLogic = new AccommodationTypeLogic();
@@ -74,25 +70,29 @@ namespace AccommodationBookingApp.Pages
 
         public async Task<IActionResult> OnPost()
         {
-
-            AccommodationTypeLogic = new AccommodationTypeLogic();
-            AccommodationTypes = await AccommodationTypeLogic.GetAccommodationTypes();
-
-            DateTime checkInDate = DateTime.Parse(CheckInDateString);
-            DateTime checkOutDate = DateTime.Parse(CheckOutDateString);
-
-            AccommodationLogic = new AccommodationLogic();
-            Accommodations = await AccommodationLogic.GetFilteredAccommodations(AccommodationCity, NumberOfGuests,
-                                                                                checkInDate, checkOutDate, AccommodationTypeId,
-                                                                                LatestCheckInTime, EarliestCheckOutTime,
-                                                                                ShowOnlyAccommodationsWithInstantBooking,
-                                                                                ShowOnlyAccommodationsWhereUserCanCancelBooking);
-
-            if (Accommodations.Count == 0)
+            if (ModelState.IsValid)
             {
-                ErrorMessage = "Sorry, no accommodations found that match the given criteria";
+                AccommodationTypeLogic = new AccommodationTypeLogic();
+                AccommodationTypes = await AccommodationTypeLogic.GetAccommodationTypes();
+
+                DateTime checkInDate = DateTime.Parse(CheckInDateString);
+                DateTime checkOutDate = DateTime.Parse(CheckOutDateString);
+
+                AccommodationLogic = new AccommodationLogic();
+                Accommodations = await AccommodationLogic.GetFilteredAccommodations(AccommodationCity, NumberOfGuests,
+                                                                                    checkInDate, checkOutDate, AccommodationTypeId,
+                                                                                    LatestCheckInTime, EarliestCheckOutTime,
+                                                                                    ShowOnlyAccommodationsWithInstantBooking,
+                                                                                    ShowOnlyAccommodationsWhereUserCanCancelBooking);
+
+                if (Accommodations.Count == 0)
+                {
+                    ErrorMessage = "Sorry, no accommodations found that match the given criteria";
+                }
+                return Page();
             }
-            return Page();
+
+            return BadRequest();
         }
     }
 }

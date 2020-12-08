@@ -16,22 +16,35 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
         private IAccommodation _accommodation = new DataAccess.Functions.AccommodationFunctions();
         private BookingLogic bookingLogic = new BookingLogic();
 
-        public async Task<Boolean> CreateNewAccomodation(Accommodation accommodation,
-                                                         string applicationUserId,
-                                                         string accommodationImagesFolder,
-                                                         IFormFile AccommodationHeaderPhoto,
+        public async Task<Boolean> CreateNewAccomodation(string name, string city, string address, int numberOfBeds, int pricePerNight, Currency currency,
+                                                         bool requireApproval, int accommodationTypeId, string checkInTime, string checkOutTime, 
+                                                         string accommodationOwnerUsername, bool userCanCancelBooking, string accommodationImagesFolder, IFormFile AccommodationHeaderPhoto,
                                                          List<IFormFile> AcommodationPhotos)
         {
-            //convert accommodation city names to have first character in every word uppercase kastel stari => Kastel Stari
-            accommodation.City = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(accommodation.City);
+
+            Accommodation newAccommodation = new Accommodation {
+                Name = name,
+                City = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(city),
+                Address = address,
+                NumberOfBeds = numberOfBeds,
+                PricePerNight = pricePerNight,
+                Currency = currency,
+                RequireApproval = requireApproval,
+                CheckInTime = checkInTime,
+                CheckOutTime = checkOutTime,
+                UserCanCancelBooking = userCanCancelBooking
+            };
+
             try
             {
                 var headerPhotoFileName = Guid.NewGuid().ToString() + "_" + AccommodationHeaderPhoto.FileName;
-                accommodation.HeaderPhotoFileName = headerPhotoFileName;
-                var result = await _accommodation.CreateAccommodation(accommodation, applicationUserId);
+                newAccommodation.HeaderPhotoFileName = headerPhotoFileName;
+
+                var result = await _accommodation.CreateAccommodation(newAccommodation, accommodationTypeId, accommodationOwnerUsername);
+
                 if(result.Id > 0)
                 {
-                    string directoryPath = Path.Combine(accommodationImagesFolder, accommodation.Name);
+                    string directoryPath = Path.Combine(accommodationImagesFolder, name);
                     string headerFolderPath = Path.Combine(directoryPath, "Header");
                     Directory.CreateDirectory(directoryPath);
                     Directory.CreateDirectory(headerFolderPath);
@@ -42,7 +55,7 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
                     foreach (IFormFile formFile in AcommodationPhotos)
                     {
                         var photoFileName = Guid.NewGuid().ToString() + "_" + formFile.FileName;
-                        string photoFilePath = Path.Combine(accommodationImagesFolder, accommodation.Name, photoFileName);
+                        string photoFilePath = Path.Combine(accommodationImagesFolder, name, photoFileName);
                         await formFile.CopyToAsync(new FileStream(photoFilePath, FileMode.Create));
                     }
 

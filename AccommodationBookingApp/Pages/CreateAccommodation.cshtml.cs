@@ -19,33 +19,63 @@ namespace AccommodationBookingApp.Pages
     [Authorize (Roles = "Host")]
     public class CreateAccommodationModel : PageModel
     {
+        
+        [Required]
         [BindProperty]
-        public Accommodation Accommodation { get; set; }
+        public string Name { get; set; }
+        [Required]
+        [BindProperty]
+        public string City { get; set; }
+        [Required]
+        [BindProperty]
+        public string Address { get; set; }
+        [Required]
+        [BindProperty]
+        [Display (Name = "Number of beds")]
+        public int NumberOfBeds { get; set; }
+        [Required]
+        [BindProperty]
+        [Display (Name = "Price per night")]
+        public int PricePerNight { get; set; }
+        [Required]
+        [BindProperty]
+        public Currency Currency { get; set; }
+        [BindProperty]
+        public bool RequireApproval { get; set; }
+        [BindProperty]
+        public bool UserCanCancelBooking { get; set; }
+        [Required]
+        [BindProperty]
+        [Display (Name = "Accommodation type")]
+        public int AccommodationTypeId { get; set; }
+        [Required]
+        [BindProperty]
+        [Display (Name = "Check-in time")]
+        public string CheckInTime { get; set; }
+        [Required]
+        [BindProperty]
+        [Display (Name = "Check-out time")]
+        public string CheckOutTime { get; set; }
         public object WebRootPath { get; private set; }
-        [BindProperty]
         [Required]
-        [FileExtensions(Extensions = ".jpg,.jpeg,.png")]
+        [BindProperty]
+        [Display (Name = "Header photo")]
         public List<IFormFile> AccommodationPhotos { get; set; }
-        [BindProperty]
         [Required]
-        [FileExtensions(Extensions = ".jpg,.jpeg,.png")]
+        [BindProperty]
+        [Display (Name = "Photos")]
         public IFormFile AccommodationHeaderPhoto { get; set; }
         public IWebHostEnvironment WebHostEnvironment { get; }
         public List<string> TimesList { get; set; }
-        [BindProperty]
-        [Required]
-        public int AccommodationTypeId { get; set; }
 
         private AccommodationLogic AccommodationLogic = new AccommodationLogic();
         private AccommodationTypeLogic AccommodationTypeLogic = new AccommodationTypeLogic();
         public List<AccommodationType> AccommodationTypes;
-        private readonly UserManager<ApplicationUser> userManager;
 
-        public CreateAccommodationModel(IWebHostEnvironment webHostEnvironment,
-                                        UserManager<ApplicationUser> userManager)
+
+        public CreateAccommodationModel(IWebHostEnvironment webHostEnvironment)
         {
             WebHostEnvironment = webHostEnvironment;
-            this.userManager = userManager;
             TimesList = new List<string>();
 
             for (int i = 0; i < 24; i++)
@@ -66,40 +96,46 @@ namespace AccommodationBookingApp.Pages
             int checkInTimeInt;
             int checkOutTimeInt;
 
-            AccommodationTypes = await AccommodationTypeLogic.GetAccommodationTypes();
-
-            try
+            if (ModelState.IsValid)
             {
-                checkInTimeInt = Int32.Parse(Accommodation.CheckInTime.Split(":")[0]);
-                checkOutTimeInt = Int32.Parse(Accommodation.CheckOutTime.Split(":")[0]);
+
+                //AccommodationTypes = await AccommodationTypeLogic.GetAccommodationTypes();
+
+                try
+                {
+                    checkInTimeInt = Int32.Parse(CheckInTime.Split(":")[0]);
+                    checkOutTimeInt = Int32.Parse(CheckOutTime.Split(":")[0]);
+                }
+                catch
+                {
+                    return BadRequest();
+                }
+                if (checkInTimeInt <= checkOutTimeInt)
+                {
+                    ModelState.AddModelError("CheckInTime", "Check-in time must be later than check-out time!");
+                    //this is required as the page requires accommodationTypes list populated in order to display the
+                    //accommodation type select list
+                    AccommodationTypes = await AccommodationTypeLogic.GetAccommodationTypes();
+                    return Page();
+                }
+
+                string accommodationImagesFolder = Path.Combine(WebHostEnvironment.WebRootPath, "accommodationPhotos");
+
+                var result = await AccommodationLogic.CreateNewAccomodation(Name, City, Address, NumberOfBeds, PricePerNight, Currency, RequireApproval,
+                                                                            AccommodationTypeId, CheckInTime, CheckOutTime, User.Identity.Name, UserCanCancelBooking,
+                                                                            accommodationImagesFolder, AccommodationHeaderPhoto, AccommodationPhotos);
+
+                if (!result)
+                {
+                    return BadRequest();
+                }
+
+                return RedirectToPage("/Accommodation");
             }
-            catch
+            else
             {
-                return Page();
+                return BadRequest();
             }
-            if(checkInTimeInt <= checkOutTimeInt)
-            {
-                ModelState.AddModelError("Accommodation.CheckInTime", "Check-in time must be later than check-out time!");
-                return Page();
-            }
-  
-
-            ApplicationUser applicationUser = await userManager.GetUserAsync(User);
-
-            string accommodationImagesFolder = Path.Combine(WebHostEnvironment.WebRootPath, "accommodationPhotos");
-
-            var result = await AccommodationLogic.CreateNewAccomodation(Accommodation,
-                                                                        applicationUser.Id,
-                                                                        accommodationImagesFolder,
-                                                                        AccommodationHeaderPhoto,
-                                                                        AccommodationPhotos);
-
-            if (!result)
-            {
-                return RedirectToPage("/CreateAccommodation");
-            }
-
-            return RedirectToPage("/index");
         }
     }
 }

@@ -1,17 +1,13 @@
 ﻿@page
 @model AccommodationBookingApp.Pages.ReservationsModel
 @{
-    <div class="row">
-        <h2>Pending reservations:</h2>
-    </div>
-    @if (Model.PendingReservations == null || Model.PendingReservations.Count == 0)
+
+    @if (Model.PendingReservations != null && Model.PendingReservations.Count > 0)
     {
         <div class="row">
-            <p>No pending reservations.</p>
+            <h2>Pending reservations:</h2>
         </div>
-    }
-    else
-    {
+    
         @foreach (AccommodationBookingApp.DataAccess.Entities.Booking booking in Model.PendingReservations)
         {
             <div class="row">
@@ -19,26 +15,18 @@
                 <p>@booking.CheckInDate.Date.ToShortDateString()</p>
                 <p>@booking.CheckOutDate.Date.ToShortDateString()</p>
                 <p>@booking.ApplicationUser.UserName</p>
-                <form method="post">
-                    <button type="submit" class="btn btn-sm btn-success" asp-page-handler="ApproveBooking" asp-route-BookingId="@booking.Id">Approve</button>
-                    <button type="submit" class="btn btn-sm btn-danger" asp-page-handler="DeclineBooking" asp-route-BookingId="@booking.Id">Decline</button>
-                </form>
                 <a asp-page="/BookingDetails" asp-route-bookingId="@booking.Id" asp-route-accommodationId="@booking.Accommodation.Id">See details</a>
             </div>
         }
     }
 
-    <div class="row">
-        <h2>Approved reservations:</h2>
-    </div>
-    @if (Model.ApprovedReservations == null || Model.ApprovedReservations.Count == 0)
+    
+    @if (Model.ApprovedReservations != null && Model.ApprovedReservations.Count > 0)
     {
         <div class="row">
-            <p>No approved reservations.</p>
+            <h2>Approved reservations:</h2>
         </div>
-    }
-    else
-    {
+
         @foreach (AccommodationBookingApp.DataAccess.Entities.Booking booking in Model.ApprovedReservations)
         {
             <div class="row">
@@ -46,25 +34,17 @@
                 <p>@booking.CheckInDate.Date.ToShortDateString()</p>
                 <p>@booking.CheckOutDate.Date.ToShortDateString()</p>
                 <p>@booking.ApplicationUser.UserName</p>
-                <form method="post">
-                    <button type="submit" class="btn btn-sm btn-danger" asp-page-handler="CancelBooking" asp-route-BookingId="@booking.Id">Cancel</button>
-                </form>
                 <a asp-page="/BookingDetails" asp-route-bookingId="@booking.Id" asp-route-accommodationId="@booking.Accommodation.Id">See details</a>
             </div>
         }
     }
 
-    <div class="row">
-        <h2>Previous reservations:</h2>
-    </div>
-    @if (Model.PreviousReservations == null || Model.PreviousReservations.Count == 0)
+    @if (Model.PreviousReservations != null && Model.PreviousReservations.Count > 0)
     {
         <div class="row">
-            <p>No previous reservations.</p>
+            <h2>Previous reservations:</h2>
         </div>
-    }
-    else
-    {
+
         @foreach (AccommodationBookingApp.DataAccess.Entities.Booking booking in Model.PreviousReservations)
         {
             <div class="row">
@@ -77,17 +57,13 @@
         }
     }
 
-    <div class="row">
-        <h2>Declined reservations:</h2>
-    </div>
-    @if (Model.DeclinedReservations == null || Model.DeclinedReservations.Count == 0)
+
+    @if (Model.DeclinedReservations != null && Model.DeclinedReservations.Count > 0)
     {
         <div class="row">
-            <p>No declined reservations.</p>
+            <h2>Declined reservations:</h2>
         </div>
-    }
-    else
-    {
+
         @foreach (AccommodationBookingApp.DataAccess.Entities.Booking booking in Model.DeclinedReservations)
         {
             <div class="row">
@@ -100,17 +76,13 @@
         }
     }
 
-    <div class="row">
-        <h2>Cancelled reservations:</h2>
-    </div>
-    @if (Model.CancelledReservations == null || Model.CancelledReservations.Count == 0)
+
+    @if (Model.CancelledReservations != null && Model.CancelledReservations.Count > 0)
     {
         <div class="row">
-            <p>No canceled reservations.</p>
+            <h2>Canceled reservations:</h2>
         </div>
-    }
-    else
-    {
+
         @foreach (AccommodationBookingApp.DataAccess.Entities.Booking booking in Model.CancelledReservations)
         {
             <div class="row">
@@ -123,17 +95,13 @@
         }
     }
 
-    <div class="row">
-        <h2>Cancelled by user reservations:</h2>
-    </div>
-    @if(Model.CancelledByUserReservations == null || Model.CancelledByUserReservations.Count == 0)
+
+    @if (Model.CancelledByUserReservations != null && Model.CancelledByUserReservations.Count > 0)
     {
         <div class="row">
-            <p>No cancelled by user reservations.</p>
+            <h2>Cancelled by user reservations:</h2>
         </div>
-    }
-    else
-    {
+
         @foreach (AccommodationBookingApp.DataAccess.Entities.Booking booking in Model.CancelledByUserReservations)
         {
             <div class="row">
@@ -144,5 +112,14 @@
                 <a asp-page="/AccommodationDetails" asp-route-bookingId="@booking.Id" asp-route-accommodationId="@booking.Accommodation.Id">See details</a>
             </div>
         }
+    }
+
+    @if (Model.PendingReservations.Count == 0 && Model.ApprovedReservations.Count == 0 && Model.PreviousReservations.Count == 0 &&
+            Model.DeclinedReservations.Count == 0 && Model.CancelledReservations.Count == 0 && 
+            (Model.CancelledByUserReservations != null && Model.CancelledByUserReservations.Count == 0 || Model.CancelledByUserReservations == null))
+    {
+        <div class="row">
+            <p>No reservations yet</p>
+        </div>
     }
 }

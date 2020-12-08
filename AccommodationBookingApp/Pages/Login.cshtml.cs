@@ -17,9 +17,10 @@ namespace AccommodationBookingApp.Pages
 {
     public class LoginModel : PageModel
     {
-
         [BindProperty]
-        public ApplicationUser User { get; set; }
+        [Required]
+        [DataType(DataType.EmailAddress)]
+        public string Username { get; set; }
         [BindProperty]
         [Required]
         [DataType(DataType.Password)]
@@ -40,18 +41,21 @@ namespace AccommodationBookingApp.Pages
 
         public async Task<IActionResult> OnPost(string ReturnUrl)
         {
-            bool result = await userLogic.SignInUser(User, Password);
-
-            if (!result)
+            if (ModelState.IsValid)
             {
-                ErrorMessage = "Invalid email and password combination!";
-                return Page();
-            }
+                bool result = await userLogic.SignInUser(Username, Password);
 
-            //redirect only to local pages in order to prevent open redirect vulnerability to be exploited
-            if(!string.IsNullOrEmpty(ReturnUrl) && Url.IsLocalUrl(ReturnUrl))
-            {
-                return Redirect(ReturnUrl);
+                if (!result)
+                {
+                    ErrorMessage = "Invalid email and password combination!";
+                    return Page();
+                }
+
+                //redirect only to local pages in order to prevent open redirect vulnerability to be exploited
+                if (!string.IsNullOrEmpty(ReturnUrl) && Url.IsLocalUrl(ReturnUrl))
+                {
+                    return Redirect(ReturnUrl);
+                }
             }
 
             return RedirectToPage("/Index");

@@ -6,24 +6,24 @@
 <form method="post" class="mt-2">
     <div asp-validation-summary="All" class="text-warning"></div>
     <div class="form-group">
-        <label>First name</label>
-        <input asp-for="ApplicationUser.FirstName" class="form-control"/>
-        <span asp-validation-for="ApplicationUser.FirstName" class="text-warning"></span>
+        <label>First Name</label>
+        <input asp-for="FirstName" class="form-control"/>
+        <span asp-validation-for="FirstName" class="text-warning"></span>
     </div>
     <div class="form-group">
         <label>Last Name</label>
-        <input asp-for="ApplicationUser.LastName" class="form-control" />
-        <span asp-validation-for="ApplicationUser.LastName" class="text-warning"></span>
+        <input asp-for="LastName" class="form-control" />
+        <span asp-validation-for="LastName" class="text-warning"></span>
     </div>
     <div class="form-group">
         <label>Email</label>
-        <input asp-for="ApplicationUser.Email" class="form-control" />
-        <span asp-validation-for="ApplicationUser.Email" class="text-warning"></span>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-warning"></span>
     </div>
     <div class="form-group">
         <label>Address</label>
-        <input required asp-for="ApplicationUser.Address" class="form-control" />
-        <span asp-validation-for="ApplicationUser.Address" class="text-warning"></span>
+        <input required asp-for="Address" class="form-control" />
+        <span asp-validation-for="Address" class="text-warning"></span>
     </div>
     <div class="form-group">
         <label>Mobile phone number (Digits only)</label>
@@ -32,13 +32,13 @@
     </div>
     <div class="form-group">
         <label>City</label>
-        <input required asp-for="ApplicationUser.City" class="form-control" />
-        <span asp-validation-for="ApplicationUser.City" class="text-warning"></span>
+        <input required asp-for="City" class="form-control" />
+        <span asp-validation-for="City" class="text-warning"></span>
     </div>
     <div class="form-group">
         <label>Country</label>
-        <input required asp-for="ApplicationUser.Country" class="form-control" />
-        <span asp-validation-for="ApplicationUser.Country" class="text-warning"></span>
+        <input required asp-for="Country" class="form-control" />
+        <span asp-validation-for="Country" class="text-warning"></span>
     </div>
     <div class="form-group">
         <label>Password</label>

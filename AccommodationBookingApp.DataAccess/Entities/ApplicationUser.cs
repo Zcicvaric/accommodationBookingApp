@@ -11,13 +11,10 @@ namespace AccommodationBookingApp.DataAccess.Entities
     public class ApplicationUser : IdentityUser
     {
         [Required]
-        [Display(Name = "First Name")]
         public string FirstName { get; set; }
         [Required]
-        [Display(Name = "Last Name")]
         public string LastName { get; set; }
         [Required]
-        [DataType (DataType.EmailAddress)]
         public override string Email { get; set; }
         public string Address { get; set; }
         public string City { get; set; }

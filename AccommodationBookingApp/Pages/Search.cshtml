@@ -25,7 +25,7 @@
                 <label>Accommodation type:</label>
                 <div class="input-group mb-2">
                     <select asp-items="@(new SelectList(Model.AccommodationTypes, "Id", "Name"))" asp-for="AccommodationTypeId">
-                        <option selected disabled hidden>Please select the accommodation type</option>
+                        <option selected hidden value="0">Please select the accommodation type</option>
                     </select>
                 </div>
                 <label>Check-in time no later than:</label>

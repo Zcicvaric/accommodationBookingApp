@@ -8,61 +8,61 @@
 <form enctype="multipart/form-data" method="post">
     <div class="form-group row">
         <label>Name</label>
-        <input asp-for="Accommodation.Name" class="form-control" />
-        <span asp-validation-for="Accommodation.Name" class="text-warning"></span>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-warning"></span>
     </div>
     <div class="form-group row">
         <label>Address</label>
-        <input asp-for="Accommodation.Address" class="form-control" />
-        <span asp-validation-for="Accommodation.Address" class="text-warning"></span>
+        <input asp-for="Address" class="form-control" />
+        <span asp-validation-for="Address" class="text-warning"></span>
     </div>
     <div class="form-group row">
         <label>City</label>
-        <input asp-for="Accommodation.City" class="form-control" />
-        <span asp-validation-for="Accommodation.City" class="text-warning"></span>
+        <input asp-for="City" class="form-control" />
+        <span asp-validation-for="City" class="text-warning"></span>
     </div>
     <div class="form-group row">
         <label>Number of beds</label>
-        <input asp-for="Accommodation.NumberOfBeds" class="form-control" />
-        <span asp-validation-for="Accommodation.NumberOfBeds" class="text-warning"></span>
+        <input min="1" value="1" asp-for="NumberOfBeds" class="form-control" />
+        <span asp-validation-for="NumberOfBeds" class="text-warning"></span>
     </div>
     <div class="form-group row">
         <label>Price per night</label>
-        <input asp-for="Accommodation.PricePerNight" class="form-control mr-1" style="width: 80%;" />
-        <select asp-for="Accommodation.Currency"
+        <input min="1" asp-for="PricePerNight" class="form-control mr-1" style="width: 80%;" />
+        <select asp-for="Currency"
                 asp-items="@Html.GetEnumSelectList<AccommodationBookingApp.DataAccess.Entities.Currency>()">
         </select>
-        <span asp-validation-for="Accommodation.PricePerNight" class="text-warning"></span>
+        <span asp-validation-for="PricePerNight" class="text-warning"></span>
     </div>
     <div class="form-group row">
-        <label asp-for="Accommodation.RequireApproval">Require your approval before booking is confirmed?</label>
-        <input asp-for="Accommodation.RequireApproval" class="form-control" />
+        <label asp-for="RequireApproval">Require your approval before booking is confirmed?</label>
+        <input asp-for="RequireApproval" class="form-control" />
     </div>
     <div class="form-group row">
-        <label asp-for="Accommodation.UserCanCancelBooking">Allow the users to cancel their booking before arrival?</label>
-        <input asp-for="Accommodation.UserCanCancelBooking" class="form-control" />
+        <label asp-for="UserCanCancelBooking">Allow the users to cancel their booking before arrival?</label>
+        <input asp-for="UserCanCancelBooking" class="form-control" />
     </div>
     <div class="form-group row">
         <label>Accommodation type:</label>
-        <select asp-for="Accommodation.AccommodationType.Id"
+        <select asp-for="AccommodationTypeId"
                 asp-items="@(new SelectList(Model.AccommodationTypes, "Id", "Name"))">
             <option selected disabled hidden>Please select the accommodation type</option>
         </select>
-        <span asp-validation-for="Accommodation.AccommodationType.Id" class="text-warning"></span>
+        <span asp-validation-for="AccommodationTypeId" class="text-warning"></span>
     </div>
     <div class="form-group row">
         <label>Check-in time:</label>
-        <select asp-for="Accommodation.CheckInTime"
+        <select asp-for="CheckInTime"
                 asp-items="@(new SelectList(Model.TimesList))">
             <option value="" selected disabled hidden>Please select the check-in time</option>
         </select>
-        <span asp-validation-for="Accommodation.CheckInTime" class="text-warning"></span>
+        <span asp-validation-for="CheckInTime" class="text-warning"></span>
         <label>Check-out time:</label>
-        <select asp-for="Accommodation.CheckOutTime"
+        <select asp-for="CheckOutTime"
                 asp-items="@(new SelectList(Model.TimesList))">
             <option value="" selected disabled hidden>Please select the check-out time</option>
         </select>
-        <span asp-validation-for="Accommodation.CheckOutTime" class="text-warning"></span>
+        <span asp-validation-for="CheckOutTime" class="text-warning"></span>
     </div>
     <div class="form-group row">
         <label>Header photo</label>

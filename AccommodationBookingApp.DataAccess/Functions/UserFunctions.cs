@@ -36,22 +36,23 @@ namespace AccommodationBookingApp.DataAccess.Functions
             this.signInManager = signInManager;
         }
 
-        public async Task<IdentityResult> CreateNewUser(ApplicationUser user, string password, bool registerAsHost)
+        public async Task<IdentityResult> CreateNewUser(ApplicationUser newUser, string password, bool registerAsHost)
         {
-            var result = await userManager.CreateAsync(user, password);
+      
+            var result = await userManager.CreateAsync(newUser, password);
 
             if(result.Succeeded)
             {
                 if(registerAsHost)
             {
-                await userManager.AddToRoleAsync(user, "Host");
+                await userManager.AddToRoleAsync(newUser, "Host");
             }
             else
             {
-                await userManager.AddToRoleAsync(user, "User");
+                await userManager.AddToRoleAsync(newUser, "User");
             }
 
-            await signInManager.PasswordSignInAsync(user, password, true, false);
+            await signInManager.PasswordSignInAsync(newUser, password, true, false);
             }
 
             return result;

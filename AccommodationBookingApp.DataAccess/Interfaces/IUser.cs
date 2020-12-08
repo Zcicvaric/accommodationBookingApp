@@ -9,7 +9,7 @@ namespace AccommodationBookingApp.DataAccess.Interfaces
 {
     public interface IUser
     {
-        Task<IdentityResult> CreateNewUser(ApplicationUser user, string password, bool registerAsHost);
+        Task<IdentityResult> CreateNewUser(ApplicationUser applicationUser, string password, bool registerAsHost);
         Task<bool> SignInUser(ApplicationUser user, string password);
         Task<bool> SignOutUser();
     }

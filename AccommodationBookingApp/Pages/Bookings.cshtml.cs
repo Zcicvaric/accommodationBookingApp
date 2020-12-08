@@ -37,31 +37,5 @@ namespace AccommodationBookingApp.Pages
             return Page();
         }
 
-        public async Task<IActionResult> OnPostUserCancelBooking (int bookingId)
-        {
-            if (ModelState.IsValid)
-            {
-                Booking booking = await BookingLogic.GetBookingByIdAsync(bookingId);
-                
-                if (booking == null)
-                {
-                    return NotFound();
-                }
-
-                if (booking.ApplicationUser.UserName == User.Identity.Name)
-                {
-                    return Unauthorized();
-                }
-
-                var result = await BookingLogic.CancelBookingAsUser(bookingId);
-
-                if (result)
-                {
-                    return RedirectToPage("/Bookings");
-                }
-            }
-
-            return Page();
-        }
     }
 }

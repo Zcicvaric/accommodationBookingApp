@@ -7,23 +7,45 @@ using AccommodationBookingApp.BLL.UserLogic;
 using AccommodationBookingApp.DataAccess.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace AccommodationBookingApp.Pages
 {
+    [BindProperties]
     public class RegisterAsHostModel : PageModel
     {
-        [BindProperty]
-        public ApplicationUser ApplicationUser { get; set; }
-        [BindProperty]
+        [Required]
+        [Display (Name = "First Name")]
+        public string FirstName { get; set; }
+
+        [Required]
+        [Display (Name = "Last Name")]
+        public string LastName { get; set; }
+
+        [Required]
+        [DataType (DataType.EmailAddress)]
+        public string Email { get; set; }
+
+        [Required]
+        public string Address { get; set; }
+        [Required]
+        public string City { get; set; }
+
+        [Required]
+        public string Country { get; set; }
+
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+
         [Required]
+        [BindNever]
         [DataType(DataType.Password)]
+        [Display (Name = "Password confirm")]
         [Compare("Password", ErrorMessage = "Passwords must match!")]
         public string ConfirmPassword { get; set; }
-        [BindProperty]
+
         [Required]
         [Display(Name = "Mobile Phone Number")]
         [RegularExpression(@"^(\d{9,10})$", ErrorMessage = "Mobile phone number must have 9 or 10 digits")]
@@ -47,9 +69,8 @@ namespace AccommodationBookingApp.Pages
         {
             if (ModelState.IsValid)
             {
-                ApplicationUser.UserName = ApplicationUser.Email;
-                ApplicationUser.PhoneNumber = MobilePhoneNumber;
-                var result = await userLogic.CreateNewUser(ApplicationUser, Password, true);
+                var result = await userLogic.CreateNewHost(FirstName, LastName, Email, Address, City, Country, MobilePhoneNumber,
+                                                           Password);
                 
                 if(result.Succeeded)
                 {

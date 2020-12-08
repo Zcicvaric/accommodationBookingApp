@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AccommodationBookingApp.BLL.AccommodationLogic;
 using AccommodationBookingApp.DataAccess.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,7 @@ using Microsoft.Extensions.Hosting.Internal;
 
 namespace AccommodationBookingApp.Pages
 {
+    [Authorize (Roles = "Host")]
     public class AccommodationModel : PageModel
     {
         private AccommodationLogic AccommodationLogic;
@@ -31,10 +33,13 @@ namespace AccommodationBookingApp.Pages
         public async Task<IActionResult> OnGet()
         {
             var user = await UserManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return RedirectToPage("/Login");
+            }
             Accommodations = await AccommodationLogic.GetAccommodationsWithUserId(user.Id);
-            //HeaderImageFolderPath = Path.Combine(WebHostEnvironment.WebRootPath, "accommodationImages/");
 
-             return Page();
+            return Page();
         }
     }
 } 

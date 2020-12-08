@@ -42,6 +42,10 @@ namespace AccommodationBookingApp.Pages
 
         public async Task<IActionResult> OnGet(int accommodationId, string checkInDate, string checkOutDate)
         {
+            if (accommodationId == 0)
+            {
+                return BadRequest();
+            }
             AccommodationId = accommodationId;
             Accommodation = await AccommodationLogic.GetAccommodationById(accommodationId);
             if (Accommodation == null)
@@ -91,6 +95,14 @@ namespace AccommodationBookingApp.Pages
             if (ModelState.IsValid)
             {
                 CurrentUser = await userManager.GetUserAsync(User);
+
+                Accommodation = await AccommodationLogic.GetAccommodationById(AccommodationId);
+
+                if (Accommodation.ApplicationUser.Id == CurrentUser.Id)
+                {
+                    return BadRequest();
+                }
+
                 var datesOccupied = await AccommodationLogic.GetDatesOccupiedForAccommodation(AccommodationId);
 
                 if(datesOccupied.Contains(CheckInDateString) || datesOccupied.Contains(CheckOutDateString))

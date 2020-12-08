@@ -15,7 +15,6 @@ namespace AccommodationBookingApp.Pages
     [Authorize (Roles = "User")]
     public class UpdateAccountModel : PageModel
     {
-        //dodat ovde sve property i onda njih dodat u current user objekt
         private UserLogic userLogic;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
@@ -50,8 +49,8 @@ namespace AccommodationBookingApp.Pages
         }
 
 
-        //u ovom slucaju se nije moglo odmah update usera u controlleru radi optimistic concurrency failure (na dva mista se odjednom
-        //pristupa objektu
+        //Can't update the user here using the userManager's update method due to the optimistic concurrency failure
+        //(caused when multiple users try to change the same object
         public async Task<IActionResult> OnPost()
         {
             ApplicationUser = await userManager.GetUserAsync(User);

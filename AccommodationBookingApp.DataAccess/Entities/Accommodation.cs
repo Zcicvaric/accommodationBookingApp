@@ -20,10 +20,8 @@ namespace AccommodationBookingApp.DataAccess.Entities
         [Required]
         public string Address { get; set; }
         [Required]
-        [Display(Name = "Number of Beds")]
         public int NumberOfBeds { get; set; }
         [Required]
-        [Display(Name = "Price Per Night")]
         public int PricePerNight { get; set; }
         [Required]
         public Currency Currency { get; set; }
@@ -34,6 +32,7 @@ namespace AccommodationBookingApp.DataAccess.Entities
         public AccommodationType AccommodationType { get; set; }
         [Required]
         public ApplicationUser ApplicationUser { get; set; }
+        [Required]
         public string HeaderPhotoFileName { get; set; }
         [Required]
         public string CheckInTime { get; set; }
@@ -41,6 +40,5 @@ namespace AccommodationBookingApp.DataAccess.Entities
         public string CheckOutTime { get; set; }
         [Required]
         public bool UserCanCancelBooking { get; set; }
-        //to add: facilities (Wi-Fi, TV...)
     }
 }

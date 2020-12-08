@@ -2,79 +2,91 @@
 @model AccommodationBookingApp.Pages.BookingsModel
 @{
     <div class="container">
-        <div class="row">
-            <h2>
-                Previous stays
-            </h2>
-        </div>
-        
-        @foreach (AccommodationBookingApp.DataAccess.Entities.Booking previousBooking in Model.PreviousStays)
+        @if (Model.PreviousStays.Count > 0)
         {
             <div class="row">
-                <p>@previousBooking.Accommodation.Name  </p>
-                <p> Status: @previousBooking.ApprovalStatus </p>
-                <p> Check-in Date: @previousBooking.CheckInDate.ToShortDateString() </p>
-                <p> Check-out Date: @previousBooking.CheckOutDate.ToShortDateString() </p>
-                <a asp-page="/BookingDetails" asp-route-bookingId="@previousBooking.Id" asp-route-accommodationId="@previousBooking.Accommodation.Id">See details</a>
+                <h2>
+                    Previous stays
+                </h2>
             </div>
-                
-        }
-       <div class="row">
-            <h2>
-                Upcoming bookings
-            </h2>
-       </div>
 
-        @foreach (AccommodationBookingApp.DataAccess.Entities.Booking upcomingBooking in Model.UpcomingStays)
-        {
-            <div class="row">
-                <p>@upcomingBooking.Accommodation.Name  </p>
-                <p> Status: @upcomingBooking.ApprovalStatus </p>
-                <p> Check-in Date: @upcomingBooking.CheckInDate.ToShortDateString() </p>
-                <p> Check-out Date: @upcomingBooking.CheckOutDate.ToShortDateString() </p>
-                <a asp-page="/BookingDetails" asp-route-bookingId="@upcomingBooking.Id" asp-route-accommodationId="@upcomingBooking.Accommodation.Id">See details</a>
-                @if(upcomingBooking.Accommodation.UserCanCancelBooking && (upcomingBooking.ApprovalStatus == DataAccess.Entities.ApprovalStatus.Pending
-                    || upcomingBooking.ApprovalStatus == DataAccess.Entities.ApprovalStatus.Approved) && upcomingBooking.CheckInDate.Date != DateTime.Today.Date)
-                {
-                    <form method="post">
-                        <button type="submit" class="btn btn-sm btn-danger"
-                                asp-page-handler="UserCancelBooking" asp-route-bookingId="@upcomingBooking.Id">Cancel booking</button>
-                    </form>
-                }
-            </div>
-         }
+            @foreach (AccommodationBookingApp.DataAccess.Entities.Booking previousBooking in Model.PreviousStays)
+            {
+                <div class="row">
+                    <p>@previousBooking.Accommodation.Name  </p>
+                    <p> Status: @previousBooking.ApprovalStatus </p>
+                    <p> Check-in Date: @previousBooking.CheckInDate.ToShortDateString() </p>
+                    <p> Check-out Date: @previousBooking.CheckOutDate.ToShortDateString() </p>
+                    <a asp-page="/BookingDetails" asp-route-bookingId="@previousBooking.Id" asp-route-accommodationId="@previousBooking.Accommodation.Id">See details</a>
+                </div>
 
-        <div class="row">
-            <h2>
-                Declined stays
-            </h2>
-        </div>
-
-        @foreach (AccommodationBookingApp.DataAccess.Entities.Booking declinedBooking in Model.DeclinedStays)
-        {
-            <div class="row">
-                <p>@declinedBooking.Accommodation.Name</p>
-                <p>@declinedBooking.ApprovalStatus</p>
-                <p>@declinedBooking.CheckInDate.ToShortDateString()</p>
-                <p>@declinedBooking.CheckOutDate.ToShortDateString()</p>
-                <a asp-page="/BookingDetails" asp-route-bookingId="@declinedBooking.Id" asp-route-accommodationId="@declinedBooking.Accommodation.Id">See details</a>
-            </div>
+            }
         }
 
-        <div class="row">
-            <h2>
-                Cancelled stays
-            </h2>
-        </div>
+        @if (Model.UpcomingStays.Count > 0)
+        {
+           <div class="row">
+                <h2>
+                    Upcoming bookings
+                </h2>
+           </div>
 
-        @foreach (AccommodationBookingApp.DataAccess.Entities.Booking cancelledBooking in Model.CancelledStays)
+            @foreach (AccommodationBookingApp.DataAccess.Entities.Booking upcomingBooking in Model.UpcomingStays)
+            {
+                <div class="row">
+                    <p>@upcomingBooking.Accommodation.Name  </p>
+                    <p> Status: @upcomingBooking.ApprovalStatus </p>
+                    <p> Check-in Date: @upcomingBooking.CheckInDate.ToShortDateString() </p>
+                    <p> Check-out Date: @upcomingBooking.CheckOutDate.ToShortDateString() </p>
+                    <a asp-page="/BookingDetails" asp-route-bookingId="@upcomingBooking.Id" asp-route-accommodationId="@upcomingBooking.Accommodation.Id">See details</a>
+                </div>
+            }
+        }
+
+        @if (Model.DeclinedStays.Count > 0)
         {
             <div class="row">
-                <p>@cancelledBooking.Accommodation.Name</p>
-                <p>@cancelledBooking.ApprovalStatus</p>
-                <p>@cancelledBooking.CheckInDate.ToShortDateString()</p>
-                <p>@cancelledBooking.CheckOutDate.ToShortDateString()</p>
-                <a asp-page="/BookingDetails" asp-route-bookingId="@cancelledBooking.Id" asp-route-accommodationId="@cancelledBooking.Accommodation.Id">See details</a>
+                <h2>
+                    Declined stays
+                </h2>
+            </div>
+
+            @foreach (AccommodationBookingApp.DataAccess.Entities.Booking declinedBooking in Model.DeclinedStays)
+            {
+                <div class="row">
+                    <p>@declinedBooking.Accommodation.Name</p>
+                    <p>@declinedBooking.ApprovalStatus</p>
+                    <p>@declinedBooking.CheckInDate.ToShortDateString()</p>
+                    <p>@declinedBooking.CheckOutDate.ToShortDateString()</p>
+                    <a asp-page="/BookingDetails" asp-route-bookingId="@declinedBooking.Id" asp-route-accommodationId="@declinedBooking.Accommodation.Id">See details</a>
+                </div>
+            }
+        }
+
+        @if (Model.CancelledStays.Count > 0)
+        {
+            <div class="row">
+                <h2>
+                    Cancelled stays
+                </h2>
+            </div>
+
+            @foreach (AccommodationBookingApp.DataAccess.Entities.Booking cancelledBooking in Model.CancelledStays)
+            {
+                <div class="row">
+                    <p>@cancelledBooking.Accommodation.Name</p>
+                    <p>@cancelledBooking.ApprovalStatus</p>
+                    <p>@cancelledBooking.CheckInDate.ToShortDateString()</p>
+                    <p>@cancelledBooking.CheckOutDate.ToShortDateString()</p>
+                    <a asp-page="/BookingDetails" asp-route-bookingId="@cancelledBooking.Id" asp-route-accommodationId="@cancelledBooking.Accommodation.Id">See details</a>
+                </div>
+            }
+        }
+
+        @if (Model.PreviousStays.Count == 0 && Model.UpcomingStays.Count == 0 && Model.DeclinedStays.Count == 0 && Model.CancelledStays.Count == 0)
+        {
+            <div class="row">
+                <label>No bookings yet!</label>
             </div>
         }
     </div>

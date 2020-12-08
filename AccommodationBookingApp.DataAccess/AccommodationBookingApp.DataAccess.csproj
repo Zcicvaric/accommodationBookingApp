@@ -39,6 +39,10 @@
     <Compile Remove="Migrations\20201122173526_updated the ApplicationUser Model to sup.Designer.cs" />
     <Compile Remove="Migrations\20201129171110_Made the email column of the users table required.cs" />
     <Compile Remove="Migrations\20201129171110_Made the email column of the users table required.Designer.cs" />
+    <Compile Remove="Migrations\20201206155047_test changes in ApplicationUser Model.cs" />
+    <Compile Remove="Migrations\20201206155047_test changes in ApplicationUser Model.Designer.cs" />
+    <Compile Remove="Migrations\20201207203803_test.cs" />
+    <Compile Remove="Migrations\20201207203803_test.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

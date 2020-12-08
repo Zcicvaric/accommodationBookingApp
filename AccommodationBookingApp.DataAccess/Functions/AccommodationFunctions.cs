@@ -18,21 +18,18 @@ namespace AccommodationBookingApp.DataAccess.Functions
         {
             Context = new DatabaseContext(DatabaseContext.optionsBuild.dbContextOptions);
         }
-        public async Task<Accommodation> CreateAccommodation(Accommodation accommodation,
-                                                             string applicationUserId)
+        public async Task<Accommodation> CreateAccommodation(Accommodation accommodation, int accommodationTypeId, string accommodationOwnerUsername)
         {
-
             AccommodationType accommodationType = await Context.AccommodationType.Where(accommodationType =>
-                                                                                  accommodationType.Id == accommodation.AccommodationType.Id)
+                                                                                  accommodationType.Id == accommodationTypeId)
                                                                                   .FirstOrDefaultAsync();
 
-            ApplicationUser applicationUser = await Context.Users.Where(applicationUser =>
-                                                                  applicationUser.Id == applicationUserId)
-                                                                  .FirstOrDefaultAsync();
+            ApplicationUser applicationUser = await Context.Users.Where(user =>
+                                                                        user.UserName == accommodationOwnerUsername)
+                                                                        .FirstOrDefaultAsync();
 
             accommodation.AccommodationType = accommodationType;
             accommodation.ApplicationUser = applicationUser;
-
 
             await Context.Accommodations.AddAsync(accommodation);
             await Context.SaveChangesAsync();

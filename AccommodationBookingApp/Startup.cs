@@ -54,6 +54,11 @@ namespace AccommodationBookingApp
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                //this dosen't redirect you to the error page, but instead issues a proper 404/400 error and keeps the original URL
+                app.UseStatusCodePagesWithReExecute("/{0}");
+            }
 
             app.UseHttpsRedirection();
 

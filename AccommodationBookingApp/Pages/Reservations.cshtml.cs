@@ -16,11 +16,10 @@ namespace AccommodationBookingApp.Pages
     {
         private UserManager<ApplicationUser> UserManager;
         private BookingLogic BookingLogic = new BookingLogic();
-        [BindProperty]
+
+
         public List<Booking> PendingReservations { get; set; }
-        [BindProperty]
         public List<Booking> ApprovedReservations { get; set; }
-        [BindProperty]
         public List<Booking> PreviousReservations { get; set; }
         public List<Booking> DeclinedReservations { get; set; }
         public List<Booking> CancelledReservations { get; set; }
@@ -47,6 +46,11 @@ namespace AccommodationBookingApp.Pages
 
         public async Task<IActionResult> OnGetForAccommodation(int accommodationId)
         {
+            if (accommodationId == 0)
+            {
+                return BadRequest();
+            }
+
             var accommodationLogic = new AccommodationLogic();
             var accommodation = await accommodationLogic.GetAccommodationById(accommodationId);
 
@@ -62,6 +66,7 @@ namespace AccommodationBookingApp.Pages
             PreviousReservations = await BookingLogic.GetAllPreviousReservationsForAccommodation(accommodationId);
             DeclinedReservations = await BookingLogic.GetAllDeclinedReservationsForAccommodation(accommodationId);
             CancelledReservations = await BookingLogic.GetAllCancelledReservationsForAccommodation(accommodationId);
+
             if (accommodation.UserCanCancelBooking)
             {
                 CancelledByUserReservations = await BookingLogic.GetAllCancelledByUserReservationsForAccommodation(accommodationId);
@@ -69,41 +74,6 @@ namespace AccommodationBookingApp.Pages
             
             return Page();
             
-        }
-        public async Task<IActionResult> OnPostApproveBooking(int bookingId)
-        {
-            var result = await BookingLogic.ApproveBooking(bookingId);
-
-            if(result)
-            {
-                //RedirectToPage is used to make it run the onGet method again to initialise the data once again
-                return RedirectToPage("/Reservations");
-            }
-
-            return Page();
-        }
-        public async Task<IActionResult> OnPostDeclineBooking(int bookingId)
-        {
-            var result = await BookingLogic.DeclineBooking(bookingId);
-
-            if(result)
-            {
-                return RedirectToPage("/Reservations");
-            }
-
-            return Page();
-        }
-
-        public async Task<IActionResult> OnPostCancelBooking(int bookingId)
-        {
-            var result = await BookingLogic.CancelBooking(bookingId);
-
-            if(result)
-            {
-                return RedirectToPage("/Reservations");
-            }
-
-            return Page();
         }
     }
 }
