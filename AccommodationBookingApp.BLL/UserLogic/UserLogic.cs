@@ -63,7 +63,7 @@ namespace AccommodationBookingApp.BLL.UserLogic
         }
         
 
-        public async Task<bool> SignInUser(string username, string password)
+        public async Task<bool> SignInUser(string username, string password, bool permanentCookie)
         {
             ApplicationUser user = await userManager.FindByNameAsync(username);
             
@@ -72,7 +72,7 @@ namespace AccommodationBookingApp.BLL.UserLogic
                 return false;
             }
 
-            return await _user.SignInUser(user, password);
+            return await _user.SignInUser(user, password, permanentCookie);
         }
 
         public async Task<bool> SignOutUser()

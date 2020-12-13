@@ -58,13 +58,13 @@ namespace AccommodationBookingApp.DataAccess.Functions
             return result;
         }
 
-        public async Task<bool> SignInUser(ApplicationUser user, string password)
+        public async Task<bool> SignInUser(ApplicationUser user, string password, bool permanentCookie)
         {
             var userObject = await userManager.FindByEmailAsync(user.Email);
 
             if (userObject != null)
             {
-                var signInResult = await signInManager.PasswordSignInAsync(userObject, password, true, false);
+                var signInResult = await signInManager.PasswordSignInAsync(userObject, password, permanentCookie, false);
 
                 if (signInResult.Succeeded)
                 {

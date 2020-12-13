@@ -28,7 +28,9 @@ namespace AccommodationBookingApp.Pages
         public string Email { get; set; }
 
         [Required]
+        [RegularExpression (@"^([A-Ža-ž]{1,}\s?){1,}\s(\d{1,}[A-Ža-ž]{0,2})$", ErrorMessage = "Address needs to have the street name and street numbe, for example: Kopilica 5")]
         public string Address { get; set; }
+
         [Required]
         public string City { get; set; }
 

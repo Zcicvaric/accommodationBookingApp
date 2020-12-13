@@ -25,6 +25,8 @@ namespace AccommodationBookingApp.Pages
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+        [BindProperty]
+        public bool PermanentCookie { get; set; }
         public string ErrorMessage { get; set; }
 
         private UserLogic userLogic;
@@ -43,7 +45,7 @@ namespace AccommodationBookingApp.Pages
         {
             if (ModelState.IsValid)
             {
-                bool result = await userLogic.SignInUser(Username, Password);
+                bool result = await userLogic.SignInUser(Username, Password, PermanentCookie);
 
                 if (!result)
                 {

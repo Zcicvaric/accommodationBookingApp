@@ -20,10 +20,12 @@ namespace AccommodationBookingApp.Pages
         [BindProperty]
         [Required]
         [DataType (DataType.Password)]
+        [Display (Name = "Old Password")]
         public string OldPassword { get; set; }
         [BindProperty]
         [Required]
         [DataType (DataType.Password)]
+        [Display (Name = "New Password")]
         public string NewPassword { get; set; }
         [DataType (DataType.Password)]
         [Compare("NewPassword", ErrorMessage ="Passwords must match!")]

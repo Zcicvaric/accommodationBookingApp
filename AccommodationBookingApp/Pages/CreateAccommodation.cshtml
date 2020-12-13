@@ -1,8 +1,7 @@
 ﻿@page
 @model AccommodationBookingApp.Pages.CreateAccommodationModel
-@using Microsoft.AspNetCore.Identity;
 @{
-    ViewData["Title"] = "CreateAccommodation";
+    ViewData["Title"] = "Create New Accommodation";
 }
 
 <form enctype="multipart/form-data" method="post">
@@ -66,12 +65,12 @@
     </div>
     <div class="form-group row">
         <label>Header photo</label>
-        <input asp-for="AccommodationHeaderPhoto" accept="image/jpeg, image/png" class="form-control" placeholder="Select a photo to upload..."/>
+        <input asp-for="AccommodationHeaderPhoto" accept="image/jpeg, image/png" class="form-control-file" placeholder="Select a photo to upload..."/>
         <span asp-validation-for="AccommodationHeaderPhoto" class="text-warning"></span>
     </div>
     <div class="form-group row">
         <label>Photos</label>
-        <input asp-for="AccommodationPhotos" accept="image/jpeg, image/png" multiple class="form-control" placeholder="Select multiple photos to upload..." />
+        <input asp-for="AccommodationPhotos" accept="image/jpeg, image/png" multiple class="form-control-file" placeholder="Select multiple photos to upload..." />
         <span asp-validation-for="AccommodationPhotos" class="text-warning"></span>
     </div>
     

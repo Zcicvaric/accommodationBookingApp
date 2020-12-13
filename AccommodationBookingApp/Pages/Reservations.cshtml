@@ -1,6 +1,9 @@
 ﻿@page
 @model AccommodationBookingApp.Pages.ReservationsModel
 @{
+    ViewData["Title"] = "Your reservations";
+}
+@{
 
     @if (Model.PendingReservations != null && Model.PendingReservations.Count > 0)
     {
@@ -109,7 +112,7 @@
                 <p>@booking.CheckInDate.ToShortDateString()</p>
                 <p>@booking.CheckOutDate.ToShortDateString()</p>
                 <p>@booking.ApplicationUser.UserName</p>
-                <a asp-page="/AccommodationDetails" asp-route-bookingId="@booking.Id" asp-route-accommodationId="@booking.Accommodation.Id">See details</a>
+                <a asp-page="/BookingDetails" asp-route-bookingId="@booking.Id" asp-route-accommodationId="@booking.Accommodation.Id">See details</a>
             </div>
         }
     }

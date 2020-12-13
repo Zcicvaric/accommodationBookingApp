@@ -44,7 +44,7 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
 
                 if(result.Id > 0)
                 {
-                    string directoryPath = Path.Combine(accommodationImagesFolder, name);
+                    string directoryPath = Path.Combine(accommodationImagesFolder, (name + "_" + result.Id.ToString()));
                     string headerFolderPath = Path.Combine(directoryPath, "Header");
                     Directory.CreateDirectory(directoryPath);
                     Directory.CreateDirectory(headerFolderPath);
@@ -55,7 +55,7 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
                     foreach (IFormFile formFile in AcommodationPhotos)
                     {
                         var photoFileName = Guid.NewGuid().ToString() + "_" + formFile.FileName;
-                        string photoFilePath = Path.Combine(accommodationImagesFolder, name, photoFileName);
+                        string photoFilePath = Path.Combine(accommodationImagesFolder, (name + "_" + result.Id.ToString()), photoFileName);
                         await formFile.CopyToAsync(new FileStream(photoFilePath, FileMode.Create));
                     }
 

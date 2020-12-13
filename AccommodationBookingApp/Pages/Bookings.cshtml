@@ -1,5 +1,8 @@
 ﻿@page
 @model AccommodationBookingApp.Pages.BookingsModel
+@{ 
+    ViewData["Title"] = "Your Bookings";
+}
 @{
     <div class="container">
         @if (Model.PreviousStays.Count > 0)

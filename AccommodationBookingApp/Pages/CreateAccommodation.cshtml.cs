@@ -28,6 +28,7 @@ namespace AccommodationBookingApp.Pages
         public string City { get; set; }
         [Required]
         [BindProperty]
+        [RegularExpression (@"^([A-Ža-ž]{1,}\s?){1,}\s(\d{1,}[A-Ža-ž]{0,2})$", ErrorMessage = "Address needs to have the street name and street number, for example: Kopilica 5")]
         public string Address { get; set; }
         [Required]
         [BindProperty]
@@ -57,11 +58,11 @@ namespace AccommodationBookingApp.Pages
         [Display (Name = "Check-out time")]
         public string CheckOutTime { get; set; }
         public object WebRootPath { get; private set; }
-        [Required]
+        [Required (ErrorMessage = "Please select one or more photos")]
         [BindProperty]
         [Display (Name = "Header photo")]
         public List<IFormFile> AccommodationPhotos { get; set; }
-        [Required]
+        [Required (ErrorMessage = "Please select a header photo")]
         [BindProperty]
         [Display (Name = "Photos")]
         public IFormFile AccommodationHeaderPhoto { get; set; }

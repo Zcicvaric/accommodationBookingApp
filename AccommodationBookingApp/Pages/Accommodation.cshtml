@@ -1,13 +1,13 @@
 ﻿@page
 @model AccommodationBookingApp.Pages.AccommodationModel
-
 @{
+    ViewData["Title"] = "Your accommodations";
 }
 @if (Model.Accommodations != null & Model.Accommodations.Count > 0)
 {
     @foreach (AccommodationBookingApp.DataAccess.Entities.Accommodation accommodation in Model.Accommodations)
     {
-        var imagePath = "~/accommodationPhotos/" + @accommodation.Name + "/Header/" + accommodation.HeaderPhotoFileName;
+        var imagePath = "~/accommodationPhotos/" + @accommodation.Name + "_" + accommodation.Id.ToString() + "/Header/" + accommodation.HeaderPhotoFileName;
         <div>
             <h1><a asp-page="/AccommodationDetails" asp-route-accommodationId="@accommodation.Id">@accommodation.Name</a></h1>
             <p>Number of beds: @accommodation.NumberOfBeds</p>
