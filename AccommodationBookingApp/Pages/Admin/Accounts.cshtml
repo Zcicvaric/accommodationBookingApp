@@ -1,0 +1,55 @@
+﻿@page
+@model AccommodationBookingApp.Pages.Admin.AccountsModel
+@{ 
+    ViewData["Title"] = "List of all accounts";
+}
+@{
+    <div class="container">
+        @if (Model.HostAccounts.Count > 0)
+        {
+            <div class="row">
+                <h2>Host accounts</h2>
+            </div>
+            @foreach (var HostAccount in Model.HostAccounts)
+            {
+                <div class="row">
+                    <label>First Name</label>
+                    <p>@HostAccount.FirstName</p>
+                    <label>Last Name</label>
+                    <p>@HostAccount.LastName</p>
+                    <label>Email</label>
+                    <p>@HostAccount.Email</p>
+                </div>
+                <div class="row">
+                    <a asp-page="/Bookings" asp-page-handler="UserBookings" asp-route-username="@HostAccount.UserName"
+                       class="btn btn-info">See all bookings</a>
+                    <a asp-page="/Accommodation" asp-page-handler="AccommodationsForHost" asp-route-username="@HostAccount.UserName"
+                       class="btn btn-info">See all accommodations owned by host</a>
+                    <a asp-page="/Account" asp-page-handler="AccountDetailsForUser" asp-route-username="@HostAccount.UserName"
+                       class="btn btn-info">See account details</a>
+                </div>
+            }
+        }
+        @if (Model.UserAccounts.Count > 0)
+        {
+            <div class="row">
+                <h2>User accounts</h2>
+            </div>
+            @foreach (var UserAccount in Model.UserAccounts)
+            {
+                <div class="row">
+                    <label>First Name</label>
+                    <p>@UserAccount.FirstName</p>
+                    <label>Last Name</label>
+                    <p>@UserAccount.LastName</p>
+                    <label>Email</label>
+                    <p>@UserAccount.Email</p>
+                </div>
+                <div class="row">
+                    <a asp-page="/Bookings" asp-page-handler="UserBookings" asp-route-username="@UserAccount.UserName"
+                       class="btn btn-info">See all bookings</a>
+                </div>
+            }
+        }
+    </div>
+}

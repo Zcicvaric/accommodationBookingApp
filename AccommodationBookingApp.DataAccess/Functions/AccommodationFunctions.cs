@@ -40,7 +40,8 @@ namespace AccommodationBookingApp.DataAccess.Functions
         public async Task<List<Accommodation>> GetAllAccommodations()
         {
             List<Accommodation> accommodations = new List<Accommodation>();
-            accommodations = await Context.Accommodations.Include("AccommodationType").ToListAsync();
+            accommodations = await Context.Accommodations.Include("AccommodationType").Include("ApplicationUser")
+                                   .ToListAsync();
 
             return accommodations;
         }

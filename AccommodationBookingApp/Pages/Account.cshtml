@@ -27,17 +27,10 @@
             <h4>Type of account</h4>
         </div>
         <div class="row">
-            @if (User.IsInRole("Host"))
-            {
-                <p>Host account</p>
-            }
-            @if (User.IsInRole("User"))
-            {
-                <p>User account</p>
-            }
+            <p>@Model.UserRole account</p>
         </div>
         
-        @if (User.IsInRole("Host"))
+        @if (Model.UserRole == "Host")
         {
             <div class="row">
                 <h4>Address</h4>
@@ -64,9 +57,12 @@
                 <p>@Model.ApplicationUser.PhoneNumber</p>
             </div>
         }
-        <div class="row">
-            <a asp-page="/ChangePassword" class="btn btn-warning">Change password</a>
-        </div>
+        @if (User.Identity.Name == Model.ApplicationUser.UserName)
+        {
+            <div class="row">
+                <a asp-page="/ChangePassword" class="btn btn-warning">Change password</a>
+            </div>
+        }
         <div class="row">
         @if (User.IsInRole("User"))
         {

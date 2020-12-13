@@ -32,7 +32,7 @@
         <h4>Price per night</h4>
         <label>@Model.Accommodation.PricePerNight @Model.Accommodation.Currency</label>
     </div>
-    @if (User.Identity.IsAuthenticated && (Model.CurrentUser.Id != Model.Accommodation.ApplicationUser.Id))
+    @if (User.Identity.IsAuthenticated && !User.IsInRole("Admin") && (Model.CurrentUser.Id != Model.Accommodation.ApplicationUser.Id))
     {
         <form method="post">
             <h4>Check-in date:</h4>

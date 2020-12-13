@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace AccommodationBookingApp.Pages
 {
-    [Authorize (Roles = "Host")]
+    [Authorize (Roles = "Host, Admin")]
     public class ReservationsModel : PageModel
     {
         private UserManager<ApplicationUser> UserManager;
@@ -56,9 +56,9 @@ namespace AccommodationBookingApp.Pages
 
             CurrentUser = await UserManager.GetUserAsync(User);
 
-            if (accommodation.ApplicationUser.Id != CurrentUser.Id)
+            if (accommodation.ApplicationUser.Id != CurrentUser.Id && !User.IsInRole("Admin"))
             {
-                return RedirectToPage("/Login");
+                return Unauthorized();
             }
 
             PendingReservations = await BookingLogic.GetAllPendingReservationsForAccommodation(accommodationId);

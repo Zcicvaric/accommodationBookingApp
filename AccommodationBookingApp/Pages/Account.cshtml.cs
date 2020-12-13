@@ -16,6 +16,7 @@ namespace AccommodationBookingApp.Pages
     {
         public ApplicationUser ApplicationUser { get; set; }
         private readonly UserManager<ApplicationUser> userManager;
+        public string UserRole { get; set; }
 
         public AccountModel(UserManager<ApplicationUser> userManager)
         {
@@ -25,6 +26,25 @@ namespace AccommodationBookingApp.Pages
         public async Task<IActionResult> OnGet()
         {
             ApplicationUser = await userManager.GetUserAsync(User);
+            var roles = await userManager.GetRolesAsync(ApplicationUser);
+
+            UserRole = roles.FirstOrDefault();
+
+            return Page();
+        }
+
+        public async Task<IActionResult> OnGetAccountDetailsForUserAsync(string username)
+        {
+            if (!User.IsInRole("Admin"))
+            {
+                return Unauthorized();
+            }
+
+            ApplicationUser = await userManager.FindByNameAsync(username);
+
+            var roles = await userManager.GetRolesAsync(ApplicationUser);
+
+            UserRole = roles.FirstOrDefault();
 
             return Page();
         }

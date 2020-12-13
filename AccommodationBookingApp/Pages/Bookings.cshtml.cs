@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace AccommodationBookingApp.Pages
 {
-    [Authorize (Roles = "User, Host")]
+    [Authorize]
     public class BookingsModel : PageModel
     {
         private BookingLogic BookingLogic = new BookingLogic();
@@ -21,6 +21,7 @@ namespace AccommodationBookingApp.Pages
         public List<Booking> UpcomingStays { get; set; }
         public List<Booking> DeclinedStays { get; set; }
         public List<Booking> CancelledStays { get; set; }
+        public string Username { get; set; }
 
         public BookingsModel(UserManager<ApplicationUser> userManager)
         {
@@ -28,11 +29,36 @@ namespace AccommodationBookingApp.Pages
         }
         public async Task<IActionResult> OnGetAsync()
         {
+            if (User.IsInRole("Admin"))
+            {
+                return BadRequest();
+            }
+
             ApplicationUser = await UserManager.GetUserAsync(User);
             PreviousStays = await BookingLogic.GetAllPreviousStaysForUser(ApplicationUser.Id);
             UpcomingStays = await BookingLogic.GetAllUpcomingStaysForUser(ApplicationUser.Id);
             DeclinedStays = await BookingLogic.GetAllDeclinedStaysForUser(ApplicationUser.Id);
             CancelledStays = await BookingLogic.GetAllCancelledStaysForUser(ApplicationUser.Id);
+
+            return Page();
+        }
+
+        public async Task<IActionResult> OnGetUserBookingsAsync(string username)
+        {
+            if (!User.IsInRole("Admin"))
+            {
+                return Unauthorized();
+            }
+
+            ApplicationUser = await UserManager.FindByNameAsync(username);
+
+            Username = ApplicationUser.FirstName + " " + ApplicationUser.LastName;
+
+            PreviousStays = await BookingLogic.GetAllPreviousStaysForUser(ApplicationUser.Id);
+            UpcomingStays = await BookingLogic.GetAllUpcomingStaysForUser(ApplicationUser.Id);
+            DeclinedStays = await BookingLogic.GetAllDeclinedStaysForUser(ApplicationUser.Id);
+            CancelledStays = await BookingLogic.GetAllCancelledStaysForUser(ApplicationUser.Id);
+
 
             return Page();
         }

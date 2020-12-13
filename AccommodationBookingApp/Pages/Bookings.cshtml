@@ -1,10 +1,26 @@
 ﻿@page
 @model AccommodationBookingApp.Pages.BookingsModel
-@{ 
-    ViewData["Title"] = "Your Bookings";
+@{
+    if (Model.Username != null)
+    {
+        ViewData["Title"] = "All bookings for " + Model.Username;
+    }
+    else
+    {
+        ViewData["Title"] = "Your Bookings";
+    }
 }
 @{
     <div class="container">
+        @if (Model.Username != null && (Model.PreviousStays.Count > 0 || Model.UpcomingStays.Count > 0 ||
+                                        Model.DeclinedStays.Count > 0 || Model.CancelledStays.Count > 0))
+        {
+            <div class="row">
+                <h2>
+                    All bookings for user: @Model.Username
+                </h2>
+            </div>
+        }
         @if (Model.PreviousStays.Count > 0)
         {
             <div class="row">

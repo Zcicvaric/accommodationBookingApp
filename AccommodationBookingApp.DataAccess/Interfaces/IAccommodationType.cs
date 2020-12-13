@@ -10,5 +10,6 @@ namespace AccommodationBookingApp.DataAccess.Interfaces
     {
         Task<AccommodationType> GetAccommodationTypeById(int accommodationTypeId);
         Task<List<AccommodationType>> GetAllAccommodationTypes();
+        Task<AccommodationType> AddAccommodationType(AccommodationType accommodationType);
     }
 }

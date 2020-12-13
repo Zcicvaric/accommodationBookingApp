@@ -12,5 +12,7 @@ namespace AccommodationBookingApp.DataAccess.Interfaces
         Task<IdentityResult> CreateNewUser(ApplicationUser applicationUser, string password, bool registerAsHost);
         Task<bool> SignInUser(ApplicationUser user, string password, bool permanentCookie);
         Task<bool> SignOutUser();
+        Task<List<ApplicationUser>> GetAllUserAccountsAsync();
+        Task<List<ApplicationUser>> GetAllHostAccountsAsync();
     }
 }

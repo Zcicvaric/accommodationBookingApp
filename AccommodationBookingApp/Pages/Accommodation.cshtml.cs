@@ -14,7 +14,7 @@ using Microsoft.Extensions.Hosting.Internal;
 
 namespace AccommodationBookingApp.Pages
 {
-    [Authorize (Roles = "Host")]
+    [Authorize (Roles = "Host, Admin")]
     public class AccommodationModel : PageModel
     {
         private AccommodationLogic AccommodationLogic;
@@ -22,6 +22,7 @@ namespace AccommodationBookingApp.Pages
         public List<Accommodation> Accommodations { get; set; }
         public string HeaderImageFolderPath { get; set; }
         public IWebHostEnvironment WebHostEnvironment { get; }
+        public string Username { get; set; }
 
         public AccommodationModel(UserManager<ApplicationUser> userManager,
                                   IWebHostEnvironment webHostEnvironment)
@@ -37,6 +38,22 @@ namespace AccommodationBookingApp.Pages
             {
                 return RedirectToPage("/Login");
             }
+            Accommodations = await AccommodationLogic.GetAccommodationsWithUserId(user.Id);
+
+            return Page();
+        }
+
+        public async Task<IActionResult> OnGetAccommodationsForHost(string username)
+        {
+            if (!User.IsInRole("Admin"))
+            {
+                return Unauthorized();
+            }
+
+            var user = await UserManager.FindByNameAsync(username);
+
+            Username = user.FirstName + " " + user.LastName;
+
             Accommodations = await AccommodationLogic.GetAccommodationsWithUserId(user.Id);
 
             return Page();

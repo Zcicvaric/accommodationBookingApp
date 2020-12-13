@@ -17,6 +17,7 @@ namespace AccommodationBookingApp.DataAccess.Functions
 {
     public class UserFunctions : IUser
     {
+
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly RoleManager<IdentityRole> roleManager;
@@ -34,6 +35,10 @@ namespace AccommodationBookingApp.DataAccess.Functions
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
+        }
+        public UserFunctions(UserManager<ApplicationUser> userManager)
+        {
+            this.userManager = userManager;
         }
 
         public async Task<IdentityResult> CreateNewUser(ApplicationUser newUser, string password, bool registerAsHost)
@@ -82,6 +87,19 @@ namespace AccommodationBookingApp.DataAccess.Functions
             return true;
         }
 
+        public async Task<List<ApplicationUser>> GetAllUserAccountsAsync()
+        {
+            var users = await userManager.GetUsersInRoleAsync("User");
+
+            return (List<ApplicationUser>)users;
+        }
+
+        public async Task<List<ApplicationUser>> GetAllHostAccountsAsync()
+        {
+            var hosts = await userManager.GetUsersInRoleAsync("Host");
+
+            return (List<ApplicationUser>)hosts;
+        }
 
 
     }

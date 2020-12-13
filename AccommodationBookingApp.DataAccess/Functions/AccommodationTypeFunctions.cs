@@ -31,5 +31,14 @@ namespace AccommodationBookingApp.DataAccess.Functions
             accommodationTypes = await Context.AccommodationType.ToListAsync();
             return accommodationTypes;
         }
+
+        public async Task<AccommodationType> AddAccommodationType(AccommodationType accommodationType)
+        {
+            await Context.AccommodationType.AddAsync(accommodationType);
+
+            await Context.SaveChangesAsync();
+
+            return accommodationType;
+        }
     }
 }

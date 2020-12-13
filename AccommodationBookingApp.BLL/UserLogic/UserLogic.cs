@@ -29,6 +29,7 @@ namespace AccommodationBookingApp.BLL.UserLogic
         public UserLogic(UserManager<ApplicationUser> userManager)
         {
             this.userManager = userManager;
+            _user = new DataAccess.Functions.UserFunctions(userManager);
         }
 
         public async Task<IdentityResult> CreateNewUser(string firstName, string lastName, 
@@ -107,6 +108,16 @@ namespace AccommodationBookingApp.BLL.UserLogic
             hostToUpdate.Country = country;
 
             return await userManager.UpdateAsync(hostToUpdate);
+        }
+
+        public async Task<List<ApplicationUser>> GetAllUserAccountsAsync()
+        {
+            return await _user.GetAllUserAccountsAsync();
+        }
+
+        public async Task<List<ApplicationUser>> GetAllHostAccountsAsync()
+        {
+            return await _user.GetAllHostAccountsAsync();
         }
 
 

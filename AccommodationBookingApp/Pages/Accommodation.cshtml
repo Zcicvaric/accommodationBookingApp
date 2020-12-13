@@ -1,10 +1,23 @@
 ﻿@page
 @model AccommodationBookingApp.Pages.AccommodationModel
 @{
-    ViewData["Title"] = "Your accommodations";
+    if (Model.Username != null)
+    {
+        ViewData["Title"] = "All accommodations for: " + Model.Username;
+    }
+    else
+    {
+        ViewData["Title"] = "Your accommodations";
+    }
 }
 @if (Model.Accommodations != null & Model.Accommodations.Count > 0)
 {
+    @if (Model.Username != null)
+    {
+        <div class="row">
+            <h2>All accommodations owned by: @Model.Username</h2>
+        </div>
+    }
     @foreach (AccommodationBookingApp.DataAccess.Entities.Accommodation accommodation in Model.Accommodations)
     {
         var imagePath = "~/accommodationPhotos/" + @accommodation.Name + "_" + accommodation.Id.ToString() + "/Header/" + accommodation.HeaderPhotoFileName;
@@ -20,12 +33,19 @@
     }
 }
 
-@if (Model.Accommodations != null && Model.Accommodations.Count == 0)
+@if (Model.Accommodations != null && Model.Accommodations.Count == 0 && User.IsInRole("Host"))
 {
-    <div>
+    <div class="row">
         <h2>You have no accommodations yet</h2>
         <label>Would you like to create a new one?</label>
         <a asp-page="/CreateAccommodation">Click here to create a new accommodation</a>
+    </div>
+}
+
+@if (Model.Accommodations != null && Model.Accommodations.Count == 0 && User.IsInRole("Admin"))
+{
+    <div class="row">
+        <h4>Host has no accommodations yet</h4>
     </div>
 }
 
