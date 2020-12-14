@@ -43,6 +43,8 @@
     <Compile Remove="Migrations\20201206155047_test changes in ApplicationUser Model.Designer.cs" />
     <Compile Remove="Migrations\20201207203803_test.cs" />
     <Compile Remove="Migrations\20201207203803_test.Designer.cs" />
+    <Compile Remove="Migrations\20201214172057_added Currency table, replaced the enum in Accommodation table with a FK to Currency Table.cs" />
+    <Compile Remove="Migrations\20201214172057_added Currency table, replaced the enum in Accommodation table with a FK to Currency Table.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

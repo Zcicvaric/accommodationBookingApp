@@ -16,7 +16,7 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
         private IAccommodation _accommodation = new DataAccess.Functions.AccommodationFunctions();
         private BookingLogic bookingLogic = new BookingLogic();
 
-        public async Task<Boolean> CreateNewAccomodation(string name, string city, string address, int numberOfBeds, int pricePerNight, Currency currency,
+        public async Task<Boolean> CreateNewAccomodation(string name, string city, string address, int numberOfBeds, int pricePerNight, int currencyId,
                                                          bool requireApproval, int accommodationTypeId, string checkInTime, string checkOutTime, 
                                                          string accommodationOwnerUsername, bool userCanCancelBooking, string accommodationImagesFolder, IFormFile AccommodationHeaderPhoto,
                                                          List<IFormFile> AcommodationPhotos)
@@ -28,7 +28,6 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
                 Address = address,
                 NumberOfBeds = numberOfBeds,
                 PricePerNight = pricePerNight,
-                Currency = currency,
                 RequireApproval = requireApproval,
                 CheckInTime = checkInTime,
                 CheckOutTime = checkOutTime,
@@ -40,7 +39,7 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
                 var headerPhotoFileName = Guid.NewGuid().ToString() + "_" + AccommodationHeaderPhoto.FileName;
                 newAccommodation.HeaderPhotoFileName = headerPhotoFileName;
 
-                var result = await _accommodation.CreateAccommodation(newAccommodation, accommodationTypeId, accommodationOwnerUsername);
+                var result = await _accommodation.CreateAccommodation(newAccommodation, accommodationTypeId, currencyId, accommodationOwnerUsername);
 
                 if(result.Id > 0)
                 {

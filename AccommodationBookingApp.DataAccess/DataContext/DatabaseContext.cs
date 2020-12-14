@@ -33,5 +33,6 @@ namespace AccommodationBookingApp.DataAccess.DataContext
         public DbSet<AccommodationType> AccommodationType { get; set; }
         public DbSet<Accommodation> Accommodations { get; set; }
         public DbSet<Booking> Bookings { get; set; }
+        public DbSet<Currency> Currencies { get; set; }
     }
 }

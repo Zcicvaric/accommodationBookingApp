@@ -28,8 +28,8 @@
     <div class="form-group row">
         <label>Price per night</label>
         <input min="1" asp-for="PricePerNight" class="form-control mr-1" style="width: 80%;" />
-        <select asp-for="Currency"
-                asp-items="@Html.GetEnumSelectList<AccommodationBookingApp.DataAccess.Entities.Currency>()">
+        <select asp-for="CurrencyId"
+                asp-items="@(new SelectList(Model.Currencies, "Id", "Name"))">
         </select>
         <span asp-validation-for="PricePerNight" class="text-warning"></span>
     </div>

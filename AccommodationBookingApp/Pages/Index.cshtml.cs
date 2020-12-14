@@ -11,12 +11,9 @@ namespace AccommodationBookingApp.Pages
 {
     public class IndexModel : PageModel
     {
-        private AccommodationLogic AccommodationLogic = new AccommodationLogic();
-        public List<Accommodation> Accommodations { get; set; }
-        public async Task<IActionResult> OnGetAsync()
-        {
-            Accommodations = await AccommodationLogic.GetAccommodations();
 
+        public IActionResult OnGet()
+        {
             return Page();
         }
     }

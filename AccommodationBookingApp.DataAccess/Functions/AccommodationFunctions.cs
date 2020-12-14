@@ -18,17 +18,21 @@ namespace AccommodationBookingApp.DataAccess.Functions
         {
             Context = new DatabaseContext(DatabaseContext.optionsBuild.dbContextOptions);
         }
-        public async Task<Accommodation> CreateAccommodation(Accommodation accommodation, int accommodationTypeId, string accommodationOwnerUsername)
+        public async Task<Accommodation> CreateAccommodation(Accommodation accommodation, int accommodationTypeId, int currencyId, string accommodationOwnerUsername)
         {
             AccommodationType accommodationType = await Context.AccommodationType.Where(accommodationType =>
                                                                                   accommodationType.Id == accommodationTypeId)
                                                                                   .FirstOrDefaultAsync();
+
+            Currency currency = await Context.Currencies.Where(currency => currency.Id == currencyId)
+                                                        .FirstOrDefaultAsync();
 
             ApplicationUser applicationUser = await Context.Users.Where(user =>
                                                                         user.UserName == accommodationOwnerUsername)
                                                                         .FirstOrDefaultAsync();
 
             accommodation.AccommodationType = accommodationType;
+            accommodation.Currency = currency;
             accommodation.ApplicationUser = applicationUser;
 
             await Context.Accommodations.AddAsync(accommodation);
@@ -50,7 +54,8 @@ namespace AccommodationBookingApp.DataAccess.Functions
         {
             List<Accommodation> accommodations;
             accommodations = await Context.Accommodations.Include("AccommodationType").Include("ApplicationUser")
-                                                              .Where(accommodation => accommodation.ApplicationUser.Id == userId).ToListAsync();
+                                                         .Include("Currency")
+                                                         .Where(accommodation => accommodation.ApplicationUser.Id == userId).ToListAsync();
 
             return accommodations;
         }
@@ -60,9 +65,10 @@ namespace AccommodationBookingApp.DataAccess.Functions
         {
             List<Accommodation> accommodations;
             accommodations = await Context.Accommodations.Include("AccommodationType").Include("ApplicationUser")
-                                                                .Where(accommodation =>
-                                                                accommodation.City == accommodationCity &&
-                                                                accommodation.NumberOfBeds >= numberOfGuests).ToListAsync();
+                                                         .Include("Currency")
+                                                         .Where(accommodation =>
+                                                         accommodation.City == accommodationCity &&
+                                                         accommodation.NumberOfBeds >= numberOfGuests).ToListAsync();
             
             return accommodations;
         }
@@ -72,6 +78,7 @@ namespace AccommodationBookingApp.DataAccess.Functions
         {
             Accommodation accommodation;
             accommodation = await Context.Accommodations.Include("AccommodationType").Include("ApplicationUser")
+                                                         .Include("Currency")
                                                          .Where(accommodation =>
                                                          accommodation.Id == accommodationId)
                                                          .FirstOrDefaultAsync();

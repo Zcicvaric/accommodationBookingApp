@@ -6,10 +6,6 @@ using System.Text;
 
 namespace AccommodationBookingApp.DataAccess.Entities
 {
-    public enum Currency
-    {
-        HRK, EUR, USD, GBP
-    }
     public class Accommodation
     {
         public int Id { get; set; }

@@ -30,7 +30,7 @@
         <h4>Number of beds</h4>
         <label>@Model.Accommodation.NumberOfBeds</label>
         <h4>Price per night</h4>
-        <label>@Model.Accommodation.PricePerNight @Model.Accommodation.Currency</label>
+        <label>@Model.Accommodation.PricePerNight @Model.Accommodation.Currency.Name</label>
     </div>
     @if (User.Identity.IsAuthenticated && !User.IsInRole("Admin") && (Model.CurrentUser.Id != Model.Accommodation.ApplicationUser.Id))
     {

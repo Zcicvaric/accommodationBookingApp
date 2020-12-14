@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using AccommodationBookingApp.BLL.AccommodationLogic;
+using AccommodationBookingApp.BLL.CurrencyLogic;
 using AccommodationBookingApp.DataAccess.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -40,7 +41,7 @@ namespace AccommodationBookingApp.Pages
         public int PricePerNight { get; set; }
         [Required]
         [BindProperty]
-        public Currency Currency { get; set; }
+        public int CurrencyId { get; set; }
         [BindProperty]
         public bool RequireApproval { get; set; }
         [BindProperty]
@@ -71,7 +72,10 @@ namespace AccommodationBookingApp.Pages
 
         private AccommodationLogic AccommodationLogic = new AccommodationLogic();
         private AccommodationTypeLogic AccommodationTypeLogic = new AccommodationTypeLogic();
+        private CurrencyLogic CurrencyLogic = new CurrencyLogic();
+
         public List<AccommodationType> AccommodationTypes;
+        public List<Currency> Currencies;
 
 
         public CreateAccommodationModel(IWebHostEnvironment webHostEnvironment)
@@ -88,6 +92,7 @@ namespace AccommodationBookingApp.Pages
         public async Task<IActionResult> OnGet()
         {
             AccommodationTypes = await AccommodationTypeLogic.GetAccommodationTypes();
+            Currencies = await CurrencyLogic.GetCurrenciesAsync();
 
             return Page();
         }
@@ -99,8 +104,6 @@ namespace AccommodationBookingApp.Pages
 
             if (ModelState.IsValid)
             {
-
-                //AccommodationTypes = await AccommodationTypeLogic.GetAccommodationTypes();
 
                 try
                 {
@@ -115,14 +118,15 @@ namespace AccommodationBookingApp.Pages
                 {
                     ModelState.AddModelError("CheckInTime", "Check-in time must be later than check-out time!");
                     //this is required as the page requires accommodationTypes list populated in order to display the
-                    //accommodation type select list
+                    //accommodation type select list and currency select list
                     AccommodationTypes = await AccommodationTypeLogic.GetAccommodationTypes();
+                    Currencies = await CurrencyLogic.GetCurrenciesAsync();
                     return Page();
                 }
 
                 string accommodationImagesFolder = Path.Combine(WebHostEnvironment.WebRootPath, "accommodationPhotos");
 
-                var result = await AccommodationLogic.CreateNewAccomodation(Name, City, Address, NumberOfBeds, PricePerNight, Currency, RequireApproval,
+                var result = await AccommodationLogic.CreateNewAccomodation(Name, City, Address, NumberOfBeds, PricePerNight, CurrencyId, RequireApproval,
                                                                             AccommodationTypeId, CheckInTime, CheckOutTime, User.Identity.Name, UserCanCancelBooking,
                                                                             accommodationImagesFolder, AccommodationHeaderPhoto, AccommodationPhotos);
 

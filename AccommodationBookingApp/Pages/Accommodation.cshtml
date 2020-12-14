@@ -24,11 +24,12 @@
         <div>
             <h1><a asp-page="/AccommodationDetails" asp-route-accommodationId="@accommodation.Id">@accommodation.Name</a></h1>
             <p>Number of beds: @accommodation.NumberOfBeds</p>
-            <p>Price per night: @accommodation.PricePerNight @accommodation.Currency</p>
+            <p>Price per night: @accommodation.PricePerNight @accommodation.Currency.Name</p>
             <p>Address: @accommodation.Address</p>
             <img src="@imagePath" asp-append-version="true" />
+        </div>
+        <div class="row">
             <a asp-page="/Reservations" asp-page-handler="ForAccommodation" asp-route-accommodationId="@accommodation.Id">See all reservations</a>
-
         </div>
     }
 }
@@ -37,6 +38,8 @@
 {
     <div class="row">
         <h2>You have no accommodations yet</h2>
+    </div>
+    <div class="row">
         <label>Would you like to create a new one?</label>
         <a asp-page="/CreateAccommodation">Click here to create a new accommodation</a>
     </div>
