@@ -31,11 +31,11 @@ namespace AccommodationBookingApp.Pages
         [BindProperty]
         [RegularExpression (@"^([A-Ža-ž]{1,}\s?){1,}\s(\d{1,}[A-Ža-ž]{0,2})$", ErrorMessage = "Address needs to have the street name and street number, for example: Kopilica 5")]
         public string Address { get; set; }
-        [Required]
+        [Required (ErrorMessage = "Please enter the number of beds")]
         [BindProperty]
         [Display (Name = "Number of beds")]
         public int NumberOfBeds { get; set; }
-        [Required]
+        [Required (ErrorMessage = "Please enter the price per night")]
         [BindProperty]
         [Display (Name = "Price per night")]
         public int PricePerNight { get; set; }
@@ -46,7 +46,7 @@ namespace AccommodationBookingApp.Pages
         public bool RequireApproval { get; set; }
         [BindProperty]
         public bool UserCanCancelBooking { get; set; }
-        [Required]
+        [Required (ErrorMessage = "Accommodation type is required")]
         [BindProperty]
         [Display (Name = "Accommodation type")]
         public int AccommodationTypeId { get; set; }
@@ -61,11 +61,11 @@ namespace AccommodationBookingApp.Pages
         public object WebRootPath { get; private set; }
         [Required (ErrorMessage = "Please select one or more photos")]
         [BindProperty]
-        [Display (Name = "Header photo")]
+        [Display (Name = "Accommodation photos")]
         public List<IFormFile> AccommodationPhotos { get; set; }
         [Required (ErrorMessage = "Please select a header photo")]
         [BindProperty]
-        [Display (Name = "Photos")]
+        [Display (Name = "Header photo")]
         public IFormFile AccommodationHeaderPhoto { get; set; }
         public IWebHostEnvironment WebHostEnvironment { get; }
         public List<string> TimesList { get; set; }

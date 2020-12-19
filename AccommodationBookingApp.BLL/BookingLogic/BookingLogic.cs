@@ -258,5 +258,16 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
 
             return cancelledByUserBookings;
         }
+
+        public async Task<List<Booking>> GetAllUpcomingApprovedOrPendingReservationsForAccommodation(int accommodationId)
+        {
+            List<Booking> allBookingsForAccommodation = await _booking.GetAllBookingsForAccommodation(accommodationId);
+
+            List<Booking> upcomingBookings = allBookingsForAccommodation.Where(booking => (booking.ApprovalStatus == ApprovalStatus.Approved
+                                                                                           || booking.ApprovalStatus == ApprovalStatus.Pending)
+                                                                                           && booking.CheckInDate > DateTime.Now.Date).ToList();
+
+            return upcomingBookings;
+        }
     }
 }

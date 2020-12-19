@@ -29,6 +29,7 @@ namespace AccommodationBookingApp.Pages
         public string NewPassword { get; set; }
         [DataType (DataType.Password)]
         [Compare("NewPassword", ErrorMessage ="Passwords must match!")]
+        [Display (Name = "Confirm Password")]
         public string PasswordConfirm { get; set; }
 
         public ChangePasswordModel(UserManager<ApplicationUser> userManager,

@@ -22,7 +22,7 @@ namespace AccommodationBookingApp.Pages
         public List<Accommodation> Accommodations { get; set; }
         public string HeaderImageFolderPath { get; set; }
         public IWebHostEnvironment WebHostEnvironment { get; }
-        public string Username { get; set; }
+        public string HostName { get; set; }
 
         public AccommodationModel(UserManager<ApplicationUser> userManager,
                                   IWebHostEnvironment webHostEnvironment)
@@ -52,7 +52,7 @@ namespace AccommodationBookingApp.Pages
 
             var user = await UserManager.FindByNameAsync(username);
 
-            Username = user.FirstName + " " + user.LastName;
+            HostName = user.FirstName + " " + user.LastName;
 
             Accommodations = await AccommodationLogic.GetAccommodationsWithUserId(user.Id);
 

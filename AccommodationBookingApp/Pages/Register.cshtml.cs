@@ -34,7 +34,7 @@ namespace AccommodationBookingApp.Pages
         [Required]
         [BindNever]
         [DataType(DataType.Password)]
-        [Display(Name = "Password confirm")]
+        [Display(Name = "Password Confirm")]
         [Compare("Password", ErrorMessage = "Passwords must match!")]
         public string ConfirmPassword { get; set; }
 

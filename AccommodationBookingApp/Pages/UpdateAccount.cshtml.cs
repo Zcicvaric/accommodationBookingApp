@@ -8,29 +8,29 @@ using AccommodationBookingApp.DataAccess.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace AccommodationBookingApp.Pages
 {
     [Authorize (Roles = "User")]
+    [BindProperties]
     public class UpdateAccountModel : PageModel
     {
         private UserLogic userLogic;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
 
+        [BindNever]
         public ApplicationUser ApplicationUser { get; set; }
 
         [Required]
-        [BindProperty]
         [Display (Name = "First Name")]
         public string FirstName { get; set; }
         [Required]
-        [BindProperty]
         [Display (Name = "Last Name")]
         public string LastName { get; set; }
         [Required]
-        [BindProperty]
         [DataType (DataType.EmailAddress)]
         public string Email { get; set; }
 

@@ -21,8 +21,6 @@ namespace AccommodationBookingApp.BLL.CurrencyLogic
 
         public async Task<Boolean> AddCurrencyAsync(string name)
         {
-            name = name.ToUpper();
-
             var allCurrencies = await _currency.GetAllCurrencies();
 
             var currenciesWithName = allCurrencies.Where(currency => currency.Name == name).ToList();

@@ -1,5 +1,15 @@
 ﻿@page
 @model AccommodationBookingApp.Pages.BookingDetailsModel
+@{ 
+    if (Model.Booking.ApplicationUser.UserName == User.Identity.Name)
+    {
+        ViewData["Title"] = "Your stay at " + Model.Accommodation.Name;
+    }
+    else
+    {
+        ViewData["Title"] = "Booking details";
+    }
+}
 @{
     <div class="container">
         <div class="row">

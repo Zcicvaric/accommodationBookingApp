@@ -6,16 +6,16 @@
 @{
     <h4 class="mt-2">Search:</h4>
     <form method="post" class="mt-4">
-        <label>City</label>
+        <label asp-for="AccommodationCity"></label>
         <input type="text" placeholder="City" asp-for="AccommodationCity" />
         <span asp-validation-for="AccommodationCity" class="text-warning"></span>
-        <label>Number of guests: </label>
+        <label asp-for="NumberOfGuests"></label>
         <input type="number" min="1" value="1" asp-for="NumberOfGuests" />
         <span asp-validation-for="NumberOfGuests" class="text-warning"></span>
-        <label>Check-in date:</label>
+        <label asp-for="CheckInDateString"></label>
         <input data-provide="datepicker" asp-for="CheckInDateString" onchange="checkInCalendarClicked()" class="checkInDatepicker" autocomplete="off" />
         <span asp-validation-for="CheckInDateString" class="text-warning"></span>
-        <label>Check-out date:</label>
+        <label asp-for="CheckOutDateString"></label>
         <input data-provide="datepicker" asp-for="CheckOutDateString" class="checkOutDatepicker" autocomplete="off" />
         <span asp-validation-for="CheckOutDateString" class="text-warning"></span>
         <p>

@@ -41,6 +41,15 @@ namespace AccommodationBookingApp.DataAccess.Functions
             return accommodation;
         }
 
+        public async Task<Boolean> DeleteAccommodationAsync(Accommodation accommodationToDelete)
+        {
+            Context.Accommodations.Remove(accommodationToDelete);
+
+            await Context.SaveChangesAsync();
+
+            return true;
+        }
+
         public async Task<List<Accommodation>> GetAllAccommodations()
         {
             List<Accommodation> accommodations = new List<Accommodation>();

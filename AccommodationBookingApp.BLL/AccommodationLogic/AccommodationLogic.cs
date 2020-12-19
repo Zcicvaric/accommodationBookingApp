@@ -72,6 +72,27 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
             }
         }
 
+        public async Task<Boolean> DeleteAccommodationAsync(Accommodation accommodationToDelete, string accommodationPhotosFolder)
+        {
+            try
+            {
+                var deleteResult = await _accommodation.DeleteAccommodationAsync(accommodationToDelete);
+                
+                if (deleteResult)
+                {
+                    string accommodationPhotosDirectoryPath = Path.Combine(accommodationPhotosFolder, accommodationToDelete.Name
+                                                                           + "_" + accommodationToDelete.Id);
+                    Directory.Delete(accommodationPhotosDirectoryPath, true);
+                }
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         public async Task<List<Accommodation>> GetAccommodations()
         {
             List<Accommodation> accommodations = await _accommodation.GetAllAccommodations();

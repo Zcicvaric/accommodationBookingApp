@@ -1,6 +1,16 @@
 ﻿@page
 @model AccommodationBookingApp.Pages.AccountModel
 @{
+    if (User.Identity.Name != Model.ApplicationUser.UserName)
+    {
+        ViewData["Title"] = "Account details for: " + Model.ApplicationUser.FirstName + " " + Model.ApplicationUser.LastName;
+    }
+    else
+    {
+        ViewData["Title"] = "Account details";
+    }
+}
+@{
     <div class="container">
         <div class="row">
             <h2>Account details</h2>

@@ -1,9 +1,9 @@
 ﻿@page
 @model AccommodationBookingApp.Pages.AccommodationModel
 @{
-    if (Model.Username != null)
+    if (Model.HostName != null)
     {
-        ViewData["Title"] = "All accommodations for: " + Model.Username;
+        ViewData["Title"] = "All accommodations for: " + Model.HostName;
     }
     else
     {
@@ -12,10 +12,10 @@
 }
 @if (Model.Accommodations != null & Model.Accommodations.Count > 0)
 {
-    @if (Model.Username != null)
+    @if (Model.HostName != null)
     {
         <div class="row">
-            <h2>All accommodations owned by: @Model.Username</h2>
+            <h2>All accommodations owned by: @Model.HostName</h2>
         </div>
     }
     @foreach (AccommodationBookingApp.DataAccess.Entities.Accommodation accommodation in Model.Accommodations)
@@ -30,6 +30,7 @@
         </div>
         <div class="row">
             <a asp-page="/Reservations" asp-page-handler="ForAccommodation" asp-route-accommodationId="@accommodation.Id">See all reservations</a>
+            <a asp-page="/DeleteAccommodation" asp-route-accommodationId="@accommodation.Id">Delete this accommodation</a>
         </div>
     }
 }
