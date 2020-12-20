@@ -26,6 +26,12 @@ namespace AccommodationBookingApp.Pages
         public async Task<IActionResult> OnGet()
         {
             ApplicationUser = await userManager.GetUserAsync(User);
+
+            if (ApplicationUser == null)
+            {
+                return RedirectToPage("/Login");
+            }
+
             var roles = await userManager.GetRolesAsync(ApplicationUser);
 
             UserRole = roles.FirstOrDefault();
@@ -41,6 +47,11 @@ namespace AccommodationBookingApp.Pages
             }
 
             ApplicationUser = await userManager.FindByNameAsync(username);
+
+            if (ApplicationUser == null)
+            {
+                return BadRequest();
+            }
 
             var roles = await userManager.GetRolesAsync(ApplicationUser);
 

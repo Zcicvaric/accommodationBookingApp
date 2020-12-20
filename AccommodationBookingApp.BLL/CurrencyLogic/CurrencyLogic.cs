@@ -10,18 +10,18 @@ namespace AccommodationBookingApp.BLL.CurrencyLogic
 {
     public class CurrencyLogic
     {
-        private ICurrency _currency = new DataAccess.Functions.CurrencyFunctions();
+        private readonly ICurrency currencyFunctions = new DataAccess.Functions.CurrencyFunctions();
 
         public async Task<List<Currency>> GetCurrenciesAsync()
         {
-            List<Currency> currencies = await _currency.GetAllCurrencies();
+            var currencies = await currencyFunctions.GetAllCurrencies();
 
             return currencies;
         }
 
-        public async Task<Boolean> AddCurrencyAsync(string name)
+        public async Task<bool> AddCurrencyAsync(string name)
         {
-            var allCurrencies = await _currency.GetAllCurrencies();
+            var allCurrencies = await currencyFunctions.GetAllCurrencies();
 
             var currenciesWithName = allCurrencies.Where(currency => currency.Name == name).ToList();
 
@@ -30,12 +30,12 @@ namespace AccommodationBookingApp.BLL.CurrencyLogic
                 return false;
             }
 
-            Currency newCurrency = new Currency();
+            var newCurrency = new Currency();
             newCurrency.Name = name;
 
             try
             {
-                var result = await _currency.AddCurrency(newCurrency);
+                var result = await currencyFunctions.AddCurrency(newCurrency);
 
                 if (result.Id != 0)
                 {

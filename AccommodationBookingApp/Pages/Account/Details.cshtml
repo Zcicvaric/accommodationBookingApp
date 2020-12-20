@@ -70,17 +70,17 @@
         @if (User.Identity.Name == Model.ApplicationUser.UserName)
         {
             <div class="row">
-                <a asp-page="/ChangePassword" class="btn btn-warning">Change password</a>
+                <a asp-page="/Account/ChangePassword" class="btn btn-warning">Change password</a>
             </div>
         }
         <div class="row">
         @if (User.IsInRole("User"))
         {
-            <a asp-page="/UpdateAccount" class="btn btn-outline-warning">Update personal information</a>
+            <a asp-page="/Account/UpdateAccount" class="btn btn-outline-warning">Update personal information</a>
         }
         @if (User.IsInRole("Host"))
         {
-            <a asp-page="/UpdateHostAccount" class="btn btn-outline-warning">Update personal information</a>
+            <a asp-page="/Account/UpdateHostAccount" class="btn btn-outline-warning">Update personal information</a>
         }
         </div>
     </div>

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -19,19 +20,21 @@ namespace AccommodationBookingApp.Pages
         public int AccommodationId { get; set; }
         public Accommodation Accommodation { get; set; }
         public string HeaderPhotoPath { get; set; }
-        public List<String> AccommodationPhotos { get; set; }
+        public List<string> AccommodationPhotos { get; set; }
         public DateTime CheckInDate { get; set; }
         public DateTime CheckOutDate { get; set; }
         [BindProperty]
+        [Required (ErrorMessage = "Please select a valid check-in date")]
         public string CheckInDateString { get; set; }
         [BindProperty]
+        [Required (ErrorMessage = "Please select a valid check-out date")]
         public string CheckOutDateString { get; set; }
         public ApplicationUser CurrentUser { get; set; }
         public string [] DatesOccupiedArray { get; set; }
 
-        private AccommodationLogic AccommodationLogic = new AccommodationLogic();
+        private readonly AccommodationLogic AccommodationLogic = new AccommodationLogic();
         private readonly UserManager<ApplicationUser> userManager;
-        private BookingLogic BookingLogic = new BookingLogic();
+        private readonly BookingLogic BookingLogic = new BookingLogic();
 
 
         public AccommodationDetailsModel(UserManager<ApplicationUser> userManager)
@@ -46,44 +49,59 @@ namespace AccommodationBookingApp.Pages
             {
                 return BadRequest();
             }
+
+            if (User.Identity.IsAuthenticated)
+            {
+                CurrentUser = await userManager.FindByEmailAsync(User.Identity.Name);
+            }
+
             AccommodationId = accommodationId;
             Accommodation = await AccommodationLogic.GetAccommodationById(accommodationId);
+
             if (Accommodation == null)
             {
                 return NotFound();
             }
 
-            CurrentUser = await userManager.GetUserAsync(User);
             CheckInDateString = checkInDate;
             CheckOutDateString = checkOutDate;
-            string dateformat = "dd.MM.yyyy.";
+            var dateformat = "dd.MM.yyyy.";
+
+            var listOfDatesOccupied = await AccommodationLogic.GetDatesOccupiedForAccommodation(accommodationId);
+
             try
             {
                 CheckInDate = DateTime.ParseExact(checkInDate, dateformat, CultureInfo.InvariantCulture);
                 CheckOutDate = DateTime.ParseExact(checkOutDate, dateformat, CultureInfo.InvariantCulture);
 
-                if (CheckInDate < DateTime.Now.Date || CheckOutDate < DateTime.Now.AddDays(1).Date)
+                if (CheckInDate < DateTime.Now.Date || CheckOutDate < DateTime.Now.AddDays(1).Date
+                    || CheckInDate >= CheckOutDate)
                 {
                     throw new Exception("Invalid dates!");
+                }
+
+                if (listOfDatesOccupied.Contains(checkInDate) || listOfDatesOccupied.Contains(checkOutDate))
+                {
+                    throw new Exception("Dates occupied!");
                 }
             }
             catch
             {
                 CheckInDate = DateTime.Now;
-                CheckOutDate = DateTime.Now.AddDays(1);
+                CheckOutDate = DateTime.Now;
 
                 CheckInDateString = CheckInDate.ToString(dateformat);
                 CheckOutDateString = CheckOutDate.ToString(dateformat);
             }
             
 
-            var ListOfDatesOccupied = await AccommodationLogic.GetDatesOccupiedForAccommodation(accommodationId);
+            //var listOfDatesOccupied = await AccommodationLogic.GetDatesOccupiedForAccommodation(accommodationId);
 
-            DatesOccupiedArray = ListOfDatesOccupied.ToArray();
+            DatesOccupiedArray = listOfDatesOccupied.ToArray();
 
             HeaderPhotoPath = "~/accommodationPhotos/" + Accommodation.Name + "_" + Accommodation.Id.ToString() + "/Header/" + Accommodation.HeaderPhotoFileName;
 
-            string accommodationImagesFolder = "wwwroot/accommodationPhotos/" + Accommodation.Name + "_" + Accommodation.Id.ToString() + "/";
+            var accommodationImagesFolder = "wwwroot/accommodationPhotos/" + Accommodation.Name + "_" + Accommodation.Id.ToString() + "/";
 
             try
             {
@@ -93,6 +111,7 @@ namespace AccommodationBookingApp.Pages
             {
                 AccommodationPhotos = new List<string>();
             }
+
             return Page();
         }
 
@@ -109,15 +128,21 @@ namespace AccommodationBookingApp.Pages
                     return BadRequest();
                 }
 
-                var datesOccupied = await AccommodationLogic.GetDatesOccupiedForAccommodation(AccommodationId);
+                try
+                {
+                    CheckInDate = DateTime.Parse(CheckInDateString);
+                    CheckOutDate = DateTime.Parse(CheckOutDateString);
 
-                if(datesOccupied.Contains(CheckInDateString) || datesOccupied.Contains(CheckOutDateString))
+                    if (CheckInDate < DateTime.Now.Date || CheckOutDate < DateTime.Now.AddDays(1).Date
+                        || CheckInDate >= CheckOutDate)
+                    {
+                        return BadRequest();
+                    }
+                }
+                catch (Exception e)
                 {
                     return BadRequest();
                 }
-
-                CheckInDate = DateTime.Parse(CheckInDateString);
-                CheckOutDate = DateTime.Parse(CheckOutDateString);
 
                 var booking = await BookingLogic.CreateNewBooking(AccommodationId, CurrentUser.Id,
                                                     CheckInDate, CheckOutDate);

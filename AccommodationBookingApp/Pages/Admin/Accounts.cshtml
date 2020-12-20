@@ -23,9 +23,9 @@
                 <div class="row">
                     <a asp-page="/Bookings" asp-page-handler="UserBookings" asp-route-username="@HostAccount.UserName"
                        class="btn btn-info">See all bookings</a>
-                    <a asp-page="/Accommodation" asp-page-handler="AccommodationsForHost" asp-route-username="@HostAccount.UserName"
+                    <a asp-page="/Accommodations" asp-page-handler="AccommodationsForHost" asp-route-username="@HostAccount.UserName"
                        class="btn btn-info">See all accommodations owned by host</a>
-                    <a asp-page="/Account" asp-page-handler="AccountDetailsForUser" asp-route-username="@HostAccount.UserName"
+                    <a asp-page="/Account/Details" asp-page-handler="AccountDetailsForUser" asp-route-username="@HostAccount.UserName"
                        class="btn btn-info">See account details</a>
                 </div>
             }

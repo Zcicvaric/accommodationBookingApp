@@ -24,7 +24,7 @@ namespace AccommodationBookingApp.Pages
         public bool PermanentCookie { get; set; }
         public string ErrorMessage { get; set; }
 
-        private UserLogic userLogic;
+        private readonly UserLogic userLogic;
 
         public LoginModel(UserManager<ApplicationUser> userManager,
                           SignInManager<ApplicationUser> signInManager)
@@ -40,7 +40,7 @@ namespace AccommodationBookingApp.Pages
         {
             if (ModelState.IsValid)
             {
-                bool result = await userLogic.SignInUser(Username, Password, PermanentCookie);
+                var result = await userLogic.SignInUser(Username, Password, PermanentCookie);
 
                 if (!result)
                 {

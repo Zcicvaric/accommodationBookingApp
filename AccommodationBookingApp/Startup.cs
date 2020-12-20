@@ -38,7 +38,7 @@ namespace AccommodationBookingApp
 
             services.ConfigureApplicationCookie(config =>
             {
-                config.Cookie.Name = "AcommodationBookingAppCookie";
+                config.Cookie.Name = "AccommodationBookingAppCookie";
                 config.LoginPath = "/Login";
                 config.AccessDeniedPath = "/AccessDenied";
             });

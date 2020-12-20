@@ -50,6 +50,11 @@ namespace AccommodationBookingApp.Pages
             {
                 var user = await userManager.GetUserAsync(User);
 
+                if (user == null)
+                {
+                    return BadRequest();
+                }
+
                 var passwordChangeResult = await userManager.ChangePasswordAsync(user, OldPassword, NewPassword);
 
                 if (!passwordChangeResult.Succeeded)
@@ -64,9 +69,11 @@ namespace AccommodationBookingApp.Pages
 
                 //kreiramo novi pristupni token, tako da ako nam i napadac dode do naseg pristupnog tokena nece mu dugo vridit
                 await signInManager.RefreshSignInAsync(user);
+
+                return RedirectToPage("/Account/PasswordChanged", "PasswordChanged");
             }
 
-            return RedirectToPage("/PasswordChanged", "PasswordChanged");
+            return BadRequest();
         }
     }
 }

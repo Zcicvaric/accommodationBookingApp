@@ -53,7 +53,7 @@ namespace AccommodationBookingApp.Pages
         [RegularExpression(@"^(\d{9,10})$", ErrorMessage = "Mobile phone number must have 9 or 10 digits")]
         public string MobilePhoneNumber { get; set; }
 
-        private UserLogic userLogic;
+        private readonly UserLogic userLogic;
 
         public RegisterAsHostModel(UserManager<ApplicationUser> userManager,
                                    SignInManager<ApplicationUser> signInManager,
@@ -82,10 +82,12 @@ namespace AccommodationBookingApp.Pages
                 foreach(var registrationError in result.Errors)
                 {
                     ModelState.AddModelError("", registrationError.Description);
+
+                    return Page();
                 }
             }
 
-            return Page();
+            return BadRequest();
         }
     }
 }

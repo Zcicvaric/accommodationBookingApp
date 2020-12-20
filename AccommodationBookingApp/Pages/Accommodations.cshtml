@@ -1,5 +1,5 @@
 ﻿@page
-@model AccommodationBookingApp.Pages.AccommodationModel
+@model AccommodationBookingApp.Pages.AccommodationsModel
 @{
     if (Model.HostName != null)
     {
@@ -18,11 +18,11 @@
             <h2>All accommodations owned by: @Model.HostName</h2>
         </div>
     }
-    @foreach (AccommodationBookingApp.DataAccess.Entities.Accommodation accommodation in Model.Accommodations)
+    @foreach (var accommodation in Model.Accommodations)
     {
         var imagePath = "~/accommodationPhotos/" + @accommodation.Name + "_" + accommodation.Id.ToString() + "/Header/" + accommodation.HeaderPhotoFileName;
         <div>
-            <h1><a asp-page="/AccommodationDetails" asp-route-accommodationId="@accommodation.Id">@accommodation.Name</a></h1>
+            <h1><a asp-page="/AccommodationsDetails" asp-route-accommodationId="@accommodation.Id">@accommodation.Name</a></h1>
             <p>Number of beds: @accommodation.NumberOfBeds</p>
             <p>Price per night: @accommodation.PricePerNight @accommodation.Currency.Name</p>
             <p>Address: @accommodation.Address</p>

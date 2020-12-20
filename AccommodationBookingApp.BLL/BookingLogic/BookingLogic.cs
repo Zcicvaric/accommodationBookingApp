@@ -11,12 +11,11 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
 {
     public class BookingLogic
     {
-
-        IBooking _booking = new DataAccess.Functions.BookingFunctions();
+        readonly IBooking bookingFunctions = new BookingFunctions();
         public async Task<Booking> CreateNewBooking(int accommodationId, string applicationUserId,
                                                     DateTime checkInDate, DateTime checkOutDate)
         {
-            var booking = await _booking.CreateBooking(accommodationId, applicationUserId,
+            var booking = await bookingFunctions.CreateBooking(accommodationId, applicationUserId,
                                                        checkInDate, checkOutDate);
 
             return booking;
@@ -24,12 +23,12 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
 
         public async Task<Booking> GetBookingByIdAsync(int bookingId)
         {
-            return await _booking.GetBookingByIdAsync(bookingId);
+            return await bookingFunctions.GetBookingByIdAsync(bookingId);
         }
 
         public async Task <List<Booking>> GetAllPreviousStaysForUser(string applicationUserId)
         {
-            var previousStays = await _booking.GetAllPreviousStaysForUser(applicationUserId);
+            var previousStays = await bookingFunctions.GetAllPreviousStaysForUser(applicationUserId);
 
             var previousStaysSorted = previousStays.OrderBy(previousStay => previousStay.CheckInDate).ToList();
 
@@ -38,7 +37,7 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
 
         public async Task <List<Booking>> GetAllUpcomingStaysForUser(string applicationUserId)
         {
-            var upcomingStays = await _booking.GetAllUpcomingStaysForUser(applicationUserId);
+            var upcomingStays = await bookingFunctions.GetAllUpcomingStaysForUser(applicationUserId);
 
             var upcomingStaysSorted = upcomingStays.OrderBy(upcomingStay => upcomingStay.CheckInDate).ToList();
 
@@ -47,16 +46,16 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
 
         public async Task <List<Booking>> GetAllDeclinedStaysForUser(string applicationUserId)
         {
-            var declinedStays = await _booking.GetAllDeclinedStaysForUser(applicationUserId);
+            var declinedStays = await bookingFunctions.GetAllDeclinedStaysForUser(applicationUserId);
 
             var declinedStaysSorted = declinedStays.OrderBy(declinedStay => declinedStay.CheckInDate).ToList();
 
-            return declinedStays;
+            return declinedStaysSorted;
         }
 
         public async Task <List<Booking>> GetAllCancelledStaysForUser(string applicationUserId)
         {
-            var cancelledStays = await _booking.GetAllCancelledStaysForUser(applicationUserId);
+            var cancelledStays = await bookingFunctions.GetAllCancelledStaysForUser(applicationUserId);
 
             var cancelledStaysSorted = cancelledStays.OrderBy(cancelledStay => cancelledStay.CheckInDate).ToList();
 
@@ -65,15 +64,15 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
 
         public async Task <List<Booking>> GetAllBookingsForAccommodation(int accommodationId)
         {
-            var bookings = await _booking.GetAllBookingsForAccommodation(accommodationId);
+            var bookings = await bookingFunctions.GetAllBookingsForAccommodation(accommodationId);
 
             var bookingsSorted = bookings.OrderBy(booking => booking.CheckInDate).ToList();
 
-            return bookings;
+            return bookingsSorted;
         }
         public async Task<List<Booking>> GetAllPendingReservationsForHost(string userId)
         {
-            var bookingsForHost = await _booking.GetAllBookingsForHost(userId);
+            var bookingsForHost = await bookingFunctions.GetAllBookingsForHost(userId);
 
             var pendingReservations = bookingsForHost.Where(booking => booking.ApprovalStatus == ApprovalStatus.Pending)
                                       .OrderBy(booking => booking.CheckInDate).ToList();
@@ -82,7 +81,7 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
         }
         public async Task<List<Booking>> GetAllApprovedReservationsForHost(string userId)
         {
-            var bookingsForHost = await _booking.GetAllBookingsForHost(userId);
+            var bookingsForHost = await bookingFunctions.GetAllBookingsForHost(userId);
 
             var approvedReservations = bookingsForHost.Where(booking => booking.ApprovalStatus == ApprovalStatus.Approved
                                                              && booking.CheckInDate.Date >= DateTime.Now.Date)
@@ -92,7 +91,7 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
         }
         public async Task<List<Booking>> GetAllPreviousReservationsForHost(string userId)
         {
-            var bookingsForHost = await _booking.GetAllBookingsForHost(userId);
+            var bookingsForHost = await bookingFunctions.GetAllBookingsForHost(userId);
 
             var previousReservations = bookingsForHost.Where(booking => booking.ApprovalStatus == ApprovalStatus.Approved
                                                              && booking.CheckOutDate.Date <= DateTime.Now.Date)
@@ -102,7 +101,7 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
         }
         public async Task<List<Booking>> GetAllDeclinedReservationsForHost(string userId)
         {
-            var bookingsForHost = await _booking.GetAllBookingsForHost(userId);
+            var bookingsForHost = await bookingFunctions.GetAllBookingsForHost(userId);
 
             var declinedReservations = bookingsForHost.Where(booking => booking.ApprovalStatus == ApprovalStatus.Declined)
                                                             .OrderBy(booking => booking.CheckInDate).ToList();
@@ -111,7 +110,7 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
         }
         public async Task<List<Booking>> GetAllCancelledReservationsForHost(string userId)
         {
-            var bookingsForHost = await _booking.GetAllBookingsForHost(userId);
+            var bookingsForHost = await bookingFunctions.GetAllBookingsForHost(userId);
 
             var canceledReservations = bookingsForHost.Where(booking => booking.ApprovalStatus == ApprovalStatus.Cancelled)
                                                             .OrderBy(booking => booking.CheckInDate).ToList();
@@ -120,19 +119,19 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
         }
         public async Task<List<Booking>> GetAllCancelledByUserReservationsForHost(string userId)
         {
-            var bookingsForHost = await _booking.GetAllBookingsForHost(userId);
+            var bookingsForHost = await bookingFunctions.GetAllBookingsForHost(userId);
 
             var cancelledByUserReservations = bookingsForHost.Where(booking => booking.ApprovalStatus == ApprovalStatus.CancelledByUser)
                                                                     .OrderBy(booking => booking.CheckInDate).ToList();
 
             return cancelledByUserReservations;
         }
-        public async Task<Boolean> ApproveBooking(int bookingId)
+        public async Task<bool> ApproveBooking(int bookingId)
         {
             Booking updatedBooking;
             try
             {
-                updatedBooking = await _booking.UpdateBookingStatus(bookingId, ApprovalStatus.Approved);
+                updatedBooking = await bookingFunctions.UpdateBookingStatus(bookingId, ApprovalStatus.Approved);
             }
             catch
             {
@@ -145,12 +144,12 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
 
             return false;
         }
-        public async Task<Boolean> DeclineBooking(int bookingId)
+        public async Task<bool> DeclineBooking(int bookingId)
         {
             Booking updatedBooking;
             try
             {
-                updatedBooking = await _booking.UpdateBookingStatus(bookingId, ApprovalStatus.Declined);
+                updatedBooking = await bookingFunctions.UpdateBookingStatus(bookingId, ApprovalStatus.Declined);
             }
             catch
             {
@@ -162,12 +161,12 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
             }
             return false;
         }
-        public async Task<Boolean> CancelBooking(int bookingId)
+        public async Task<bool> CancelBooking(int bookingId)
         {
             Booking updatedBooking;
             try
             {
-                updatedBooking = await _booking.UpdateBookingStatus(bookingId, ApprovalStatus.Cancelled);
+                updatedBooking = await bookingFunctions.UpdateBookingStatus(bookingId, ApprovalStatus.Cancelled);
             }
             catch
             {
@@ -180,13 +179,13 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
 
             return false;
         }
-        public async Task<Boolean> CancelBookingAsUser(int bookingId)
+        public async Task<bool> CancelBookingAsUser(int bookingId)
         {
             Booking updatedBooking;
 
             try
             {
-                updatedBooking = await _booking.UpdateBookingStatus(bookingId, ApprovalStatus.CancelledByUser);
+                updatedBooking = await bookingFunctions.UpdateBookingStatus(bookingId, ApprovalStatus.CancelledByUser);
             }
             catch
             {
@@ -202,9 +201,9 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
         }
         public async Task <List<Booking>> GetAllPendingReservationsForAccommodation(int accommodationId)
         {
-            List<Booking> allBookingsForAccommodation = await _booking.GetAllBookingsForAccommodation(accommodationId);
+            var allBookingsForAccommodation = await bookingFunctions.GetAllBookingsForAccommodation(accommodationId);
 
-            List<Booking> pendingBookings = allBookingsForAccommodation.Where(booking => booking.ApprovalStatus == ApprovalStatus.Pending)
+            var pendingBookings = allBookingsForAccommodation.Where(booking => booking.ApprovalStatus == ApprovalStatus.Pending)
                                                                              .OrderBy(booking => booking.CheckInDate).ToList();
 
             return pendingBookings;
@@ -212,18 +211,18 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
 
         public async Task<List<Booking>> GetAllApprovedReservationsForAccommodation(int accommodationId)
         {
-            List<Booking> allBookingsForAccommodation = await _booking.GetAllBookingsForAccommodation(accommodationId);
+            var allBookingsForAccommodation = await bookingFunctions.GetAllBookingsForAccommodation(accommodationId);
 
-            List<Booking> approvedBookings = allBookingsForAccommodation.Where(booking => booking.ApprovalStatus == ApprovalStatus.Approved)
+            var approvedBookings = allBookingsForAccommodation.Where(booking => booking.ApprovalStatus == ApprovalStatus.Approved)
                                                                      .OrderBy(booking => booking.CheckInDate).ToList();
             return approvedBookings;
         }
 
         public async Task<List<Booking>> GetAllPreviousReservationsForAccommodation(int accommodationId)
         {
-            List<Booking> allBookingsForAccommodation = await _booking.GetAllBookingsForAccommodation(accommodationId);
+            var allBookingsForAccommodation = await bookingFunctions.GetAllBookingsForAccommodation(accommodationId);
 
-            List<Booking> previousBookings = allBookingsForAccommodation.Where(booking => booking.ApprovalStatus == ApprovalStatus.Approved
+            var previousBookings = allBookingsForAccommodation.Where(booking => booking.ApprovalStatus == ApprovalStatus.Approved
                                                                                && booking.CheckInDate.Date <= DateTime.Now.Date)
                                                                                .OrderBy(booking => booking.CheckInDate).ToList();
             return previousBookings;
@@ -231,9 +230,9 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
 
         public async Task<List<Booking>> GetAllDeclinedReservationsForAccommodation(int accommodationId)
         {
-            List<Booking> allBookingsForAccommodation = await _booking.GetAllBookingsForAccommodation(accommodationId);
+            var allBookingsForAccommodation = await bookingFunctions.GetAllBookingsForAccommodation(accommodationId);
 
-            List<Booking> declinedBookings = allBookingsForAccommodation.Where(booking => booking.ApprovalStatus == ApprovalStatus.Declined)
+            var declinedBookings = allBookingsForAccommodation.Where(booking => booking.ApprovalStatus == ApprovalStatus.Declined)
                                                                               .OrderBy(booking => booking.CheckInDate).ToList();
 
             return declinedBookings;
@@ -241,9 +240,9 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
 
         public async Task<List<Booking>> GetAllCancelledReservationsForAccommodation(int accommodationId)
         {
-            List<Booking> allBookingsForAccommodation = await _booking.GetAllBookingsForAccommodation(accommodationId);
+            var allBookingsForAccommodation = await bookingFunctions.GetAllBookingsForAccommodation(accommodationId);
 
-            List<Booking> cancelledBookings = allBookingsForAccommodation.Where(booking => booking.ApprovalStatus == ApprovalStatus.Declined)
+            var cancelledBookings = allBookingsForAccommodation.Where(booking => booking.ApprovalStatus == ApprovalStatus.Declined)
                                                                               .OrderBy(booking => booking.CheckInDate).ToList();
 
             return cancelledBookings;
@@ -251,9 +250,9 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
 
         public async Task<List<Booking>> GetAllCancelledByUserReservationsForAccommodation(int accommodationId)
         {
-            List<Booking> allBookingsForAccommodation = await _booking.GetAllBookingsForAccommodation(accommodationId);
+            var allBookingsForAccommodation = await bookingFunctions.GetAllBookingsForAccommodation(accommodationId);
 
-            List<Booking> cancelledByUserBookings = allBookingsForAccommodation.Where(booking => booking.ApprovalStatus == ApprovalStatus.CancelledByUser)
+            var cancelledByUserBookings = allBookingsForAccommodation.Where(booking => booking.ApprovalStatus == ApprovalStatus.CancelledByUser)
                                                                                     .OrderBy(booking => booking.CheckInDate).ToList();
 
             return cancelledByUserBookings;
@@ -261,9 +260,9 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
 
         public async Task<List<Booking>> GetAllUpcomingApprovedOrPendingReservationsForAccommodation(int accommodationId)
         {
-            List<Booking> allBookingsForAccommodation = await _booking.GetAllBookingsForAccommodation(accommodationId);
+            var allBookingsForAccommodation = await bookingFunctions.GetAllBookingsForAccommodation(accommodationId);
 
-            List<Booking> upcomingBookings = allBookingsForAccommodation.Where(booking => (booking.ApprovalStatus == ApprovalStatus.Approved
+            var upcomingBookings = allBookingsForAccommodation.Where(booking => (booking.ApprovalStatus == ApprovalStatus.Approved
                                                                                            || booking.ApprovalStatus == ApprovalStatus.Pending)
                                                                                            && booking.CheckInDate > DateTime.Now.Date).ToList();
 

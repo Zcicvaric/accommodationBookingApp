@@ -10,75 +10,76 @@ namespace AccommodationBookingApp.BLL.UserLogic
 {
     public class UserLogic
     {
-        private IUser _user;
-
-        UserManager<ApplicationUser> userManager;
+        private readonly IUser userFunctions;
+        private readonly UserManager<ApplicationUser> userManager;
        
         public UserLogic(UserManager<ApplicationUser> userManager,
                         SignInManager<ApplicationUser> signInManager,
                         RoleManager<IdentityRole> roleManager)
         {
-            _user = new DataAccess.Functions.UserFunctions(userManager, signInManager, roleManager);
+            userFunctions = new DataAccess.Functions.UserFunctions(userManager, signInManager, roleManager);
         }
         public UserLogic(UserManager<ApplicationUser> userManager,
                         SignInManager<ApplicationUser> signInManager)
         {
             this.userManager = userManager;
-            _user = new DataAccess.Functions.UserFunctions(userManager, signInManager);
+            userFunctions = new DataAccess.Functions.UserFunctions(userManager, signInManager);
         }
         public UserLogic(UserManager<ApplicationUser> userManager)
         {
             this.userManager = userManager;
-            _user = new DataAccess.Functions.UserFunctions(userManager);
+            userFunctions = new DataAccess.Functions.UserFunctions(userManager);
         }
 
         public async Task<IdentityResult> CreateNewUser(string firstName, string lastName, 
                                                         string email, string password)
         {
-            ApplicationUser newUser = new ApplicationUser();
+            var newUser = new ApplicationUser
+            {
+                FirstName = firstName,
+                LastName = lastName,
+                Email = email,
+                UserName = email
+            };
 
-            newUser.FirstName = firstName;
-            newUser.LastName = lastName;
-            newUser.Email = email;
-            newUser.UserName = email;
 
-
-            return await _user.CreateNewUser(newUser, password, false);
+            return await userFunctions.CreateNewUser(newUser, password, false);
         }
 
         public async Task<IdentityResult> CreateNewHost(string firstName, string lastName, string email, string address, string city,
                                                         string country, string mobilePhoneNumber, string password)
         {
-            ApplicationUser newHost = new ApplicationUser();
+            var newHost = new ApplicationUser
+            {
+                FirstName = firstName,
+                LastName = lastName,
+                Email = email,
+                UserName = email,
+                Address = address,
+                City = city,
+                Country = country,
+                PhoneNumber = mobilePhoneNumber
+            };
 
-            newHost.FirstName = firstName;
-            newHost.LastName = lastName;
-            newHost.Email = email;
-            newHost.UserName = email;
-            newHost.Address = address;
-            newHost.City = city;
-            newHost.Country = country;
-            newHost.PhoneNumber = mobilePhoneNumber;
-
-            return await _user.CreateNewUser(newHost, password, true);
+            return await userFunctions.CreateNewUser(newHost, password, true);
         }
         
 
         public async Task<bool> SignInUser(string username, string password, bool permanentCookie)
         {
-            ApplicationUser user = await userManager.FindByNameAsync(username);
+            var user = await userManager.FindByNameAsync(username);
             
             if (user == null)
             {
                 return false;
             }
 
-            return await _user.SignInUser(user, password, permanentCookie);
+            return await userFunctions.SignInUser(user, password, permanentCookie);
         }
 
         public async Task<bool> SignOutUser()
         {
-            return await _user.SignOutUser();
+            return await userFunctions.SignOutUser();
         }
 
         public async Task<IdentityResult> UpdateAccount(ApplicationUser oldUser, string firstName, string lastName, string email)
@@ -112,12 +113,12 @@ namespace AccommodationBookingApp.BLL.UserLogic
 
         public async Task<List<ApplicationUser>> GetAllUserAccountsAsync()
         {
-            return await _user.GetAllUserAccountsAsync();
+            return await userFunctions.GetAllUserAccountsAsync();
         }
 
         public async Task<List<ApplicationUser>> GetAllHostAccountsAsync()
         {
-            return await _user.GetAllHostAccountsAsync();
+            return await userFunctions.GetAllHostAccountsAsync();
         }
 
 

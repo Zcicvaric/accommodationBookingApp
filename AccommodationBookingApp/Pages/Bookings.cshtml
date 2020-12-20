@@ -29,7 +29,7 @@
                 </h2>
             </div>
 
-            @foreach (AccommodationBookingApp.DataAccess.Entities.Booking previousBooking in Model.PreviousStays)
+            @foreach (var previousBooking in Model.PreviousStays)
             {
                 <div class="row">
                     <p>@previousBooking.Accommodation.Name  </p>
@@ -50,7 +50,7 @@
                 </h2>
            </div>
 
-            @foreach (AccommodationBookingApp.DataAccess.Entities.Booking upcomingBooking in Model.UpcomingStays)
+            @foreach (var upcomingBooking in Model.UpcomingStays)
             {
                 <div class="row">
                     <p>@upcomingBooking.Accommodation.Name  </p>
@@ -70,7 +70,7 @@
                 </h2>
             </div>
 
-            @foreach (AccommodationBookingApp.DataAccess.Entities.Booking declinedBooking in Model.DeclinedStays)
+            @foreach (var declinedBooking in Model.DeclinedStays)
             {
                 <div class="row">
                     <p>@declinedBooking.Accommodation.Name</p>
@@ -90,7 +90,7 @@
                 </h2>
             </div>
 
-            @foreach (AccommodationBookingApp.DataAccess.Entities.Booking cancelledBooking in Model.CancelledStays)
+            @foreach (var cancelledBooking in Model.CancelledStays)
             {
                 <div class="row">
                     <p>@cancelledBooking.Accommodation.Name</p>

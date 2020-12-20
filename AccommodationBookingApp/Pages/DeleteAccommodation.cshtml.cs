@@ -17,10 +17,10 @@ namespace AccommodationBookingApp.Pages
         [BindProperty]
         public int AccommodationId { get; set; }
         public int NumberOfBookingsForAccommodation { get; set; }
-        public IWebHostEnvironment WebHostEnvironment { get; }
+        private IWebHostEnvironment WebHostEnvironment { get; }
 
-        BookingLogic bookingLogic = new BookingLogic();
-        AccommodationLogic accommodationLogic = new AccommodationLogic();
+        private readonly BookingLogic bookingLogic = new BookingLogic();
+        private readonly AccommodationLogic accommodationLogic = new AccommodationLogic();
 
         public DeleteAccommodationModel(IWebHostEnvironment webHostEnvironment)
         {
@@ -44,6 +44,7 @@ namespace AccommodationBookingApp.Pages
 
             var allBookingsForAccommodation = await bookingLogic.GetAllUpcomingApprovedOrPendingReservationsForAccommodation(accommodationId);
             NumberOfBookingsForAccommodation = allBookingsForAccommodation.Count();
+
             return Page();
         }
 
@@ -58,7 +59,7 @@ namespace AccommodationBookingApp.Pages
                     return Unauthorized();
                 }
 
-                string accommodationPhotosFolder = Path.Combine(WebHostEnvironment.WebRootPath, "accommodationPhotos");
+                var accommodationPhotosFolder = Path.Combine(WebHostEnvironment.WebRootPath, "accommodationPhotos");
 
                 var deleteSuccessful = await accommodationLogic.DeleteAccommodationAsync(accommodationToBeDeleted, accommodationPhotosFolder);
 
@@ -68,7 +69,7 @@ namespace AccommodationBookingApp.Pages
                 }
 
             }
-            return RedirectToPage("/Accommodation");
+            return RedirectToPage("/Accommodations");
         }
     }
 }

@@ -13,16 +13,16 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
 {
     public class AccommodationLogic
     {
-        private IAccommodation _accommodation = new DataAccess.Functions.AccommodationFunctions();
-        private BookingLogic bookingLogic = new BookingLogic();
+        private readonly IAccommodation accommodationFunctions = new DataAccess.Functions.AccommodationFunctions();
+        private readonly BookingLogic bookingLogic = new BookingLogic();
 
-        public async Task<Boolean> CreateNewAccomodation(string name, string city, string address, int numberOfBeds, int pricePerNight, int currencyId,
+        public async Task<bool> CreateNewAccomodation(string name, string city, string address, int numberOfBeds, int pricePerNight, int currencyId,
                                                          bool requireApproval, int accommodationTypeId, string checkInTime, string checkOutTime, 
                                                          string accommodationOwnerUsername, bool userCanCancelBooking, string accommodationImagesFolder, IFormFile AccommodationHeaderPhoto,
                                                          List<IFormFile> AcommodationPhotos)
         {
 
-            Accommodation newAccommodation = new Accommodation {
+            var newAccommodation = new Accommodation {
                 Name = name,
                 City = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(city),
                 Address = address,
@@ -39,22 +39,22 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
                 var headerPhotoFileName = Guid.NewGuid().ToString() + "_" + AccommodationHeaderPhoto.FileName;
                 newAccommodation.HeaderPhotoFileName = headerPhotoFileName;
 
-                var result = await _accommodation.CreateAccommodation(newAccommodation, accommodationTypeId, currencyId, accommodationOwnerUsername);
+                var result = await accommodationFunctions.CreateAccommodation(newAccommodation, accommodationTypeId, currencyId, accommodationOwnerUsername);
 
                 if(result.Id > 0)
                 {
-                    string directoryPath = Path.Combine(accommodationImagesFolder, (name + "_" + result.Id.ToString()));
-                    string headerFolderPath = Path.Combine(directoryPath, "Header");
+                    var directoryPath = Path.Combine(accommodationImagesFolder, (name + "_" + result.Id.ToString()));
+                    var headerFolderPath = Path.Combine(directoryPath, "Header");
                     Directory.CreateDirectory(directoryPath);
                     Directory.CreateDirectory(headerFolderPath);
 
-                    string headerPhotoFilePath = Path.Combine(headerFolderPath, headerPhotoFileName);
+                    var headerPhotoFilePath = Path.Combine(headerFolderPath, headerPhotoFileName);
                     await AccommodationHeaderPhoto.CopyToAsync(new FileStream(headerPhotoFilePath, FileMode.Create));
 
-                    foreach (IFormFile formFile in AcommodationPhotos)
+                    foreach (var formFile in AcommodationPhotos)
                     {
                         var photoFileName = Guid.NewGuid().ToString() + "_" + formFile.FileName;
-                        string photoFilePath = Path.Combine(accommodationImagesFolder, (name + "_" + result.Id.ToString()), photoFileName);
+                        var photoFilePath = Path.Combine(accommodationImagesFolder, (name + "_" + result.Id.ToString()), photoFileName);
                         await formFile.CopyToAsync(new FileStream(photoFilePath, FileMode.Create));
                     }
 
@@ -72,15 +72,15 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
             }
         }
 
-        public async Task<Boolean> DeleteAccommodationAsync(Accommodation accommodationToDelete, string accommodationPhotosFolder)
+        public async Task<bool> DeleteAccommodationAsync(Accommodation accommodationToDelete, string accommodationPhotosFolder)
         {
             try
             {
-                var deleteResult = await _accommodation.DeleteAccommodationAsync(accommodationToDelete);
+                var deleteResult = await accommodationFunctions.DeleteAccommodationAsync(accommodationToDelete);
                 
                 if (deleteResult)
                 {
-                    string accommodationPhotosDirectoryPath = Path.Combine(accommodationPhotosFolder, accommodationToDelete.Name
+                    var accommodationPhotosDirectoryPath = Path.Combine(accommodationPhotosFolder, accommodationToDelete.Name
                                                                            + "_" + accommodationToDelete.Id);
                     Directory.Delete(accommodationPhotosDirectoryPath, true);
                 }
@@ -95,14 +95,14 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
 
         public async Task<List<Accommodation>> GetAccommodations()
         {
-            List<Accommodation> accommodations = await _accommodation.GetAllAccommodations();
+            var accommodations = await accommodationFunctions.GetAllAccommodations();
 
             return accommodations;
         }
 
         public async Task<List<Accommodation>> GetAccommodationsWithUserId(string userId)
         {
-            List<Accommodation> accommodations = await _accommodation.GetAccommodationsWithUserIdAsync(userId);
+            var accommodations = await accommodationFunctions.GetAccommodationsWithUserIdAsync(userId);
 
             return accommodations;
         }
@@ -116,9 +116,9 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
         {
             //convert accommodation city names to have every word's first character uppercase kastel stari => Kastel Stari
             accommodationCity = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(accommodationCity);
-            List<Accommodation> accommodationsToRemove = new List<Accommodation>();
+            var accommodationsToRemove = new List<Accommodation>();
 
-            List<Accommodation> accommodations = await _accommodation.GetFilteredAccommodations(accommodationCity, numberOfGuests);
+            var accommodations = await accommodationFunctions.GetFilteredAccommodations(accommodationCity, numberOfGuests);
 
             if (accommodationTypeId != 0)
             {
@@ -134,12 +134,13 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
             }
 
             //obavezno provjerit rubne slucajeve npr kad gleda zadnju rezervaciju i sl++ (search dobro radi, problem sa check-in i check-out datumima na details stranici)
-            foreach (Accommodation accommodation in accommodations)
+            foreach (var accommodation in accommodations)
             {
                 var bookingsForAccommodation = await bookingLogic.GetAllBookingsForAccommodation(accommodation.Id);
+                
                 if (bookingsForAccommodation.Count != 0)
                 {
-                    foreach (Booking booking in bookingsForAccommodation)
+                    foreach (var booking in bookingsForAccommodation)
                     {
                         if (checkInDate < booking.CheckOutDate && checkOutDate > booking.CheckInDate
                             && booking.ApprovalStatus != ApprovalStatus.Cancelled
@@ -150,8 +151,8 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
                         }
                         if (latestCheckInTime != null)
                         {
-                            int accommodationCheckInTimeInt = Int32.Parse(accommodation.CheckInTime.Split(":")[0]);
-                            if (accommodationCheckInTimeInt > Int32.Parse(latestCheckInTime.Split(":")[0]))
+                            var accommodationCheckInTimeInt = int.Parse(accommodation.CheckInTime.Split(":")[0]);
+                            if (accommodationCheckInTimeInt > int.Parse(latestCheckInTime.Split(":")[0]))
                             {
                                 accommodationsToRemove.Add(accommodation);
                                 continue;
@@ -159,8 +160,8 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
                         }
                         if (earliestCheckOutTime != null)
                         {
-                            int AccommodationCheckOutTimeInt = Int32.Parse(accommodation.CheckOutTime.Split(":")[0]);
-                            if (AccommodationCheckOutTimeInt < Int32.Parse(earliestCheckOutTime.Split(":")[0]))
+                            var accommodationCheckOutTimeInt = int.Parse(accommodation.CheckOutTime.Split(":")[0]);
+                            if (accommodationCheckOutTimeInt < int.Parse(earliestCheckOutTime.Split(":")[0]))
                             {
                                 accommodationsToRemove.Add(accommodation);
                                 continue;
@@ -170,7 +171,7 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
                 }
             }
 
-            foreach (Accommodation accommodationToRemove in accommodationsToRemove)
+            foreach (var accommodationToRemove in accommodationsToRemove)
             {
                 accommodations.Remove(accommodationToRemove);
             }
@@ -180,18 +181,18 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
         
         public async Task<Accommodation> GetAccommodationById(int accommodationId)
         {
-            return await _accommodation.GetAccommodationById(accommodationId);
+            return await accommodationFunctions.GetAccommodationById(accommodationId);
         }
 
-        public async Task<List<String>> GetDatesOccupiedForAccommodation(int accommodationId)
+        public async Task<List<string>> GetDatesOccupiedForAccommodation(int accommodationId)
         {
-            List<string> listOFDatesOccupied = new List<string>();
-            string dateFormat = "dd.MM.yyyy.";
+            var listOFDatesOccupied = new List<string>();
+            var dateFormat = "dd.MM.yyyy.";
 
             var bookings = await bookingLogic.GetAllBookingsForAccommodation(accommodationId);
             var bookingsSorted = bookings.OrderBy(booking => booking.CheckInDate);
 
-            foreach(Booking booking in bookingsSorted)
+            foreach(var booking in bookingsSorted)
             {
                 if(booking.ApprovalStatus == ApprovalStatus.Cancelled || booking.ApprovalStatus == ApprovalStatus.Declined
                    || booking.ApprovalStatus == ApprovalStatus.CancelledByUser)

@@ -12,7 +12,7 @@ namespace AccommodationBookingApp.Pages
 {
     public class LogoutModel : PageModel
     {
-        private UserLogic userLogic;
+        private readonly UserLogic userLogic;
 
         public LogoutModel(UserManager<ApplicationUser> userManager,
                           SignInManager<ApplicationUser> signInManager)

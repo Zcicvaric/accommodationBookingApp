@@ -58,7 +58,6 @@ namespace AccommodationBookingApp.Pages
         [BindProperty]
         [Display (Name = "Check-out time")]
         public string CheckOutTime { get; set; }
-        public object WebRootPath { get; private set; }
         [Required (ErrorMessage = "Please select one or more photos")]
         [BindProperty]
         [Display (Name = "Accommodation photos")]
@@ -67,12 +66,12 @@ namespace AccommodationBookingApp.Pages
         [BindProperty]
         [Display (Name = "Header photo")]
         public IFormFile AccommodationHeaderPhoto { get; set; }
-        public IWebHostEnvironment WebHostEnvironment { get; }
+        private IWebHostEnvironment WebHostEnvironment { get; }
         public List<string> TimesList { get; set; }
 
-        private AccommodationLogic AccommodationLogic = new AccommodationLogic();
-        private AccommodationTypeLogic AccommodationTypeLogic = new AccommodationTypeLogic();
-        private CurrencyLogic CurrencyLogic = new CurrencyLogic();
+        private readonly AccommodationLogic AccommodationLogic = new AccommodationLogic();
+        private readonly AccommodationTypeLogic AccommodationTypeLogic = new AccommodationTypeLogic();
+        private readonly CurrencyLogic CurrencyLogic = new CurrencyLogic();
 
         public List<AccommodationType> AccommodationTypes;
         public List<Currency> Currencies;
@@ -99,16 +98,16 @@ namespace AccommodationBookingApp.Pages
 
         public async Task<IActionResult> OnPost()
         {
-            int checkInTimeInt;
-            int checkOutTimeInt;
 
             if (ModelState.IsValid)
             {
+                int checkInTimeInt;
+                int checkOutTimeInt;
 
                 try
                 {
-                    checkInTimeInt = Int32.Parse(CheckInTime.Split(":")[0]);
-                    checkOutTimeInt = Int32.Parse(CheckOutTime.Split(":")[0]);
+                    checkInTimeInt = int.Parse(CheckInTime.Split(":")[0]);
+                    checkOutTimeInt = int.Parse(CheckOutTime.Split(":")[0]);
                 }
                 catch
                 {
@@ -124,7 +123,7 @@ namespace AccommodationBookingApp.Pages
                     return Page();
                 }
 
-                string accommodationImagesFolder = Path.Combine(WebHostEnvironment.WebRootPath, "accommodationPhotos");
+                var accommodationImagesFolder = Path.Combine(WebHostEnvironment.WebRootPath, "accommodationPhotos");
 
                 var result = await AccommodationLogic.CreateNewAccomodation(Name, City, Address, NumberOfBeds, PricePerNight, CurrencyId, RequireApproval,
                                                                             AccommodationTypeId, CheckInTime, CheckOutTime, User.Identity.Name, UserCanCancelBooking,
@@ -135,7 +134,7 @@ namespace AccommodationBookingApp.Pages
                     return BadRequest();
                 }
 
-                return RedirectToPage("/Accommodation");
+                return RedirectToPage("/Accommodations");
             }
             else
             {

@@ -11,7 +11,7 @@ namespace AccommodationBookingApp.DataAccess.Functions
 {
     public class CurrencyFunctions : ICurrency
     {
-        private DatabaseContext Context;
+        private readonly DatabaseContext Context;
 
         public CurrencyFunctions()
         {
@@ -29,8 +29,7 @@ namespace AccommodationBookingApp.DataAccess.Functions
 
         public async Task<List<Currency>> GetAllCurrencies()
         {
-            List<Currency> currencies = new List<Currency>();
-            currencies = await Context.Currencies.ToListAsync();
+            var currencies = await Context.Currencies.ToListAsync();
 
             return currencies;
         }

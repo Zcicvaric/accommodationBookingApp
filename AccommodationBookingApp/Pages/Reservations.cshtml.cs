@@ -14,17 +14,16 @@ namespace AccommodationBookingApp.Pages
     [Authorize (Roles = "Host, Admin")]
     public class ReservationsModel : PageModel
     {
-        private UserManager<ApplicationUser> UserManager;
-        private BookingLogic BookingLogic = new BookingLogic();
-
-
+        private readonly UserManager<ApplicationUser> UserManager;
+        private readonly BookingLogic BookingLogic = new BookingLogic();
+        
         public List<Booking> PendingReservations { get; set; }
         public List<Booking> ApprovedReservations { get; set; }
         public List<Booking> PreviousReservations { get; set; }
         public List<Booking> DeclinedReservations { get; set; }
         public List<Booking> CancelledReservations { get; set; }
         public List<Booking> CancelledByUserReservations { get; set; }
-        public ApplicationUser CurrentUser { get; set; }
+        private ApplicationUser CurrentUser { get; set; }
 
         public ReservationsModel(UserManager<ApplicationUser> userManager)
         {
@@ -33,6 +32,12 @@ namespace AccommodationBookingApp.Pages
         public async Task<IActionResult> OnGet()
         {
             CurrentUser = await UserManager.GetUserAsync(User);
+
+            if (User == null)
+            {
+                return RedirectToPage("/Login");
+            }
+
             PendingReservations = await BookingLogic.GetAllPendingReservationsForHost(CurrentUser.Id);
             ApprovedReservations = await BookingLogic.GetAllApprovedReservationsForHost(CurrentUser.Id);
             PreviousReservations = await BookingLogic.GetAllPreviousReservationsForHost(CurrentUser.Id);
@@ -55,6 +60,11 @@ namespace AccommodationBookingApp.Pages
             var accommodation = await accommodationLogic.GetAccommodationById(accommodationId);
 
             CurrentUser = await UserManager.GetUserAsync(User);
+
+            if (CurrentUser == null)
+            {
+                return BadRequest();
+            }
 
             if (accommodation.ApplicationUser.Id != CurrentUser.Id && !User.IsInRole("Admin"))
             {

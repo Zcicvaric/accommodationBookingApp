@@ -29,7 +29,7 @@
                 }
                 @if (User.IsInRole("Host"))
                 {
-                    <a class="nav-item nav-link" asp-page="/Accommodation">Your Accomodations</a>
+                    <a class="nav-item nav-link" asp-page="/Accommodations">Your Accomodations</a>
                 }
                 @if (User.Identity.IsAuthenticated && !User.IsInRole("Admin"))
                 {
@@ -44,7 +44,7 @@
             <div class="navbar-nav ml-auto">
                 @if (User.Identity.IsAuthenticated)
                 {
-                    <a class="nav-item nav-link" asp-page="/Account">Welcome @User.Identity.Name</a>
+                    <a class="nav-item nav-link" asp-page="/Account/Details">Welcome @User.Identity.Name</a>
                     <a class="nav-item nav-link" asp-page="/LogOut">Log out</a>
                 }
                 else

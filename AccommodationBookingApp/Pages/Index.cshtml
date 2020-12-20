@@ -3,14 +3,3 @@
 @{
     ViewData["Title"] = "Welcome to the accommodation booking app";
 }
-
-
-@if (User.Identity.IsAuthenticated)
-{
-    <p>Logged in!</p>
-}
-
-@if (User.IsInRole("User"))
-{
-    <p>You have the role of User!</p>
-}

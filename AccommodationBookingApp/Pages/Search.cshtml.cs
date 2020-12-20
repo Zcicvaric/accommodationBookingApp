@@ -51,9 +51,9 @@ namespace AccommodationBookingApp.Pages
         {
             TimeOfTheDayList = new List<string>();
 
-            for(int i = 0; i < 24; i++)
+            for(var i = 0; i < 24; i++)
             {
-                string timeOfTheDay = i.ToString() + ":00";
+                var timeOfTheDay = i.ToString() + ":00";
                 TimeOfTheDayList.Add(timeOfTheDay);
             }
         }
@@ -64,6 +64,7 @@ namespace AccommodationBookingApp.Pages
             CheckOutDateString = DateTime.Today.AddDays(1).ToShortDateString();
             AccommodationTypeLogic = new AccommodationTypeLogic();
             AccommodationTypes = await AccommodationTypeLogic.GetAccommodationTypes();
+
             return Page();
         }
 
@@ -75,8 +76,8 @@ namespace AccommodationBookingApp.Pages
                 AccommodationTypeLogic = new AccommodationTypeLogic();
                 AccommodationTypes = await AccommodationTypeLogic.GetAccommodationTypes();
 
-                DateTime checkInDate = DateTime.Parse(CheckInDateString);
-                DateTime checkOutDate = DateTime.Parse(CheckOutDateString);
+                var checkInDate = DateTime.Parse(CheckInDateString);
+                var checkOutDate = DateTime.Parse(CheckOutDateString);
 
                 AccommodationLogic = new AccommodationLogic();
                 Accommodations = await AccommodationLogic.GetFilteredAccommodations(AccommodationCity, NumberOfGuests,
@@ -89,6 +90,7 @@ namespace AccommodationBookingApp.Pages
                 {
                     ErrorMessage = "Sorry, no accommodations found that match the given criteria";
                 }
+
                 return Page();
             }
 

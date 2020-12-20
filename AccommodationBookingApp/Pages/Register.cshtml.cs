@@ -38,7 +38,7 @@ namespace AccommodationBookingApp.Pages
         [Compare("Password", ErrorMessage = "Passwords must match!")]
         public string ConfirmPassword { get; set; }
 
-        private UserLogic userLogic;
+        private readonly UserLogic userLogic;
 
         public RegisterModel(UserManager<ApplicationUser> userManager,
                             SignInManager<ApplicationUser> signInManager,
@@ -64,12 +64,13 @@ namespace AccommodationBookingApp.Pages
                 foreach (var registrationError in result.Errors)
                 {
                     ModelState.AddModelError("", registrationError.Description);
+
+                    return Page();
                 }
                  
             }
 
-            return Page();
-            
+            return BadRequest();
         }
     }
 }

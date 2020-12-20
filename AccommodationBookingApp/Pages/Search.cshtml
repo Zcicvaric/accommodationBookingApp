@@ -47,7 +47,7 @@
                 <div class="input-group mb-2">
                     <input asp-for="@Model.ShowOnlyAccommodationsWithInstantBooking" class="form-control"/>
                 </div>
-                <label>Cancelation allowed after booking is confirmed?</label>
+                <label>Cancellation allowed after booking is confirmed?</label>
                 <div class="input-group mb-2">
                     <input asp-for="@Model.ShowOnlyAccommodationsWhereUserCanCancelBooking" class="form-control"/>
                 </div>
@@ -59,7 +59,7 @@
     @if (Model.Accommodations != null)
     {
 
-        foreach (AccommodationBookingApp.DataAccess.Entities.Accommodation accommodation in Model.Accommodations)
+        foreach (var accommodation in Model.Accommodations)
         {
             var imagePath = "~/accommodationPhotos/" + @accommodation.Name + "_" + accommodation.Id.ToString() + "/Header/" + accommodation.HeaderPhotoFileName;
 
@@ -67,11 +67,11 @@
                 <h2><a asp-page="/AccommodationDetails" asp-route-accommodationId="@accommodation.Id"
                        asp-route-checkInDate="@Model.CheckInDateString" asp-route-checkOutDate="@Model.CheckOutDateString">@accommodation.Name</a></h2>
                 <p>Number of beds: @accommodation.NumberOfBeds</p>
-                <p>Price per night: @accommodation.PricePerNight @accommodation.Currency</p>
+                <p>Price per night: @accommodation.PricePerNight @accommodation.Currency.Name</p>
                 <p>Address: @accommodation.Address</p>
                 <p>City: @accommodation.City</p>
                 <a asp-page="/AccommodationDetails" asp-route-accommodationId="@accommodation.Id"
-                   asp-route-checkInDate="@Model.CheckInDateString" asp-route-checkOutDate="@Model.CheckOutDateString"><img src="@imagePath" asp-append-version="true" /></a>
+                   asp-route-checkInDate="@Model.CheckInDateString" asp-route-checkOutDate="@Model.CheckOutDateString"><img src="@imagePath" alt="accommodationPhoto" asp-append-version="true" /></a>
             </div>
         }
     }

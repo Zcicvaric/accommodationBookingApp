@@ -46,9 +46,9 @@ namespace AccommodationBookingApp.DataAccess.Functions
       
             var result = await userManager.CreateAsync(newUser, password);
 
-            if(result.Succeeded)
+            if (result.Succeeded)
             {
-                if(registerAsHost)
+                if (registerAsHost)
             {
                 await userManager.AddToRoleAsync(newUser, "Host");
             }

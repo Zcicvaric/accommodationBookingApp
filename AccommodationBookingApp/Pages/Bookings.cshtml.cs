@@ -14,8 +14,8 @@ namespace AccommodationBookingApp.Pages
     [Authorize]
     public class BookingsModel : PageModel
     {
-        private BookingLogic BookingLogic = new BookingLogic();
-        private UserManager<ApplicationUser> UserManager;
+        private readonly BookingLogic BookingLogic = new BookingLogic();
+        private readonly UserManager<ApplicationUser> UserManager;
         private ApplicationUser ApplicationUser;
         public List<Booking> PreviousStays { get; set; }
         public List<Booking> UpcomingStays { get; set; }
@@ -35,6 +35,12 @@ namespace AccommodationBookingApp.Pages
             }
 
             ApplicationUser = await UserManager.GetUserAsync(User);
+
+            if (ApplicationUser == null)
+            {
+                return RedirectToPage("/Login");
+            }
+
             PreviousStays = await BookingLogic.GetAllPreviousStaysForUser(ApplicationUser.Id);
             UpcomingStays = await BookingLogic.GetAllUpcomingStaysForUser(ApplicationUser.Id);
             DeclinedStays = await BookingLogic.GetAllDeclinedStaysForUser(ApplicationUser.Id);
@@ -51,6 +57,11 @@ namespace AccommodationBookingApp.Pages
             }
 
             ApplicationUser = await UserManager.FindByNameAsync(username);
+
+            if (ApplicationUser == null)
+            {
+                return BadRequest();
+            }
 
             Username = ApplicationUser.FirstName + " " + ApplicationUser.LastName;
 

@@ -14,8 +14,8 @@ namespace AccommodationBookingApp.Pages
     [Authorize]
     public class BookingDetailsModel : PageModel
     {
-        private BookingLogic bookingLogic;
-        private AccommodationLogic accommodationLogic;
+        private readonly BookingLogic bookingLogic;
+        private readonly AccommodationLogic accommodationLogic;
 
         public Booking Booking { get; set; }
         public Accommodation Accommodation { get; set; }
@@ -40,7 +40,7 @@ namespace AccommodationBookingApp.Pages
                 return NotFound();
             }
 
-            //check if a user is trying to accsess some other user's booking - in that case deny the request
+            //check if a user is trying to access some other user's booking - in that case deny the request
             //but if a host is trying to see a booking for one of his accommodations, allow it
             if (User.IsInRole("User") && Booking.ApplicationUser.UserName != User.Identity.Name)
             {
@@ -75,9 +75,9 @@ namespace AccommodationBookingApp.Pages
                     return Unauthorized();
                 }
 
-                var cancelationSuccessful = await bookingLogic.CancelBookingAsUser(Booking.Id);
+                var cancellationSuccessful = await bookingLogic.CancelBookingAsUser(Booking.Id);
 
-                if (cancelationSuccessful)
+                if (cancellationSuccessful)
                 {
                     return RedirectToPage("/Bookings");
                 }
@@ -141,9 +141,9 @@ namespace AccommodationBookingApp.Pages
                     return Unauthorized();
                 }
 
-                var declineSuccesful = await bookingLogic.DeclineBooking(bookingId);
+                var declineSuccessful = await bookingLogic.DeclineBooking(bookingId);
 
-                if(declineSuccesful)
+                if(declineSuccessful)
                 {
                     return RedirectToPage("/Reservations");
                 }
@@ -175,9 +175,9 @@ namespace AccommodationBookingApp.Pages
                     return Unauthorized();
                 }
 
-                var cancelationSucsessful = await bookingLogic.CancelBooking(bookingId);
+                var cancellationSuccessful = await bookingLogic.CancelBooking(bookingId);
 
-                if (cancelationSucsessful)
+                if (cancellationSuccessful)
                 {
                     return RedirectToPage("/Reservations");
                 }

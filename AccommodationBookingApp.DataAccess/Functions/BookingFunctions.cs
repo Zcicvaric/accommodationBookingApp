@@ -12,7 +12,7 @@ namespace AccommodationBookingApp.DataAccess.Functions
 {
     public class BookingFunctions : IBooking
     {
-        private DatabaseContext Context;
+        private readonly DatabaseContext Context;
 
         public BookingFunctions()
         {
@@ -21,11 +21,11 @@ namespace AccommodationBookingApp.DataAccess.Functions
         public async Task<Booking> CreateBooking(int accommodationId, string userId,
                                                  DateTime checkInDate, DateTime checkOutDate)
         { 
-            Accommodation accommodation = await Context.Accommodations.Where(x => x.Id == accommodationId)
+            var accommodation = await Context.Accommodations.Where(x => x.Id == accommodationId)
                                                                         .FirstOrDefaultAsync();
-            ApplicationUser applicationUser = await Context.Users.Where(applicationUser => applicationUser.Id == userId)
+            var applicationUser = await Context.Users.Where(applicationUser => applicationUser.Id == userId)
                                                                         .FirstOrDefaultAsync();
-            Booking booking = new Booking {
+            var booking = new Booking {
                 Accommodation = accommodation,
                 ApplicationUser = applicationUser,
                 CheckInDate = checkInDate,
@@ -41,7 +41,7 @@ namespace AccommodationBookingApp.DataAccess.Functions
 
         public async Task <Booking> GetBookingByIdAsync(int bookingId)
         {
-            Booking booking = await Context.Bookings.Include("ApplicationUser").Include("Accommodation")
+            var booking = await Context.Bookings.Include("ApplicationUser").Include("Accommodation")
                                                     .Where(booking => booking.Id == bookingId)
                                                     .FirstOrDefaultAsync();
 
@@ -119,7 +119,8 @@ namespace AccommodationBookingApp.DataAccess.Functions
         public async Task<Booking> UpdateBookingStatus(int bookingId, ApprovalStatus newApprovalStatus)
         {
             var booking = await Context.Bookings.FindAsync(bookingId);
-            if(booking != null)
+            
+            if (booking != null)
             {
                 booking.ApprovalStatus = newApprovalStatus;
 

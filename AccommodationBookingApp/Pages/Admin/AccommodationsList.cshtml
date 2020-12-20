@@ -32,7 +32,7 @@
                        asp-route-accommodationId="@accommodation.Id" class="btn btn-info">See all reservations for this accommodation</a>
                     <a asp-page="/DeleteAccommodation" asp-route-accommodationId =" @accommodation.Id"
                        class="btn btn-info">Delete this accommodation</a>
-                    <a asp-page="/Account" asp-page-handler="AccountDetailsForUser" 
+                    <a asp-page="/Account/Details" asp-page-handler="AccountDetailsForUser" 
                        asp-route-username="@accommodation.ApplicationUser.UserName" class="btn btn-info">Accommodation owner details</a>
                 </div>
             }

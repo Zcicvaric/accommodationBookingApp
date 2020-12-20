@@ -12,20 +12,20 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
     public class AccommodationTypeLogic
     {
 
-        private IAccommodationType _accommodationType = new DataAccess.Functions.AccommodationTypeFunctions();
+        private readonly IAccommodationType accommodationTypeFunctions = new DataAccess.Functions.AccommodationTypeFunctions();
 
         public async Task<List<AccommodationType>> GetAccommodationTypes()
         {
-            List<AccommodationType> accommodationTypes = await _accommodationType.GetAllAccommodationTypes();
+            var accommodationTypes = await accommodationTypeFunctions.GetAllAccommodationTypes();
 
             return accommodationTypes;
         }
 
-        public async Task<Boolean> AddAccommodationType(string name)
+        public async Task<bool> AddAccommodationType(string name)
         {
             name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(name);
 
-            var allAccommodationTypes = await _accommodationType.GetAllAccommodationTypes();
+            var allAccommodationTypes = await accommodationTypeFunctions.GetAllAccommodationTypes();
 
             var accommodationTypeWithName = allAccommodationTypes.Where(accommodationType => accommodationType.Name == name)
                                             .ToList();
@@ -35,12 +35,12 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
                 return false;
             }
 
-            AccommodationType newAccommodationType = new AccommodationType();
+            var newAccommodationType = new AccommodationType();
             newAccommodationType.Name = name;
 
             try
             {
-                var result = await _accommodationType.AddAccommodationType(newAccommodationType);
+                var result = await accommodationTypeFunctions.AddAccommodationType(newAccommodationType);
 
                 if (result.Id != 0)
                 {

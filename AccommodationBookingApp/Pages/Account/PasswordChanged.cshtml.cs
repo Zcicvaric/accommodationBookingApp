@@ -13,7 +13,7 @@ namespace AccommodationBookingApp.Pages
     {
         public IActionResult OnGet()
         {
-            return RedirectToPage("/ChangePassword");
+            return RedirectToPage("/Account/ChangePassword");
         }
         public IActionResult OnGetPasswordChanged()
         {

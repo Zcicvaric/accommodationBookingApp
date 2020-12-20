@@ -13,17 +13,17 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace AccommodationBookingApp.Pages
 {
-    [Authorize (Roles = "User")]
+    [Authorize (Roles = "Host")]
     [BindProperties]
-    public class UpdateAccountModel : PageModel
+    public class UpdateHostAccountModel : PageModel
     {
-        private UserLogic userLogic;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
 
+        private readonly UserLogic userLogic;
+
         [BindNever]
         public ApplicationUser ApplicationUser { get; set; }
-
         [Required]
         [Display (Name = "First Name")]
         public string FirstName { get; set; }
@@ -33,51 +33,67 @@ namespace AccommodationBookingApp.Pages
         [Required]
         [DataType (DataType.EmailAddress)]
         public string Email { get; set; }
+        [Required]
+        [RegularExpression (@"^([A-Ža-ž]{1,}\s?){1,}\s(\d{1,}[A-Ža-ž]{0,2})$", ErrorMessage = "Address needs to have the street name and street numbe, for example Kopilica 5")]
+        public string Address { get; set; }
+        [Required]
+        [Display (Name = "Mobile Phone Number")]
+        [RegularExpression(@"^(\d{9,10})$", ErrorMessage = "Mobile phone number must have 9 or 10 digits")]
+        public string MobilePhoneNumber { get; set; }
+        [Required]
+        public string City { get; set; }
+        [Required]
+        public string Country { get; set; }
 
-        public UpdateAccountModel(UserManager<ApplicationUser> userManager,
-                                  SignInManager<ApplicationUser> signInManager)
+        public UpdateHostAccountModel(UserManager<ApplicationUser> userManager,
+                                      SignInManager<ApplicationUser> signInManager)
         {
-            this.userLogic = new UserLogic(userManager);
             this.userManager = userManager;
             this.signInManager = signInManager;
+
+            userLogic = new UserLogic(userManager);
         }
         public async Task<IActionResult> OnGet()
         {
             ApplicationUser = await userManager.GetUserAsync(User);
-            
+
+            if (ApplicationUser == null)
+            {
+                return BadRequest();
+            }
+
             return Page();
         }
 
-
-        //Can't update the user here using the userManager's update method due to the optimistic concurrency failure
-        //(caused when multiple users try to change the same object
         public async Task<IActionResult> OnPost()
         {
             ApplicationUser = await userManager.GetUserAsync(User);
 
             if (ApplicationUser == null)
             {
-                return RedirectToPage("/UpdateAccount");
+                return RedirectToPage("/UpdateHostAccount");
             }
 
             if (ModelState.IsValid)
             {
-                var userUpdateResult = await userLogic.UpdateAccount(ApplicationUser, FirstName, LastName, Email);
-                
-                if(userUpdateResult.Succeeded)
+                var hostUpdateResult = await userLogic.UpdateHostAccount(ApplicationUser, FirstName, LastName, Email, Address,
+                                                                         MobilePhoneNumber, City, Country);
+
+                if (hostUpdateResult.Succeeded)
                 {
                     await signInManager.RefreshSignInAsync(ApplicationUser);
-                    return RedirectToPage("/Account");
+                    return RedirectToPage("/Account/Details");
                 }
 
-                foreach (var userUpdateError in userUpdateResult.Errors)
+                foreach (var error in hostUpdateResult.Errors)
                 {
-                    ModelState.AddModelError("", userUpdateError.Description);
+                    ModelState.AddModelError("", error.Description);
                 }
+
                 return Page();
             }
 
-            return Page();
+            return BadRequest();
         }
     }
 }

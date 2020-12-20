@@ -12,23 +12,21 @@ namespace AccommodationBookingApp.DataAccess.Functions
 {
     public class AccommodationTypeFunctions : IAccommodationType
     {
-        private DatabaseContext Context;
+        private readonly DatabaseContext Context;
         public AccommodationTypeFunctions()
         {
             Context = new DatabaseContext(DatabaseContext.optionsBuild.dbContextOptions);
         }
         public async Task<AccommodationType> GetAccommodationTypeById(int accommodationTypeId)
         {
-            AccommodationType accommodationType = new AccommodationType();
-            accommodationType = await Context.AccommodationType.Where(accommodationType =>
+            var accommodationType = await Context.AccommodationType.Where(accommodationType =>
                                                   accommodationType.Id == accommodationTypeId).FirstOrDefaultAsync();
 
             return accommodationType;
         }
         public async Task<List<AccommodationType>> GetAllAccommodationTypes()
         {
-            List<AccommodationType> accommodationTypes = new List<AccommodationType>();
-            accommodationTypes = await Context.AccommodationType.ToListAsync();
+            var accommodationTypes = await Context.AccommodationType.ToListAsync();
             return accommodationTypes;
         }
 

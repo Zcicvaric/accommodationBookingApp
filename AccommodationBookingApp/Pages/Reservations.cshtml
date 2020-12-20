@@ -11,7 +11,7 @@
             <h2>Pending reservations:</h2>
         </div>
     
-        @foreach (AccommodationBookingApp.DataAccess.Entities.Booking booking in Model.PendingReservations)
+        @foreach (var booking in Model.PendingReservations)
         {
             <div class="row">
                 <p>@booking.Accommodation.Name</p>
@@ -30,7 +30,7 @@
             <h2>Approved reservations:</h2>
         </div>
 
-        @foreach (AccommodationBookingApp.DataAccess.Entities.Booking booking in Model.ApprovedReservations)
+        @foreach (var booking in Model.ApprovedReservations)
         {
             <div class="row">
                 <p>@booking.Accommodation.Name</p>
@@ -48,7 +48,7 @@
             <h2>Previous reservations:</h2>
         </div>
 
-        @foreach (AccommodationBookingApp.DataAccess.Entities.Booking booking in Model.PreviousReservations)
+        @foreach (var booking in Model.PreviousReservations)
         {
             <div class="row">
                 <p>@booking.Accommodation.Name</p>
@@ -67,7 +67,7 @@
             <h2>Declined reservations:</h2>
         </div>
 
-        @foreach (AccommodationBookingApp.DataAccess.Entities.Booking booking in Model.DeclinedReservations)
+        @foreach (var booking in Model.DeclinedReservations)
         {
             <div class="row">
                 <p>@booking.Accommodation.Name</p>
@@ -86,7 +86,7 @@
             <h2>Canceled reservations:</h2>
         </div>
 
-        @foreach (AccommodationBookingApp.DataAccess.Entities.Booking booking in Model.CancelledReservations)
+        @foreach (var booking in Model.CancelledReservations)
         {
             <div class="row">
                 <p>@booking.Accommodation.Name</p>
@@ -105,7 +105,7 @@
             <h2>Cancelled by user reservations:</h2>
         </div>
 
-        @foreach (AccommodationBookingApp.DataAccess.Entities.Booking booking in Model.CancelledByUserReservations)
+        @foreach (var booking in Model.CancelledByUserReservations)
         {
             <div class="row">
                 <p>@booking.Accommodation.Name</p>
