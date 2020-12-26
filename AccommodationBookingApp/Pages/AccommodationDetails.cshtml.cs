@@ -1,3 +1,8 @@
+using AccommodationBookingApp.BLL.AccommodationLogic;
+using AccommodationBookingApp.DataAccess.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -5,12 +10,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using AccommodationBookingApp.BLL.AccommodationLogic;
-using AccommodationBookingApp.DataAccess.Entities;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace AccommodationBookingApp.Pages
 {
@@ -24,13 +23,13 @@ namespace AccommodationBookingApp.Pages
         public DateTime CheckInDate { get; set; }
         public DateTime CheckOutDate { get; set; }
         [BindProperty]
-        [Required (ErrorMessage = "Please select a valid check-in date")]
+        [Required(ErrorMessage = "Please select a valid check-in date")]
         public string CheckInDateString { get; set; }
         [BindProperty]
-        [Required (ErrorMessage = "Please select a valid check-out date")]
+        [Required(ErrorMessage = "Please select a valid check-out date")]
         public string CheckOutDateString { get; set; }
         public ApplicationUser CurrentUser { get; set; }
-        public string [] DatesOccupiedArray { get; set; }
+        public string[] DatesOccupiedArray { get; set; }
 
         private readonly AccommodationLogic AccommodationLogic = new AccommodationLogic();
         private readonly UserManager<ApplicationUser> userManager;
@@ -43,7 +42,7 @@ namespace AccommodationBookingApp.Pages
         }
 
 
-        public async Task<IActionResult> OnGet(int accommodationId, string checkInDate, string checkOutDate)
+        public async Task<IActionResult> OnGetAsync(int accommodationId, string checkInDate, string checkOutDate)
         {
             if (accommodationId == 0)
             {
@@ -56,7 +55,7 @@ namespace AccommodationBookingApp.Pages
             }
 
             AccommodationId = accommodationId;
-            Accommodation = await AccommodationLogic.GetAccommodationById(accommodationId);
+            Accommodation = await AccommodationLogic.GetAccommodationByIdAsync(accommodationId);
 
             if (Accommodation == null)
             {
@@ -67,7 +66,7 @@ namespace AccommodationBookingApp.Pages
             CheckOutDateString = checkOutDate;
             var dateformat = "dd.MM.yyyy.";
 
-            var listOfDatesOccupied = await AccommodationLogic.GetDatesOccupiedForAccommodation(accommodationId);
+            var listOfDatesOccupied = await AccommodationLogic.GetDatesOccupiedForAccommodationAsync(accommodationId);
 
             try
             {
@@ -93,9 +92,7 @@ namespace AccommodationBookingApp.Pages
                 CheckInDateString = CheckInDate.ToString(dateformat);
                 CheckOutDateString = CheckOutDate.ToString(dateformat);
             }
-            
 
-            //var listOfDatesOccupied = await AccommodationLogic.GetDatesOccupiedForAccommodation(accommodationId);
 
             DatesOccupiedArray = listOfDatesOccupied.ToArray();
 
@@ -107,7 +104,7 @@ namespace AccommodationBookingApp.Pages
             {
                 AccommodationPhotos = Directory.GetFiles(accommodationImagesFolder, "*", SearchOption.TopDirectoryOnly).ToList();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 AccommodationPhotos = new List<string>();
             }
@@ -115,13 +112,13 @@ namespace AccommodationBookingApp.Pages
             return Page();
         }
 
-        public async Task<IActionResult> OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
             if (ModelState.IsValid)
             {
                 CurrentUser = await userManager.GetUserAsync(User);
 
-                Accommodation = await AccommodationLogic.GetAccommodationById(AccommodationId);
+                Accommodation = await AccommodationLogic.GetAccommodationByIdAsync(AccommodationId);
 
                 if (Accommodation.ApplicationUser.Id == CurrentUser.Id)
                 {
@@ -139,12 +136,12 @@ namespace AccommodationBookingApp.Pages
                         return BadRequest();
                     }
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     return BadRequest();
                 }
 
-                var booking = await BookingLogic.CreateNewBooking(AccommodationId, CurrentUser.Id,
+                var booking = await BookingLogic.CreateNewBookingAsync(AccommodationId, CurrentUser.Id,
                                                     CheckInDate, CheckOutDate);
 
                 if (booking.Id != 0)

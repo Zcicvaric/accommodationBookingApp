@@ -118,7 +118,6 @@
                 return;
             }
 
-
             //checks if selected date date range includes any dates that are disabled
             checkSelectedDateRangeForConflicts(checkInDateSelected, checkOutDateSelected);
 
@@ -159,7 +158,7 @@
 
         function checkSelectedDateRangeForConflicts(checkInDateSelected, checkOutDateSelected) {
 
-            if (checkInDateSelected == null || checkOutDateSelected == null) {
+            if (checkInDateSelected == undefined || checkOutDateSelected == undefined) {
                 return;
             }
 
@@ -174,7 +173,7 @@
             //we can compare the dates occupied two by two as two of them represent one booking
             //if one of the previous booking's date range is a subset of the date range we want to book
             //clear the checkOutDate (that is if our booking would run over someone others booking)
-            for (let j = 0; j < datesOccupied.length; j = j + 2) {
+            for (let j = 0; j < datesOccupied.length-1; j = j + 2) {
 
                 if (compareDateStrings(datesOccupied[j], checkInDateFormatted)
                     && compareDateStrings(checkOutDateFormatted, datesToDisableArray[j + 1])) {

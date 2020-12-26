@@ -5,8 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AccommodationBookingApp.DataAccess.Functions
@@ -18,7 +16,7 @@ namespace AccommodationBookingApp.DataAccess.Functions
         {
             Context = new DatabaseContext(DatabaseContext.optionsBuild.dbContextOptions);
         }
-        public async Task<Accommodation> CreateAccommodation(Accommodation accommodation, int accommodationTypeId, int currencyId, string accommodationOwnerUsername)
+        public async Task<Accommodation> CreateAccommodationAsync(Accommodation accommodation, int accommodationTypeId, int currencyId, string accommodationOwnerUsername)
         {
             var accommodationType = await Context.AccommodationType.Where(accommodationType =>
                                                                                   accommodationType.Id == accommodationTypeId)
@@ -36,7 +34,16 @@ namespace AccommodationBookingApp.DataAccess.Functions
             accommodation.ApplicationUser = applicationUser;
 
             await Context.Accommodations.AddAsync(accommodation);
-            await Context.SaveChangesAsync();
+
+            try
+            {
+                await Context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+
+                return new Accommodation();
+            }
 
             return accommodation;
         }
@@ -45,12 +52,20 @@ namespace AccommodationBookingApp.DataAccess.Functions
         {
             Context.Accommodations.Remove(accommodationToDelete);
 
-            await Context.SaveChangesAsync();
+            try
+            {
+                await Context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
 
             return true;
         }
 
-        public async Task<List<Accommodation>> GetAllAccommodations()
+        public async Task<List<Accommodation>> GetAllAccommodationsAsync()
         {
             var accommodations = await Context.Accommodations.Include("AccommodationType").Include("ApplicationUser")
                                    .ToListAsync();
@@ -62,25 +77,27 @@ namespace AccommodationBookingApp.DataAccess.Functions
         {
             var accommodations = await Context.Accommodations.Include("AccommodationType").Include("ApplicationUser")
                                                          .Include("Currency")
-                                                         .Where(accommodation => accommodation.ApplicationUser.Id == userId).ToListAsync();
+                                                         .Where(accommodation => accommodation.ApplicationUser.Id == userId)
+                                                         .ToListAsync();
 
             return accommodations;
         }
 
-        //mos na ovo napravit prezentaciju kako radi 
-        public async Task<List<Accommodation>> GetFilteredAccommodations(string accommodationCity, int numberOfGuests)
+        // Mos na ovo napravit prezentaciju kako radi 
+        public async Task<List<Accommodation>> GetFilteredAccommodationsAsync(string accommodationCity, int numberOfGuests)
         {
             var accommodations = await Context.Accommodations.Include("AccommodationType").Include("ApplicationUser")
                                                          .Include("Currency")
                                                          .Where(accommodation =>
                                                          accommodation.City == accommodationCity &&
-                                                         accommodation.NumberOfBeds >= numberOfGuests).ToListAsync();
-            
+                                                         accommodation.NumberOfBeds >= numberOfGuests)
+                                                         .ToListAsync();
+
             return accommodations;
         }
 
 
-        public async Task<Accommodation> GetAccommodationById(int accommodationId)
+        public async Task<Accommodation> GetAccommodationByIdAsync(int accommodationId)
         {
             var accommodation = await Context.Accommodations.Include("AccommodationType").Include("ApplicationUser")
                                                          .Include("Currency")
@@ -90,6 +107,6 @@ namespace AccommodationBookingApp.DataAccess.Functions
 
             return accommodation;
         }
-        
+
     }
 }

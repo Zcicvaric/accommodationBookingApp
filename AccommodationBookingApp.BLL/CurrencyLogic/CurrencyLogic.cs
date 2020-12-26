@@ -3,7 +3,6 @@ using AccommodationBookingApp.DataAccess.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AccommodationBookingApp.BLL.CurrencyLogic
@@ -14,14 +13,14 @@ namespace AccommodationBookingApp.BLL.CurrencyLogic
 
         public async Task<List<Currency>> GetCurrenciesAsync()
         {
-            var currencies = await currencyFunctions.GetAllCurrencies();
+            var currencies = await currencyFunctions.GetAllCurrenciesAsync();
 
             return currencies;
         }
 
         public async Task<bool> AddCurrencyAsync(string name)
         {
-            var allCurrencies = await currencyFunctions.GetAllCurrencies();
+            var allCurrencies = await currencyFunctions.GetAllCurrenciesAsync();
 
             var currenciesWithName = allCurrencies.Where(currency => currency.Name == name).ToList();
 
@@ -30,19 +29,21 @@ namespace AccommodationBookingApp.BLL.CurrencyLogic
                 return false;
             }
 
-            var newCurrency = new Currency();
-            newCurrency.Name = name;
+            var newCurrency = new Currency
+            {
+                Name = name
+            };
 
             try
             {
-                var result = await currencyFunctions.AddCurrency(newCurrency);
+                var result = await currencyFunctions.CreateCurrencyAsync(newCurrency);
 
                 if (result.Id != 0)
                 {
                     return true;
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }

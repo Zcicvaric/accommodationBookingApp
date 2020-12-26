@@ -1,33 +1,31 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 using AccommodationBookingApp.BLL.AccommodationLogic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 
 namespace AccommodationBookingApp.Pages.Admin
 {
-    [Authorize (Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class CreateNewAccommodationTypeModel : PageModel
     {
         [Required]
         [BindProperty]
-        [Display (Name = "Accommodation Type Name")]
+        [MaxLength(50)]
+        [Display(Name = "Accommodation Type Name")]
         public string AccommodationTypeName { get; set; }
 
-        private AccommodationTypeLogic accommodationTypeLogic = new AccommodationTypeLogic();
+        private readonly AccommodationTypeLogic accommodationTypeLogic = new AccommodationTypeLogic();
         public void OnGet()
         {
         }
 
-        public async Task<IActionResult> OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
             if (ModelState.IsValid)
             {
-                var result = await accommodationTypeLogic.AddAccommodationType(AccommodationTypeName);
+                var result = await accommodationTypeLogic.AddAccommodationTypeAsync(AccommodationTypeName);
 
                 if (result)
                 {

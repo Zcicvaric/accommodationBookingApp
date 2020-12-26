@@ -1,22 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AccommodationBookingApp.BLL.AccommodationLogic;
 using AccommodationBookingApp.DataAccess.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace AccommodationBookingApp.Pages
 {
-    [Authorize (Roles = "Host, Admin")]
+    [Authorize(Roles = "Host, Admin")]
     public class ReservationsModel : PageModel
     {
         private readonly UserManager<ApplicationUser> UserManager;
         private readonly BookingLogic BookingLogic = new BookingLogic();
-        
+
         public List<Booking> PendingReservations { get; set; }
         public List<Booking> ApprovedReservations { get; set; }
         public List<Booking> PreviousReservations { get; set; }
@@ -29,7 +27,7 @@ namespace AccommodationBookingApp.Pages
         {
             UserManager = userManager;
         }
-        public async Task<IActionResult> OnGet()
+        public async Task<IActionResult> OnGetAsync()
         {
             CurrentUser = await UserManager.GetUserAsync(User);
 
@@ -38,18 +36,18 @@ namespace AccommodationBookingApp.Pages
                 return RedirectToPage("/Login");
             }
 
-            PendingReservations = await BookingLogic.GetAllPendingReservationsForHost(CurrentUser.Id);
-            ApprovedReservations = await BookingLogic.GetAllApprovedReservationsForHost(CurrentUser.Id);
-            PreviousReservations = await BookingLogic.GetAllPreviousReservationsForHost(CurrentUser.Id);
-            DeclinedReservations = await BookingLogic.GetAllDeclinedReservationsForHost(CurrentUser.Id);
-            CancelledReservations = await BookingLogic.GetAllCancelledReservationsForHost(CurrentUser.Id);
-            CancelledByUserReservations = await BookingLogic.GetAllCancelledByUserReservationsForHost(CurrentUser.Id);
-            
+            PendingReservations = await BookingLogic.GetAllPendingReservationsForHostAsync(CurrentUser.Id);
+            ApprovedReservations = await BookingLogic.GetAllApprovedReservationsForHostAsync(CurrentUser.Id);
+            PreviousReservations = await BookingLogic.GetAllPreviousReservationsForHostAsync(CurrentUser.Id);
+            DeclinedReservations = await BookingLogic.GetAllDeclinedReservationsForHostAsync(CurrentUser.Id);
+            CancelledReservations = await BookingLogic.GetAllCancelledReservationsForHostAsync(CurrentUser.Id);
+            CancelledByUserReservations = await BookingLogic.GetAllCancelledByUserReservationsForHostAsync(CurrentUser.Id);
+
 
             return Page();
         }
 
-        public async Task<IActionResult> OnGetForAccommodation(int accommodationId)
+        public async Task<IActionResult> OnGetForAccommodationAsync(int accommodationId)
         {
             if (accommodationId == 0)
             {
@@ -57,7 +55,7 @@ namespace AccommodationBookingApp.Pages
             }
 
             var accommodationLogic = new AccommodationLogic();
-            var accommodation = await accommodationLogic.GetAccommodationById(accommodationId);
+            var accommodation = await accommodationLogic.GetAccommodationByIdAsync(accommodationId);
 
             CurrentUser = await UserManager.GetUserAsync(User);
 
@@ -71,19 +69,19 @@ namespace AccommodationBookingApp.Pages
                 return Unauthorized();
             }
 
-            PendingReservations = await BookingLogic.GetAllPendingReservationsForAccommodation(accommodationId);
-            ApprovedReservations = await BookingLogic.GetAllApprovedReservationsForAccommodation(accommodationId);
-            PreviousReservations = await BookingLogic.GetAllPreviousReservationsForAccommodation(accommodationId);
-            DeclinedReservations = await BookingLogic.GetAllDeclinedReservationsForAccommodation(accommodationId);
-            CancelledReservations = await BookingLogic.GetAllCancelledReservationsForAccommodation(accommodationId);
+            PendingReservations = await BookingLogic.GetAllPendingReservationsForAccommodationAsync(accommodationId);
+            ApprovedReservations = await BookingLogic.GetAllApprovedReservationsForAccommodationAsync(accommodationId);
+            PreviousReservations = await BookingLogic.GetAllPreviousReservationsForAccommodationAsync(accommodationId);
+            DeclinedReservations = await BookingLogic.GetAllDeclinedReservationsForAccommodationAsync(accommodationId);
+            CancelledReservations = await BookingLogic.GetAllCancelledReservationsForAccommodationAsync(accommodationId);
 
             if (accommodation.UserCanCancelBooking)
             {
-                CancelledByUserReservations = await BookingLogic.GetAllCancelledByUserReservationsForAccommodation(accommodationId);
+                CancelledByUserReservations = await BookingLogic.GetAllCancelledByUserReservationsForAccommodationAsync(accommodationId);
             }
-            
+
             return Page();
-            
+
         }
     }
 }

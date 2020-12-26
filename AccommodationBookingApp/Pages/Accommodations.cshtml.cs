@@ -27,7 +27,7 @@ namespace AccommodationBookingApp.Pages
             UserManager = userManager;
             WebHostEnvironment = webHostEnvironment;
         }
-        public async Task<IActionResult> OnGet()
+        public async Task<IActionResult> OnGetAsync()
         {
             var user = await UserManager.GetUserAsync(User);
 
@@ -36,12 +36,12 @@ namespace AccommodationBookingApp.Pages
                 return RedirectToPage("/Login");
             }
 
-            Accommodations = await AccommodationLogic.GetAccommodationsWithUserId(user.Id);
+            Accommodations = await AccommodationLogic.GetAccommodationsWithUserIdAsync(user.Id);
 
             return Page();
         }
 
-        public async Task<IActionResult> OnGetAccommodationsForHost(string username)
+        public async Task<IActionResult> OnGetAccommodationsForHostAsync(string username)
         {
             if (!User.IsInRole("Admin"))
             {
@@ -52,7 +52,7 @@ namespace AccommodationBookingApp.Pages
 
             HostName = user.FirstName + " " + user.LastName;
 
-            Accommodations = await AccommodationLogic.GetAccommodationsWithUserId(user.Id);
+            Accommodations = await AccommodationLogic.GetAccommodationsWithUserIdAsync(user.Id);
 
             return Page();
         }

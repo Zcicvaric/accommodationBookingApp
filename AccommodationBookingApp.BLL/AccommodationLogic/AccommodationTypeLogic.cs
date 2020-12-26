@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AccommodationBookingApp.BLL.AccommodationLogic
@@ -14,23 +13,23 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
 
         private readonly IAccommodationType accommodationTypeFunctions = new DataAccess.Functions.AccommodationTypeFunctions();
 
-        public async Task<List<AccommodationType>> GetAccommodationTypes()
+        public async Task<List<AccommodationType>> GetAccommodationTypesAsync()
         {
-            var accommodationTypes = await accommodationTypeFunctions.GetAllAccommodationTypes();
+            var accommodationTypes = await accommodationTypeFunctions.GetAllAccommodationTypesAsync();
 
             return accommodationTypes;
         }
 
-        public async Task<bool> AddAccommodationType(string name)
+        public async Task<bool> AddAccommodationTypeAsync(string name)
         {
             name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(name);
 
-            var allAccommodationTypes = await accommodationTypeFunctions.GetAllAccommodationTypes();
+            var allAccommodationTypes = await accommodationTypeFunctions.GetAllAccommodationTypesAsync();
 
             var accommodationTypeWithName = allAccommodationTypes.Where(accommodationType => accommodationType.Name == name)
                                             .ToList();
 
-            if(accommodationTypeWithName.Count != 0)
+            if (accommodationTypeWithName.Count != 0)
             {
                 return false;
             }
@@ -40,14 +39,14 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
 
             try
             {
-                var result = await accommodationTypeFunctions.AddAccommodationType(newAccommodationType);
+                var result = await accommodationTypeFunctions.CreateAccommodationTypeAsync(newAccommodationType);
 
                 if (result.Id != 0)
                 {
                     return true;
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }

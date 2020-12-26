@@ -1,13 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 using AccommodationBookingApp.DataAccess.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 
 namespace AccommodationBookingApp.Pages
 {
@@ -19,17 +16,17 @@ namespace AccommodationBookingApp.Pages
 
         [BindProperty]
         [Required]
-        [DataType (DataType.Password)]
-        [Display (Name = "Old Password")]
+        [DataType(DataType.Password)]
+        [Display(Name = "Old Password")]
         public string OldPassword { get; set; }
         [BindProperty]
         [Required]
-        [DataType (DataType.Password)]
-        [Display (Name = "New Password")]
+        [DataType(DataType.Password)]
+        [Display(Name = "New Password")]
         public string NewPassword { get; set; }
-        [DataType (DataType.Password)]
-        [Compare("NewPassword", ErrorMessage ="Passwords must match!")]
-        [Display (Name = "Confirm Password")]
+        [DataType(DataType.Password)]
+        [Compare("NewPassword", ErrorMessage = "Passwords must match!")]
+        [Display(Name = "Confirm Password")]
         public string PasswordConfirm { get; set; }
 
         public ChangePasswordModel(UserManager<ApplicationUser> userManager,
@@ -44,7 +41,7 @@ namespace AccommodationBookingApp.Pages
 
         }
 
-        public async Task<IActionResult> OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
             if (ModelState.IsValid)
             {

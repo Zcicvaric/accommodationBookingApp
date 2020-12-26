@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AccommodationBookingApp.BLL.AccommodationLogic
@@ -16,13 +15,14 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
         private readonly IAccommodation accommodationFunctions = new DataAccess.Functions.AccommodationFunctions();
         private readonly BookingLogic bookingLogic = new BookingLogic();
 
-        public async Task<bool> CreateNewAccomodation(string name, string city, string address, int numberOfBeds, int pricePerNight, int currencyId,
-                                                         bool requireApproval, int accommodationTypeId, string checkInTime, string checkOutTime, 
+        public async Task<bool> CreateNewAccomodationAsync(string name, string city, string address, int numberOfBeds, int pricePerNight, int currencyId,
+                                                         bool requireApproval, int accommodationTypeId, string checkInTime, string checkOutTime,
                                                          string accommodationOwnerUsername, bool userCanCancelBooking, string accommodationImagesFolder, IFormFile AccommodationHeaderPhoto,
                                                          List<IFormFile> AcommodationPhotos)
         {
 
-            var newAccommodation = new Accommodation {
+            var newAccommodation = new Accommodation
+            {
                 Name = name,
                 City = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(city),
                 Address = address,
@@ -39,9 +39,9 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
                 var headerPhotoFileName = Guid.NewGuid().ToString() + "_" + AccommodationHeaderPhoto.FileName;
                 newAccommodation.HeaderPhotoFileName = headerPhotoFileName;
 
-                var result = await accommodationFunctions.CreateAccommodation(newAccommodation, accommodationTypeId, currencyId, accommodationOwnerUsername);
+                var result = await accommodationFunctions.CreateAccommodationAsync(newAccommodation, accommodationTypeId, currencyId, accommodationOwnerUsername);
 
-                if(result.Id > 0)
+                if (result.Id > 0)
                 {
                     var directoryPath = Path.Combine(accommodationImagesFolder, (name + "_" + result.Id.ToString()));
                     var headerFolderPath = Path.Combine(directoryPath, "Header");
@@ -66,7 +66,7 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
                 }
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }
@@ -77,7 +77,7 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
             try
             {
                 var deleteResult = await accommodationFunctions.DeleteAccommodationAsync(accommodationToDelete);
-                
+
                 if (deleteResult)
                 {
                     var accommodationPhotosDirectoryPath = Path.Combine(accommodationPhotosFolder, accommodationToDelete.Name
@@ -85,7 +85,7 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
                     Directory.Delete(accommodationPhotosDirectoryPath, true);
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }
@@ -93,32 +93,32 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
             return true;
         }
 
-        public async Task<List<Accommodation>> GetAccommodations()
+        public async Task<List<Accommodation>> GetAccommodationsAsync()
         {
-            var accommodations = await accommodationFunctions.GetAllAccommodations();
+            var accommodations = await accommodationFunctions.GetAllAccommodationsAsync();
 
             return accommodations;
         }
 
-        public async Task<List<Accommodation>> GetAccommodationsWithUserId(string userId)
+        public async Task<List<Accommodation>> GetAccommodationsWithUserIdAsync(string userId)
         {
             var accommodations = await accommodationFunctions.GetAccommodationsWithUserIdAsync(userId);
 
             return accommodations;
         }
 
-        public async Task<List<Accommodation>> GetFilteredAccommodations(string accommodationCity, int numberOfGuests,
+        public async Task<List<Accommodation>> GetFilteredAccommodationsAsync(string accommodationCity, int numberOfGuests,
                                                                          DateTime checkInDate, DateTime checkOutDate,
                                                                          int accommodationTypeId, string latestCheckInTime,
                                                                          string earliestCheckOutTime,
                                                                          bool showOnlyAccommodationsWithInstantBooking,
                                                                          bool showOnlyAccommodationsWhereUserCanCancelBooking)
         {
-            //convert accommodation city names to have every word's first character uppercase kastel stari => Kastel Stari
+            // Convert accommodation city names to have every word's first character uppercase kastel stari => Kastel Stari
             accommodationCity = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(accommodationCity);
             var accommodationsToRemove = new List<Accommodation>();
 
-            var accommodations = await accommodationFunctions.GetFilteredAccommodations(accommodationCity, numberOfGuests);
+            var accommodations = await accommodationFunctions.GetFilteredAccommodationsAsync(accommodationCity, numberOfGuests);
 
             if (accommodationTypeId != 0)
             {
@@ -133,11 +133,11 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
                 accommodations = accommodations.Where(accommodation => accommodation.UserCanCancelBooking == true).ToList();
             }
 
-            //obavezno provjerit rubne slucajeve npr kad gleda zadnju rezervaciju i sl++ (search dobro radi, problem sa check-in i check-out datumima na details stranici)
+            
             foreach (var accommodation in accommodations)
             {
-                var bookingsForAccommodation = await bookingLogic.GetAllBookingsForAccommodation(accommodation.Id);
-                
+                var bookingsForAccommodation = await bookingLogic.GetAllBookingsForAccommodationAsync(accommodation.Id);
+
                 if (bookingsForAccommodation.Count != 0)
                 {
                     foreach (var booking in bookingsForAccommodation)
@@ -178,23 +178,22 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
 
             return accommodations;
         }
-        
-        public async Task<Accommodation> GetAccommodationById(int accommodationId)
+
+        public async Task<Accommodation> GetAccommodationByIdAsync(int accommodationId)
         {
-            return await accommodationFunctions.GetAccommodationById(accommodationId);
+            return await accommodationFunctions.GetAccommodationByIdAsync(accommodationId);
         }
 
-        public async Task<List<string>> GetDatesOccupiedForAccommodation(int accommodationId)
+        public async Task<List<string>> GetDatesOccupiedForAccommodationAsync(int accommodationId)
         {
             var listOFDatesOccupied = new List<string>();
             var dateFormat = "dd.MM.yyyy.";
 
-            var bookings = await bookingLogic.GetAllBookingsForAccommodation(accommodationId);
-            var bookingsSorted = bookings.OrderBy(booking => booking.CheckInDate);
+            var bookings = await bookingLogic.GetAllBookingsForAccommodationAsync(accommodationId);
 
-            foreach(var booking in bookingsSorted)
+            foreach (var booking in bookings)
             {
-                if(booking.ApprovalStatus == ApprovalStatus.Cancelled || booking.ApprovalStatus == ApprovalStatus.Declined
+                if (booking.ApprovalStatus == ApprovalStatus.Cancelled || booking.ApprovalStatus == ApprovalStatus.Declined
                    || booking.ApprovalStatus == ApprovalStatus.CancelledByUser)
                 {
                     continue;

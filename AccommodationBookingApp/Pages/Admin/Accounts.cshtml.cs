@@ -1,20 +1,18 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AccommodationBookingApp.BLL.UserLogic;
 using AccommodationBookingApp.DataAccess.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace AccommodationBookingApp.Pages.Admin
 {
-    [Authorize (Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class AccountsModel : PageModel
     {
-        private UserLogic UserLogic;
+        private readonly UserLogic UserLogic;
         public List<ApplicationUser> UserAccounts { get; set; }
         public List<ApplicationUser> HostAccounts { get; set; }
 
@@ -22,7 +20,7 @@ namespace AccommodationBookingApp.Pages.Admin
         {
             UserLogic = new UserLogic(userManager);
         }
-        public async Task<IActionResult> OnGet()
+        public async Task<IActionResult> OnGetAsync()
         {
             UserAccounts = await UserLogic.GetAllUserAccountsAsync();
             HostAccounts = await UserLogic.GetAllHostAccountsAsync();

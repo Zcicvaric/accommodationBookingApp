@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
-using AccommodationBookingApp.BLL.UserLogic;
+﻿using AccommodationBookingApp.BLL.UserLogic;
 using AccommodationBookingApp.DataAccess.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 
 namespace AccommodationBookingApp.Pages
 {
@@ -36,11 +34,11 @@ namespace AccommodationBookingApp.Pages
 
         }
 
-        public async Task<IActionResult> OnPost(string ReturnUrl)
+        public async Task<IActionResult> OnPostAsync(string ReturnUrl)
         {
             if (ModelState.IsValid)
             {
-                var result = await userLogic.SignInUser(Username, Password, PermanentCookie);
+                var result = await userLogic.SignInUserAsync(Username, Password, PermanentCookie);
 
                 if (!result)
                 {

@@ -1,14 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 using AccommodationBookingApp.BLL.UserLogic;
 using AccommodationBookingApp.DataAccess.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 
 namespace AccommodationBookingApp.Pages
 {
@@ -16,38 +13,30 @@ namespace AccommodationBookingApp.Pages
     public class RegisterAsHostModel : PageModel
     {
         [Required]
-        [Display (Name = "First Name")]
+        [Display(Name = "First Name")]
         public string FirstName { get; set; }
-
         [Required]
-        [Display (Name = "Last Name")]
+        [Display(Name = "Last Name")]
         public string LastName { get; set; }
-
         [Required]
-        [DataType (DataType.EmailAddress)]
+        [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
-
         [Required]
-        [RegularExpression (@"^([A-Ža-ž]{1,}\s?){1,}\s(\d{1,}[A-Ža-ž]{0,2})$", ErrorMessage = "Address needs to have the street name and street numbe, for example: Kopilica 5")]
+        [RegularExpression(@"^([A-Ža-ž]{1,}\s?){1,}\s(\d{1,}[A-Ža-ž]{0,2})$", ErrorMessage = "Address needs to have the street name and street numbe, for example: Kopilica 5")]
         public string Address { get; set; }
-
         [Required]
         public string City { get; set; }
-
         [Required]
         public string Country { get; set; }
-
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
-
         [Required]
         [BindNever]
         [DataType(DataType.Password)]
-        [Display (Name = "Confirm Password")]
+        [Display(Name = "Confirm Password")]
         [Compare("Password", ErrorMessage = "Passwords must match!")]
         public string ConfirmPassword { get; set; }
-
         [Required]
         [Display(Name = "Mobile Phone Number")]
         [RegularExpression(@"^(\d{9,10})$", ErrorMessage = "Mobile phone number must have 9 or 10 digits")]
@@ -67,19 +56,19 @@ namespace AccommodationBookingApp.Pages
 
         }
 
-        public async Task<IActionResult> OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
             if (ModelState.IsValid)
             {
-                var result = await userLogic.CreateNewHost(FirstName, LastName, Email, Address, City, Country, MobilePhoneNumber,
+                var result = await userLogic.CreateNewHostAsync(FirstName, LastName, Email, Address, City, Country, MobilePhoneNumber,
                                                            Password);
-                
-                if(result.Succeeded)
+
+                if (result.Succeeded)
                 {
                     return RedirectToPage("/Index");
                 }
 
-                foreach(var registrationError in result.Errors)
+                foreach (var registrationError in result.Errors)
                 {
                     ModelState.AddModelError("", registrationError.Description);
 

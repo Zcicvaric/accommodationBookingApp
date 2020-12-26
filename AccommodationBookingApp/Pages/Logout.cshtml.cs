@@ -1,12 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AccommodationBookingApp.BLL.UserLogic;
 using AccommodationBookingApp.DataAccess.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Threading.Tasks;
 
 namespace AccommodationBookingApp.Pages
 {
@@ -19,9 +16,9 @@ namespace AccommodationBookingApp.Pages
         {
             userLogic = new UserLogic(userManager, signInManager);
         }
-        public async Task<IActionResult> OnGet()
+        public async Task<IActionResult> OnGetAsync()
         {
-            await userLogic.SignOutUser();
+            await userLogic.SignOutUserAsync();
 
             return RedirectToPage("/Index");
         }

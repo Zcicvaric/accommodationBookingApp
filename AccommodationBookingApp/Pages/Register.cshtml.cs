@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using AccommodationBookingApp.BLL.UserLogic;
+﻿using AccommodationBookingApp.BLL.UserLogic;
 using AccommodationBookingApp.DataAccess.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 
 namespace AccommodationBookingApp.Pages
 {
@@ -16,21 +13,17 @@ namespace AccommodationBookingApp.Pages
     public class RegisterModel : PageModel
     {
         [Required]
-        [Display (Name = "First Name")]
+        [Display(Name = "First Name")]
         public string FirstName { get; set; }
-
         [Required]
-        [Display (Name = "Last Name")]
+        [Display(Name = "Last Name")]
         public string LastName { get; set; }
-
         [Required]
-        [DataType (DataType.EmailAddress)]
+        [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
-
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
-
         [Required]
         [BindNever]
         [DataType(DataType.Password)]
@@ -49,17 +42,17 @@ namespace AccommodationBookingApp.Pages
 
         public void OnGet()
         {
-            
-        }
-        public async Task<IActionResult> OnPost()
-        {
-            if(ModelState.IsValid)
-            {
-                var result = await userLogic.CreateNewUser(FirstName, LastName, Email, Password);
 
-                if(result.Succeeded)
+        }
+        public async Task<IActionResult> OnPostAsync()
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await userLogic.CreateNewUserAsync(FirstName, LastName, Email, Password);
+
+                if (result.Succeeded)
                 {
-                     return RedirectToPage("/index");
+                    return RedirectToPage("/index");
                 }
                 foreach (var registrationError in result.Errors)
                 {
@@ -67,7 +60,7 @@ namespace AccommodationBookingApp.Pages
 
                     return Page();
                 }
-                 
+
             }
 
             return BadRequest();

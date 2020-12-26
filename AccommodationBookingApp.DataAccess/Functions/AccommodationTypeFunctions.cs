@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AccommodationBookingApp.DataAccess.Functions
@@ -17,24 +16,33 @@ namespace AccommodationBookingApp.DataAccess.Functions
         {
             Context = new DatabaseContext(DatabaseContext.optionsBuild.dbContextOptions);
         }
-        public async Task<AccommodationType> GetAccommodationTypeById(int accommodationTypeId)
+        public async Task<AccommodationType> GetAccommodationTypeByIdAsync(int accommodationTypeId)
         {
             var accommodationType = await Context.AccommodationType.Where(accommodationType =>
                                                   accommodationType.Id == accommodationTypeId).FirstOrDefaultAsync();
 
             return accommodationType;
         }
-        public async Task<List<AccommodationType>> GetAllAccommodationTypes()
+        public async Task<List<AccommodationType>> GetAllAccommodationTypesAsync()
         {
             var accommodationTypes = await Context.AccommodationType.ToListAsync();
+
             return accommodationTypes;
         }
 
-        public async Task<AccommodationType> AddAccommodationType(AccommodationType accommodationType)
+        public async Task<AccommodationType> CreateAccommodationTypeAsync(AccommodationType accommodationType)
         {
             await Context.AccommodationType.AddAsync(accommodationType);
 
-            await Context.SaveChangesAsync();
+            try
+            {
+                await Context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+
+                return new AccommodationType();
+            }
 
             return accommodationType;
         }

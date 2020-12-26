@@ -1,13 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using AccommodationBookingApp.BLL.AccommodationLogic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace AccommodationBookingApp.Pages
 {
@@ -30,19 +28,19 @@ namespace AccommodationBookingApp.Pages
         public async Task<IActionResult> OnGetAsync(int accommodationId)
         {
             AccommodationId = accommodationId;
-            var accommodation = await accommodationLogic.GetAccommodationById(accommodationId);
+            var accommodation = await accommodationLogic.GetAccommodationByIdAsync(accommodationId);
 
             if (accommodation == null)
             {
                 return NotFound();
             }
 
-            if(accommodation.ApplicationUser.UserName != User.Identity.Name && !User.IsInRole("Admin"))
+            if (accommodation.ApplicationUser.UserName != User.Identity.Name && !User.IsInRole("Admin"))
             {
                 return Unauthorized();
             }
 
-            var allBookingsForAccommodation = await bookingLogic.GetAllUpcomingApprovedOrPendingReservationsForAccommodation(accommodationId);
+            var allBookingsForAccommodation = await bookingLogic.GetAllUpcomingApprovedOrPendingReservationsForAccommodationAsync(accommodationId);
             NumberOfBookingsForAccommodation = allBookingsForAccommodation.Count();
 
             return Page();
@@ -52,9 +50,9 @@ namespace AccommodationBookingApp.Pages
         {
             if (ModelState.IsValid)
             {
-                var accommodationToBeDeleted = await accommodationLogic.GetAccommodationById(accommodationId);
+                var accommodationToBeDeleted = await accommodationLogic.GetAccommodationByIdAsync(accommodationId);
 
-                if(accommodationToBeDeleted.ApplicationUser.UserName != User.Identity.Name && !User.IsInRole("Admin"))
+                if (accommodationToBeDeleted.ApplicationUser.UserName != User.Identity.Name && !User.IsInRole("Admin"))
                 {
                     return Unauthorized();
                 }

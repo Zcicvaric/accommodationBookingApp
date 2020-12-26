@@ -1,17 +1,8 @@
 ﻿using AccommodationBookingApp.DataAccess.Entities;
 using AccommodationBookingApp.DataAccess.Interfaces;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authentication;
-using System;
 using System.Collections.Generic;
-using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
-using AccommodationBookingApp.DataAccess.DataContext;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
 
 namespace AccommodationBookingApp.DataAccess.Functions
 {
@@ -41,29 +32,29 @@ namespace AccommodationBookingApp.DataAccess.Functions
             this.userManager = userManager;
         }
 
-        public async Task<IdentityResult> CreateNewUser(ApplicationUser newUser, string password, bool registerAsHost)
+        public async Task<IdentityResult> CreateNewUserAsync(ApplicationUser newUser, string password, bool registerAsHost)
         {
-      
+
             var result = await userManager.CreateAsync(newUser, password);
 
             if (result.Succeeded)
             {
                 if (registerAsHost)
-            {
-                await userManager.AddToRoleAsync(newUser, "Host");
-            }
-            else
-            {
-                await userManager.AddToRoleAsync(newUser, "User");
-            }
+                {
+                    await userManager.AddToRoleAsync(newUser, "Host");
+                }
+                else
+                {
+                    await userManager.AddToRoleAsync(newUser, "User");
+                }
 
-            await signInManager.PasswordSignInAsync(newUser, password, true, false);
+                await signInManager.PasswordSignInAsync(newUser, password, true, false);
             }
 
             return result;
         }
 
-        public async Task<bool> SignInUser(ApplicationUser user, string password, bool permanentCookie)
+        public async Task<bool> SignInUserAsync(ApplicationUser user, string password, bool permanentCookie)
         {
             var userObject = await userManager.FindByEmailAsync(user.Email);
 
@@ -80,7 +71,7 @@ namespace AccommodationBookingApp.DataAccess.Functions
             return false;
         }
 
-        public async Task<bool> SignOutUser()
+        public async Task<bool> SignOutUserAsync()
         {
             await signInManager.SignOutAsync();
 

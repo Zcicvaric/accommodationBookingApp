@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 using AccommodationBookingApp.BLL.UserLogic;
 using AccommodationBookingApp.DataAccess.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -10,10 +5,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 
 namespace AccommodationBookingApp.Pages
 {
-    [Authorize (Roles = "Host")]
+    [Authorize(Roles = "Host")]
     [BindProperties]
     public class UpdateHostAccountModel : PageModel
     {
@@ -25,19 +22,19 @@ namespace AccommodationBookingApp.Pages
         [BindNever]
         public ApplicationUser ApplicationUser { get; set; }
         [Required]
-        [Display (Name = "First Name")]
+        [Display(Name = "First Name")]
         public string FirstName { get; set; }
         [Required]
-        [Display (Name = "Last Name")]
+        [Display(Name = "Last Name")]
         public string LastName { get; set; }
         [Required]
-        [DataType (DataType.EmailAddress)]
+        [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
         [Required]
-        [RegularExpression (@"^([A-Ža-ž]{1,}\s?){1,}\s(\d{1,}[A-Ža-ž]{0,2})$", ErrorMessage = "Address needs to have the street name and street numbe, for example Kopilica 5")]
+        [RegularExpression(@"^([A-Ža-ž]{1,}\s?){1,}\s(\d{1,}[A-Ža-ž]{0,2})$", ErrorMessage = "Address needs to have the street name and street numbe, for example Kopilica 5")]
         public string Address { get; set; }
         [Required]
-        [Display (Name = "Mobile Phone Number")]
+        [Display(Name = "Mobile Phone Number")]
         [RegularExpression(@"^(\d{9,10})$", ErrorMessage = "Mobile phone number must have 9 or 10 digits")]
         public string MobilePhoneNumber { get; set; }
         [Required]
@@ -53,7 +50,7 @@ namespace AccommodationBookingApp.Pages
 
             userLogic = new UserLogic(userManager);
         }
-        public async Task<IActionResult> OnGet()
+        public async Task<IActionResult> OnGetAsync()
         {
             ApplicationUser = await userManager.GetUserAsync(User);
 
@@ -65,7 +62,7 @@ namespace AccommodationBookingApp.Pages
             return Page();
         }
 
-        public async Task<IActionResult> OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
             ApplicationUser = await userManager.GetUserAsync(User);
 
@@ -76,7 +73,7 @@ namespace AccommodationBookingApp.Pages
 
             if (ModelState.IsValid)
             {
-                var hostUpdateResult = await userLogic.UpdateHostAccount(ApplicationUser, FirstName, LastName, Email, Address,
+                var hostUpdateResult = await userLogic.UpdateHostAccountAsync(ApplicationUser, FirstName, LastName, Email, Address,
                                                                          MobilePhoneNumber, City, Country);
 
                 if (hostUpdateResult.Succeeded)

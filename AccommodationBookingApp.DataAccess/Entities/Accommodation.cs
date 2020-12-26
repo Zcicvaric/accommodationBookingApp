@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace AccommodationBookingApp.DataAccess.Entities
 {
@@ -10,10 +6,13 @@ namespace AccommodationBookingApp.DataAccess.Entities
     {
         public int Id { get; set; }
         [Required]
+        [MaxLength(50)]
         public string Name { get; set; }
         [Required]
+        [MaxLength(50)]
         public string City { get; set; }
         [Required]
+        [MaxLength(50)]
         public string Address { get; set; }
         [Required]
         public int NumberOfBeds { get; set; }
@@ -31,8 +30,10 @@ namespace AccommodationBookingApp.DataAccess.Entities
         [Required]
         public string HeaderPhotoFileName { get; set; }
         [Required]
+        [MaxLength(5)]
         public string CheckInTime { get; set; }
         [Required]
+        [MaxLength(5)]
         public string CheckOutTime { get; set; }
         [Required]
         public bool UserCanCancelBooking { get; set; }

@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using AccommodationBookingApp.DataAccess.Entities;
+﻿using AccommodationBookingApp.DataAccess.Entities;
 using AccommodationBookingApp.DataAccess.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace AccommodationBookingApp.BLL.UserLogic
 {
@@ -12,7 +10,7 @@ namespace AccommodationBookingApp.BLL.UserLogic
     {
         private readonly IUser userFunctions;
         private readonly UserManager<ApplicationUser> userManager;
-       
+
         public UserLogic(UserManager<ApplicationUser> userManager,
                         SignInManager<ApplicationUser> signInManager,
                         RoleManager<IdentityRole> roleManager)
@@ -31,7 +29,7 @@ namespace AccommodationBookingApp.BLL.UserLogic
             userFunctions = new DataAccess.Functions.UserFunctions(userManager);
         }
 
-        public async Task<IdentityResult> CreateNewUser(string firstName, string lastName, 
+        public async Task<IdentityResult> CreateNewUserAsync(string firstName, string lastName,
                                                         string email, string password)
         {
             var newUser = new ApplicationUser
@@ -43,10 +41,10 @@ namespace AccommodationBookingApp.BLL.UserLogic
             };
 
 
-            return await userFunctions.CreateNewUser(newUser, password, false);
+            return await userFunctions.CreateNewUserAsync(newUser, password, false);
         }
 
-        public async Task<IdentityResult> CreateNewHost(string firstName, string lastName, string email, string address, string city,
+        public async Task<IdentityResult> CreateNewHostAsync(string firstName, string lastName, string email, string address, string city,
                                                         string country, string mobilePhoneNumber, string password)
         {
             var newHost = new ApplicationUser
@@ -61,28 +59,28 @@ namespace AccommodationBookingApp.BLL.UserLogic
                 PhoneNumber = mobilePhoneNumber
             };
 
-            return await userFunctions.CreateNewUser(newHost, password, true);
+            return await userFunctions.CreateNewUserAsync(newHost, password, true);
         }
-        
 
-        public async Task<bool> SignInUser(string username, string password, bool permanentCookie)
+
+        public async Task<bool> SignInUserAsync(string username, string password, bool permanentCookie)
         {
             var user = await userManager.FindByNameAsync(username);
-            
+
             if (user == null)
             {
                 return false;
             }
 
-            return await userFunctions.SignInUser(user, password, permanentCookie);
+            return await userFunctions.SignInUserAsync(user, password, permanentCookie);
         }
 
-        public async Task<bool> SignOutUser()
+        public async Task<bool> SignOutUserAsync()
         {
-            return await userFunctions.SignOutUser();
+            return await userFunctions.SignOutUserAsync();
         }
 
-        public async Task<IdentityResult> UpdateAccount(ApplicationUser oldUser, string firstName, string lastName, string email)
+        public async Task<IdentityResult> UpdateAccountAsync(ApplicationUser oldUser, string firstName, string lastName, string email)
         {
             var userToUpdate = await userManager.FindByIdAsync(oldUser.Id);
 
@@ -94,7 +92,7 @@ namespace AccommodationBookingApp.BLL.UserLogic
             return await userManager.UpdateAsync(userToUpdate);
         }
 
-        public async Task<IdentityResult> UpdateHostAccount(ApplicationUser oldHost, string firstName, string lastName, string email,
+        public async Task<IdentityResult> UpdateHostAccountAsync(ApplicationUser oldHost, string firstName, string lastName, string email,
                                                             string address, string mobilePhoneNumber, string city, string country)
         {
             var hostToUpdate = await userManager.FindByIdAsync(oldHost.Id);

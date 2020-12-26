@@ -4,7 +4,6 @@ using AccommodationBookingApp.DataAccess.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AccommodationBookingApp.DataAccess.Functions
@@ -18,16 +17,24 @@ namespace AccommodationBookingApp.DataAccess.Functions
             Context = new DatabaseContext(DatabaseContext.optionsBuild.dbContextOptions);
         }
 
-        public async Task<Currency> AddCurrency(Currency currency)
+        public async Task<Currency> CreateCurrencyAsync(Currency currency)
         {
             await Context.Currencies.AddAsync(currency);
 
-            await Context.SaveChangesAsync();
+            try
+            {
+                await Context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+
+                return new Currency();
+            }
 
             return currency;
         }
 
-        public async Task<List<Currency>> GetAllCurrencies()
+        public async Task<List<Currency>> GetAllCurrenciesAsync()
         {
             var currencies = await Context.Currencies.ToListAsync();
 

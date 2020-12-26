@@ -81,6 +81,12 @@
                 </div>
             }
         }
+        @if (User.IsInRole("Admin"))
+        {
+            <div class="row">
+                <a asp-page="/Admin/DeleteBooking" asp-route-bookingId="@Model.Booking.Id" class="btn btn-danger">Delete booking</a>
+            </div>
+        }
 
         <div class="row">
             <a asp-page="/AccommodationDetails" asp-route-accommodationId="@Model.Accommodation.Id">Click here to go to the accommodation page</a>
