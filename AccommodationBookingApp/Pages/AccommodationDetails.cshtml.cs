@@ -79,15 +79,15 @@ namespace AccommodationBookingApp.Pages
                     throw new Exception("Invalid dates!");
                 }
 
-                if (listOfDatesOccupied.Contains(checkInDate) || listOfDatesOccupied.Contains(checkOutDate))
+                if (!await AccommodationLogic.CheckIfBookingDatesAreValid(CheckInDate, CheckOutDate, accommodationId))
                 {
-                    throw new Exception("Dates occupied!");
+                    throw new Exception("Dates are occupied!");
                 }
             }
             catch
             {
-                CheckInDate = DateTime.Now;
-                CheckOutDate = DateTime.Now;
+                CheckInDate = DateTime.Now.Date;
+                CheckOutDate = DateTime.Now.Date;
 
                 CheckInDateString = CheckInDate.ToString(dateformat);
                 CheckOutDateString = CheckOutDate.ToString(dateformat);
@@ -135,6 +135,11 @@ namespace AccommodationBookingApp.Pages
                     {
                         return BadRequest();
                     }
+                    if (!await AccommodationLogic.CheckIfBookingDatesAreValid(CheckInDate, CheckOutDate, AccommodationId))
+                    {
+                        return BadRequest();
+                    }
+
                 }
                 catch (Exception)
                 {

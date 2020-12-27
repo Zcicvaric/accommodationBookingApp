@@ -64,6 +64,14 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
 
             return bookings;
         }
+
+        public async Task<List<Booking>> GetAllUpcomingBookingsForAccommodationAsync(int accommodationId)
+        {
+            var bookings = await bookingFunctions.GetAllUpcomingBookingsForAccommodationAsync(accommodationId);
+
+            return bookings;
+        }
+
         public async Task<List<Booking>> GetAllPendingReservationsForHostAsync(string userId)
         {
             var bookingsForHost = await bookingFunctions.GetAllBookingsForHostAsync(userId);
@@ -73,6 +81,7 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
 
             return pendingReservations;
         }
+
         public async Task<List<Booking>> GetAllApprovedReservationsForHostAsync(string userId)
         {
             var bookingsForHost = await bookingFunctions.GetAllBookingsForHostAsync(userId);
@@ -83,6 +92,7 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
 
             return approvedReservations;
         }
+
         public async Task<List<Booking>> GetAllPreviousReservationsForHostAsync(string userId)
         {
             var bookingsForHost = await bookingFunctions.GetAllBookingsForHostAsync(userId);
@@ -93,6 +103,7 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
 
             return previousReservations;
         }
+
         public async Task<List<Booking>> GetAllDeclinedReservationsForHostAsync(string userId)
         {
             var bookingsForHost = await bookingFunctions.GetAllBookingsForHostAsync(userId);
@@ -251,17 +262,6 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
                                                                             .ToList();
 
             return cancelledByUserBookings;
-        }
-
-        public async Task<List<Booking>> GetAllUpcomingApprovedOrPendingReservationsForAccommodationAsync(int accommodationId)
-        {
-            var allBookingsForAccommodation = await bookingFunctions.GetAllBookingsForAccommodationAsync(accommodationId);
-
-            var upcomingBookings = allBookingsForAccommodation.Where(booking => (booking.ApprovalStatus == ApprovalStatus.Approved
-                                                                                           || booking.ApprovalStatus == ApprovalStatus.Pending)
-                                                                                           && booking.CheckInDate > DateTime.Now.Date).ToList();
-
-            return upcomingBookings;
         }
     }
 }

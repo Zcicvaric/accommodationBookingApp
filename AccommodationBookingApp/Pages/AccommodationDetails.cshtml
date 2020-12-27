@@ -87,11 +87,13 @@
                 $('.checkOutDatepicker').datepicker('clearDates');
             }
 
-            //clear the check-in and check-out date input if dates that are sent as GET request parameters are occupied
             if (typeof datesToDisableArray !== "undefined") {
-                if (datesToDisableArray.includes(checkInDate) || datesToDisableArray.includes(checkOutDate)) {
-                    $('.checkInDatepicker').datepicker('clearDates');
-                    $('.checkOutDatepicker').datepicker('clearDates');
+
+                let checkInDateCalendarValue = $('.checkInDatepicker').datepicker('getDate');
+                let checkOutDateCalendarValue = $('.checkOutDatepicker').datepicker('getDate');
+
+                if (checkInDateCalendarValue != null && checkOutDateCalendarValue != null) {
+                    clickedOnTheCalendar(checkInDateCalendarValue);
                 }
             }
 
@@ -108,9 +110,20 @@
             var flag = false;
 
             let checkInDateSelected = $('.checkInDatepicker').datepicker('getDate');
+            let checkOutDateSelected = $('.checkOutDatepicker').datepicker('getDate');
+
             let minCheckoutDate = addDaysToDate(checkInDateSelected, 1);
             $('.checkOutDatepicker').datepicker('setStartDate', minCheckoutDate);
-            let checkOutDateSelected = $('.checkOutDatepicker').datepicker('getDate');
+
+            if (checkInDateSelected != null && checkOutDateSelected != null) {
+                if (checkInDateSelected >= checkOutDateSelected) {
+                    $('.checkOutDatepicker').datepicker('clearDates');
+                }
+            }
+
+            if (checkOutDateSelected == null) {
+                $('.checkOutDatepicker').datepicker('clearDates');
+            }
 
             if (checkInDateSelected == null) {
                 minCheckoutDate = addDaysToDate(checkOutDateSelected, 1);
@@ -118,25 +131,20 @@
                 return;
             }
 
-            //checks if selected date date range includes any dates that are disabled
-            checkSelectedDateRangeForConflicts(checkInDateSelected, checkOutDateSelected);
-
-            if (checkInDateSelected > checkOutDateSelected) {
-                $('.checkOutDatepicker').datepicker('clearDates');
-            }
-
             //this has to be reinitialized every time this function loads beacuse of the splice method
             datesToDisableArray = @Html.Raw(Json.Serialize(Model.DatesOccupiedArray));
 
             if (typeof datesToDisableArray === "undefined") {
                 return;
-            } 
+            }
+
+            let dateInputFormatted = formatDate(checkInDateSelected);
 
             for (var i = 0; i < datesToDisableArray.length; i++) {
-                if (!compareDateStrings(dateInput, datesToDisableArray[i]) && !flag) {
+                if (!compareDateStrings(dateInputFormatted, datesToDisableArray[i]) && !flag) {
                     flag = true;
                 }
-                else if (!compareDateStrings(dateInput, datesToDisableArray[i]) && flag) {
+                else if (!compareDateStrings(dateInputFormatted, datesToDisableArray[i]) && flag) {
                     datesToDisableForCheckout = datesToDisableArray.splice(i + 1);
 
                     //in the checkout datepicker disable all of the dates after the first avaliable the next booking's
@@ -149,37 +157,10 @@
             }
             
 
-            if (compareDateStrings(dateInput, datesToDisableArray[datesToDisableArray.length - 1]) === true
-                || compareDateStrings(dateInput, datesToDisableArray[datesToDisableArray.length - 1]) === null) {
+            if (compareDateStrings(dateInputFormatted, datesToDisableArray[datesToDisableArray.length - 1]) === true
+                || compareDateStrings(dateInputFormatted, datesToDisableArray[datesToDisableArray.length - 1]) === null) {
 
                 $('.checkOutDatepicker').datepicker('setEndDate', '');
-            }
-        }
-
-        function checkSelectedDateRangeForConflicts(checkInDateSelected, checkOutDateSelected) {
-
-            if (checkInDateSelected == undefined || checkOutDateSelected == undefined) {
-                return;
-            }
-
-            let datesOccupied = @Html.Raw(Json.Serialize(Model.DatesOccupiedArray));
-
-            let checkInDateFormatted = formatDate(checkInDateSelected);
-            let checkOutDateFormatted = formatDate(checkOutDateSelected);
-
-
-            //as datesOccupiedArray contains an array of dates blocked that is ordered by check-in date
-            //(values are earliestBooking.checkInDate, earliestBooking.checkOutDate, nextEarliestbooking...)
-            //we can compare the dates occupied two by two as two of them represent one booking
-            //if one of the previous booking's date range is a subset of the date range we want to book
-            //clear the checkOutDate (that is if our booking would run over someone others booking)
-            for (let j = 0; j < datesOccupied.length-1; j = j + 2) {
-
-                if (compareDateStrings(datesOccupied[j], checkInDateFormatted)
-                    && compareDateStrings(checkOutDateFormatted, datesToDisableArray[j + 1])) {
-                    $('.checkOutDatepicker').datepicker('clearDates');
-                    return;
-                }
             }
         }
 

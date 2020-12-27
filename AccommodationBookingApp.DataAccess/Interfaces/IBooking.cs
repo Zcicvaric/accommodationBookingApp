@@ -15,6 +15,7 @@ namespace AccommodationBookingApp.DataAccess.Interfaces
         Task<List<Booking>> GetAllDeclinedStaysForUserAsync(string userId);
         Task<List<Booking>> GetAllCancelledStaysForUserAsync(string userId);
         Task<List<Booking>> GetAllBookingsForAccommodationAsync(int accommodationId);
+        Task<List<Booking>> GetAllUpcomingBookingsForAccommodationAsync(int accommodationId);
         Task<List<Booking>> GetAllBookingsForHostAsync(string userId);
         Task<Booking> UpdateBookingStatusAsync(int bookingId, ApprovalStatus newApprovalStatus);
     }

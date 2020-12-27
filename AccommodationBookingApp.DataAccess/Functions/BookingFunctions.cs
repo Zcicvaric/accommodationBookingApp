@@ -126,6 +126,19 @@ namespace AccommodationBookingApp.DataAccess.Functions
 
             return bookingsForAccommodation;
         }
+        public async Task<List<Booking>> GetAllUpcomingBookingsForAccommodationAsync(int accommodationId)
+        {
+            var upcomingBookingsForAccommodation = await Context.Bookings.Include("Accommodation").
+                                                   Where(booking => booking.Accommodation.Id == accommodationId
+                                                   && (booking.ApprovalStatus == ApprovalStatus.Approved
+                                                       || booking.ApprovalStatus == ApprovalStatus.Pending)
+                                                   && booking.CheckInDate.Date >= DateTime.Now.Date).
+                                                   OrderBy(booking => booking.CheckInDate).
+                                                   ToListAsync();
+
+            return upcomingBookingsForAccommodation;
+        }
+
         public async Task<List<Booking>> GetAllBookingsForHostAsync(string userId)
         {
             var allBookingsWithHostId = await Context.Bookings.Include("Accommodation").Include("ApplicationUser").

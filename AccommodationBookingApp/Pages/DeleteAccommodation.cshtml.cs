@@ -40,7 +40,7 @@ namespace AccommodationBookingApp.Pages
                 return Unauthorized();
             }
 
-            var allBookingsForAccommodation = await bookingLogic.GetAllUpcomingApprovedOrPendingReservationsForAccommodationAsync(accommodationId);
+            var allBookingsForAccommodation = await bookingLogic.GetAllUpcomingBookingsForAccommodationAsync(accommodationId);
             NumberOfBookingsForAccommodation = allBookingsForAccommodation.Count();
 
             return Page();

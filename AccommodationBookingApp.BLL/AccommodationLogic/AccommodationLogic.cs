@@ -136,15 +136,13 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
             
             foreach (var accommodation in accommodations)
             {
-                var bookingsForAccommodation = await bookingLogic.GetAllBookingsForAccommodationAsync(accommodation.Id);
+                var bookingsForAccommodation = await bookingLogic.GetAllUpcomingBookingsForAccommodationAsync(accommodation.Id);
 
                 if (bookingsForAccommodation.Count != 0)
                 {
                     foreach (var booking in bookingsForAccommodation)
                     {
-                        if (checkInDate < booking.CheckOutDate && checkOutDate > booking.CheckInDate
-                            && booking.ApprovalStatus != ApprovalStatus.Cancelled
-                            && booking.ApprovalStatus != ApprovalStatus.CancelledByUser)
+                        if (checkInDate < booking.CheckOutDate && checkOutDate > booking.CheckInDate)
                         {
                             accommodationsToRemove.Add(accommodation);
                             continue;
@@ -206,6 +204,21 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
             }
 
             return listOFDatesOccupied;
+        }
+
+        public async Task<bool> CheckIfBookingDatesAreValid(DateTime checkInDate, DateTime checkOutDate, int accommodationId)
+        {
+            var bookings = await bookingLogic.GetAllUpcomingBookingsForAccommodationAsync(accommodationId);
+
+            foreach (var booking in bookings)
+            {
+                if (checkInDate.Date < booking.CheckOutDate.Date && checkOutDate.Date > booking.CheckInDate.Date)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }
