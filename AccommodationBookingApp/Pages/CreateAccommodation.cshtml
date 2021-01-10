@@ -22,12 +22,12 @@
     </div>
     <div class="form-group row">
         <label asp-for="NumberOfBeds"></label>
-        <input min="1" value="1" asp-for="NumberOfBeds" class="form-control" />
+        <input value="1" asp-for="NumberOfBeds" class="form-control" />
         <span asp-validation-for="NumberOfBeds" class="text-warning"></span>
     </div>
     <div class="form-group row">
         <label asp-for="PricePerNight"></label>
-        <input min="1" asp-for="PricePerNight" class="form-control mr-1" style="width: 80%;" />
+        <input asp-for="PricePerNight" class="form-control mr-1" style="width: 80%;" />
         <select asp-for="CurrencyId"
                 asp-items="@(new SelectList(Model.Currencies, "Id", "Name"))">
         </select>

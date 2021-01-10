@@ -31,10 +31,12 @@ namespace AccommodationBookingApp.Pages
         [RegularExpression(@"^([A-Ža-ž]{1,}\s?){1,}\s(\d{1,}[A-Ža-ž]{0,2})$", ErrorMessage = "Address needs to have the street name and street number, for example: Kopilica 5")]
         public string Address { get; set; }
         [Required(ErrorMessage = "Please enter the number of beds")]
+        [Range(1, 1000)]
         [BindProperty]
         [Display(Name = "Number of beds")]
         public int NumberOfBeds { get; set; }
         [Required(ErrorMessage = "Please enter the price per night")]
+        [Range(1, int.MaxValue)]
         [BindProperty]
         [Display(Name = "Price per night")]
         public int PricePerNight { get; set; }
@@ -65,12 +67,12 @@ namespace AccommodationBookingApp.Pages
         [BindProperty]
         [Display(Name = "Header photo")]
         public IFormFile AccommodationHeaderPhoto { get; set; }
-        private IWebHostEnvironment WebHostEnvironment { get; }
         public List<string> TimesList { get; set; }
 
         private readonly AccommodationLogic AccommodationLogic = new AccommodationLogic();
         private readonly AccommodationTypeLogic AccommodationTypeLogic = new AccommodationTypeLogic();
         private readonly CurrencyLogic CurrencyLogic = new CurrencyLogic();
+        private readonly IWebHostEnvironment webHostEnvironment;
 
         public List<AccommodationType> AccommodationTypes;
         public List<Currency> Currencies;
@@ -78,7 +80,7 @@ namespace AccommodationBookingApp.Pages
 
         public CreateAccommodationModel(IWebHostEnvironment webHostEnvironment)
         {
-            WebHostEnvironment = webHostEnvironment;
+            this.webHostEnvironment = webHostEnvironment;
             TimesList = new List<string>();
 
             for (int i = 0; i < 24; i++)
@@ -122,11 +124,11 @@ namespace AccommodationBookingApp.Pages
                     return Page();
                 }
 
-                var accommodationImagesFolder = Path.Combine(WebHostEnvironment.WebRootPath, "accommodationPhotos");
+                var accommodationPhotosRootFolder = Path.Combine(webHostEnvironment.WebRootPath, "accommodationPhotos");
 
                 var result = await AccommodationLogic.CreateNewAccomodationAsync(Name, City, Address, NumberOfBeds, PricePerNight, CurrencyId, RequireApproval,
                                                                             AccommodationTypeId, CheckInTime, CheckOutTime, User.Identity.Name, UserCanCancelBooking,
-                                                                            accommodationImagesFolder, AccommodationHeaderPhoto, AccommodationPhotos);
+                                                                            accommodationPhotosRootFolder, AccommodationHeaderPhoto, AccommodationPhotos);
 
                 if (!result)
                 {

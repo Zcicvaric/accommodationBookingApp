@@ -16,7 +16,7 @@ namespace AccommodationBookingApp.Pages.Admin
         private readonly AccommodationLogic accommodationLogic = new AccommodationLogic();
         public async Task<IActionResult> OnGetAsync()
         {
-            Accommodations = await accommodationLogic.GetAccommodationsAsync();
+            Accommodations = await accommodationLogic.GetAllAccommodationsAsync();
 
             return Page();
         }

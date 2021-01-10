@@ -126,6 +126,7 @@ namespace AccommodationBookingApp.DataAccess.Functions
 
             return bookingsForAccommodation;
         }
+
         public async Task<List<Booking>> GetAllUpcomingBookingsForAccommodationAsync(int accommodationId)
         {
             var upcomingBookingsForAccommodation = await Context.Bookings.Include("Accommodation").

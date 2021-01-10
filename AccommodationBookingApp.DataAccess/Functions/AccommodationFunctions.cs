@@ -75,8 +75,7 @@ namespace AccommodationBookingApp.DataAccess.Functions
 
         public async Task<List<Accommodation>> GetAccommodationsWithUserIdAsync(string userId)
         {
-            var accommodations = await Context.Accommodations.Include("AccommodationType").Include("ApplicationUser")
-                                                         .Include("Currency")
+            var accommodations = await Context.Accommodations.Include("ApplicationUser").Include("Currency")
                                                          .Where(accommodation => accommodation.ApplicationUser.Id == userId)
                                                          .ToListAsync();
 
@@ -99,8 +98,7 @@ namespace AccommodationBookingApp.DataAccess.Functions
 
         public async Task<Accommodation> GetAccommodationByIdAsync(int accommodationId)
         {
-            var accommodation = await Context.Accommodations.Include("AccommodationType").Include("ApplicationUser")
-                                                         .Include("Currency")
+            var accommodation = await Context.Accommodations.Include("ApplicationUser").Include("Currency")
                                                          .Where(accommodation =>
                                                          accommodation.Id == accommodationId)
                                                          .FirstOrDefaultAsync();
@@ -108,5 +106,59 @@ namespace AccommodationBookingApp.DataAccess.Functions
             return accommodation;
         }
 
+        public async Task<bool> UpdateAccommodationAsync(int accommodationId, string name, int numberOfBeds, int pricePerNight, int currencyId, bool requireApproval, bool userCanCancelBooking, string checkInTime, string checkOutTime)
+        {
+            var accommodationToBeUpdated = await Context.Accommodations.Where(accommodation => accommodation.Id == accommodationId)
+                                                                       .FirstOrDefaultAsync();
+
+            var currency = await Context.Currencies.Where(currency => currency.Id == currencyId).FirstOrDefaultAsync();
+
+            if (accommodationToBeUpdated != null)
+            {
+                accommodationToBeUpdated.Name = name;
+                accommodationToBeUpdated.NumberOfBeds = numberOfBeds;
+                accommodationToBeUpdated.PricePerNight = pricePerNight;
+                accommodationToBeUpdated.Currency = currency;
+                accommodationToBeUpdated.UserCanCancelBooking = userCanCancelBooking;
+                accommodationToBeUpdated.RequireApproval = requireApproval;
+                accommodationToBeUpdated.CheckInTime = checkInTime;
+                accommodationToBeUpdated.CheckOutTime = checkOutTime;
+            }
+
+            try
+            {
+                Context.Update(accommodationToBeUpdated);
+                await Context.SaveChangesAsync();
+            }
+            catch
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public async Task<bool> UpdateAccommodationHeaderPhoto(int accommodationId, string newHeaderPhotoFileName)
+        {
+            var accommodationToBeUpdated = await Context.Accommodations.Where(accommodation => accommodation.Id == accommodationId).FirstOrDefaultAsync();
+
+            if (accommodationToBeUpdated != null)
+            {
+                accommodationToBeUpdated.HeaderPhotoFileName = newHeaderPhotoFileName;
+            }
+
+            try
+            {
+                Context.Update(accommodationToBeUpdated);
+                await Context.SaveChangesAsync();
+            }
+            catch
+            {
+
+                return false;
+            }
+
+            return true;
+        }
     }
 }

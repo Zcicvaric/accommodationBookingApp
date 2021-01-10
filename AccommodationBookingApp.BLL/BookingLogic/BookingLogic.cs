@@ -77,7 +77,7 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
             var bookingsForHost = await bookingFunctions.GetAllBookingsForHostAsync(userId);
 
             var pendingReservations = bookingsForHost.Where(booking => booking.ApprovalStatus == ApprovalStatus.Pending)
-                                      .OrderBy(booking => booking.CheckInDate).ToList();
+                                                     .ToList();
 
             return pendingReservations;
         }
@@ -88,7 +88,7 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
 
             var approvedReservations = bookingsForHost.Where(booking => booking.ApprovalStatus == ApprovalStatus.Approved
                                                              && booking.CheckInDate.Date >= DateTime.Now.Date)
-                                                             .OrderBy(booking => booking.CheckInDate).ToList();
+                                                             .ToList();
 
             return approvedReservations;
         }

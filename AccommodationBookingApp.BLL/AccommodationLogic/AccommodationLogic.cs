@@ -1,11 +1,13 @@
 ﻿using AccommodationBookingApp.DataAccess.Entities;
 using AccommodationBookingApp.DataAccess.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Microsoft.VisualBasic.FileIO;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AccommodationBookingApp.BLL.AccommodationLogic
@@ -36,26 +38,24 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
 
             try
             {
-                var headerPhotoFileName = Guid.NewGuid().ToString() + "_" + AccommodationHeaderPhoto.FileName;
-                newAccommodation.HeaderPhotoFileName = headerPhotoFileName;
+                newAccommodation.HeaderPhotoFileName = AccommodationHeaderPhoto.FileName;
 
                 var result = await accommodationFunctions.CreateAccommodationAsync(newAccommodation, accommodationTypeId, currencyId, accommodationOwnerUsername);
 
                 if (result.Id > 0)
                 {
-                    var directoryPath = Path.Combine(accommodationImagesFolder, (name + "_" + result.Id.ToString()));
-                    var headerFolderPath = Path.Combine(directoryPath, "Header");
-                    Directory.CreateDirectory(directoryPath);
-                    Directory.CreateDirectory(headerFolderPath);
+                    var accommodationHeaderPhotoUploadResult = await UploadHeaderPhoto(name, accommodationImagesFolder, result.Id, AccommodationHeaderPhoto, false);
 
-                    var headerPhotoFilePath = Path.Combine(headerFolderPath, headerPhotoFileName);
-                    await AccommodationHeaderPhoto.CopyToAsync(new FileStream(headerPhotoFilePath, FileMode.Create));
-
-                    foreach (var formFile in AcommodationPhotos)
+                    if (!accommodationHeaderPhotoUploadResult)
                     {
-                        var photoFileName = Guid.NewGuid().ToString() + "_" + formFile.FileName;
-                        var photoFilePath = Path.Combine(accommodationImagesFolder, (name + "_" + result.Id.ToString()), photoFileName);
-                        await formFile.CopyToAsync(new FileStream(photoFilePath, FileMode.Create));
+                        return false;
+                    }
+
+                    var accommodationPhotosUploadResult = await UploadAccommodationPhotos(name, accommodationImagesFolder, result.Id, AcommodationPhotos);
+
+                    if (!accommodationPhotosUploadResult)
+                    {
+                        return false;
                     }
 
                     return true;
@@ -72,20 +72,139 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
             }
         }
 
-        public async Task<bool> DeleteAccommodationAsync(Accommodation accommodationToDelete, string accommodationPhotosFolder)
+        public async Task<bool> UploadHeaderPhoto(string accommodationName, string accommodationsRootPhotosDirectory,
+                                                  int accommodationId, IFormFile accommodationHeaderPhoto, bool deleteOldHeaderPhoto)
         {
             try
             {
-                var deleteResult = await accommodationFunctions.DeleteAccommodationAsync(accommodationToDelete);
+                var headerPhotoDirectoryPath = Path.Combine(accommodationsRootPhotosDirectory, (accommodationName + "_" + accommodationId.ToString()), "Header");
+                var headerPhotoFilePath = Path.Combine(headerPhotoDirectoryPath, accommodationHeaderPhoto.FileName);
 
-                if (deleteResult)
+                if (deleteOldHeaderPhoto)
                 {
-                    var accommodationPhotosDirectoryPath = Path.Combine(accommodationPhotosFolder, accommodationToDelete.Name
-                                                                           + "_" + accommodationToDelete.Id);
-                    Directory.Delete(accommodationPhotosDirectoryPath, true);
+                    var updateResult = await accommodationFunctions.UpdateAccommodationHeaderPhoto(accommodationId, accommodationHeaderPhoto.FileName);
+
+                    if (!updateResult)
+                    {
+                        throw new Exception();
+                    }
+
+                    Directory.Delete(headerPhotoDirectoryPath, true);
+                }
+
+                Directory.CreateDirectory(headerPhotoDirectoryPath);
+
+                await accommodationHeaderPhoto.CopyToAsync(new FileStream(headerPhotoFilePath, FileMode.Create));
+
+                return true;
+            }
+            catch
+            {
+
+                return false;
+            }
+        }
+
+        public async Task<bool> UploadAccommodationPhotos(string accommodationName, string accommodationsPhotosRootDirectory,
+                                                          int accommodationId, List<IFormFile> accommodationPhotos)
+        {
+            try
+            {
+                var photosForAccommodationDirectoryPath = Path.Combine(accommodationsPhotosRootDirectory, (accommodationName + "_" + accommodationId.ToString()));
+                Directory.CreateDirectory(photosForAccommodationDirectoryPath);
+
+                foreach (var formFile in accommodationPhotos)
+                {
+                    var photoFileName = Guid.NewGuid().ToString() + "_" + formFile.FileName;
+                    var photoFilePath = Path.Combine(photosForAccommodationDirectoryPath, photoFileName);
+                    await formFile.CopyToAsync(new FileStream(photoFilePath, FileMode.Create));
+                }
+
+                return true;
+            }
+            catch
+            {
+
+                return false;
+            }
+        }
+
+        public bool DeleteAccommodationPhoto(string photoFilePath)
+        {
+            try
+            {
+                File.Delete(photoFilePath);
+            }
+            catch 
+            {
+
+                return false;
+            }
+
+            return true;
+        }
+
+        public async Task<bool> UpdateAccommodationAsync(int accommodationId, string name, int numberOfBeds, int pricePerNight,
+                                                         int currencyId, bool requireApproval, bool userCanCancelBooking,
+                                                         string checkInTime, string checkOutTime, string oldName, string accommodationImagesFolderPath)
+        {
+            bool updateResult = await accommodationFunctions.UpdateAccommodationAsync(accommodationId, name, numberOfBeds, pricePerNight, currencyId,
+                                                                                      requireApproval, userCanCancelBooking, checkInTime, checkOutTime);
+
+            if (updateResult)
+            {
+                var oldAccommodationPhotosDirectoryPath = Path.Combine(accommodationImagesFolderPath, (oldName + "_" + accommodationId.ToString()));
+                var newAccommodationPhotosDirectoryName = name + "_" + accommodationId;
+
+                try
+                {
+                    FileSystem.RenameDirectory(oldAccommodationPhotosDirectoryPath, newAccommodationPhotosDirectoryName);
+                }
+                catch (DirectoryNotFoundException)
+                {
+                    return false;
+                }
+                // Sometimes the directory can get locked by another process
+                catch (IOException)
+                {
+                    return true;
+                }
+                catch
+                {
+                    return false;
                 }
             }
-            catch (Exception)
+
+            return updateResult;
+        }
+
+        public async Task<bool> DeleteAccommodationAsync(Accommodation accommodationToDelete, string accommodationPhotosFolder)
+        {
+            var accommodationPhotosDirectoryPath = Path.Combine(accommodationPhotosFolder, (accommodationToDelete.Name +
+                                                                "_" + accommodationToDelete.Id.ToString()));
+
+            var deleteResult = await accommodationFunctions.DeleteAccommodationAsync(accommodationToDelete);
+
+            if (!deleteResult)
+            {
+                return false;
+            }
+
+            try
+            {
+                Directory.Delete(accommodationPhotosDirectoryPath, true);
+            }
+            catch (DirectoryNotFoundException)
+            {
+                return true;
+            }
+            // Sometimes the directory or a file in the directory get locked by another process and can't be deleted
+            // in that case an IOException is raised
+            catch (IOException e)
+            {
+                return true;
+            }
+            catch
             {
                 return false;
             }
@@ -93,7 +212,7 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
             return true;
         }
 
-        public async Task<List<Accommodation>> GetAccommodationsAsync()
+        public async Task<List<Accommodation>> GetAllAccommodationsAsync()
         {
             var accommodations = await accommodationFunctions.GetAllAccommodationsAsync();
 

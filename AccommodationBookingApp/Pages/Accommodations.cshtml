@@ -22,7 +22,7 @@
     {
         var imagePath = "~/accommodationPhotos/" + @accommodation.Name + "_" + accommodation.Id.ToString() + "/Header/" + accommodation.HeaderPhotoFileName;
         <div>
-            <h1><a asp-page="/AccommodationsDetails" asp-route-accommodationId="@accommodation.Id">@accommodation.Name</a></h1>
+            <h1><a asp-page="/AccommodationDetails" asp-route-accommodationId="@accommodation.Id">@accommodation.Name</a></h1>
             <p>Number of beds: @accommodation.NumberOfBeds</p>
             <p>Price per night: @accommodation.PricePerNight @accommodation.Currency.Name</p>
             <p>Address: @accommodation.Address</p>
@@ -30,6 +30,8 @@
         </div>
         <div class="row">
             <a asp-page="/Reservations" asp-page-handler="ForAccommodation" asp-route-accommodationId="@accommodation.Id">See all reservations</a>
+            <a asp-page="/UpdateAccommodation" asp-route-accommodationId="@accommodation.Id">Update accommodation</a>
+            <a asp-page="/EditAccommodationPhotos" asp-route-accommodationId="@accommodation.Id">Edit accommodation photos</a>
             <a asp-page="/DeleteAccommodation" asp-route-accommodationId="@accommodation.Id">Delete this accommodation</a>
         </div>
     }
