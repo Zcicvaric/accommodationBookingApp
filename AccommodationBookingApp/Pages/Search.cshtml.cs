@@ -59,10 +59,21 @@ namespace AccommodationBookingApp.Pages
 
         public async Task<IActionResult> OnGetAsync()
         {
-            CheckInDateString = DateTime.Today.ToShortDateString();
-            CheckOutDateString = DateTime.Today.AddDays(1).ToShortDateString();
             AccommodationTypeLogic = new AccommodationTypeLogic();
             AccommodationTypes = await AccommodationTypeLogic.GetAccommodationTypesAsync();
+
+            var dateFormat = "dd.MM.yyyy.";
+
+            try
+            {
+                CheckInDateString = DateTime.Today.ToString(dateFormat);
+                CheckOutDateString = DateTime.Today.AddDays(1).ToString(dateFormat);
+            }
+            catch
+            {
+                CheckInDateString = DateTime.Today.ToString();
+                CheckOutDateString = DateTime.Today.AddDays(1).ToString();
+            }
 
             return Page();
         }

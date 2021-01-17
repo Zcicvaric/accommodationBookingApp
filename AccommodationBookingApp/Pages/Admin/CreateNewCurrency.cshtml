@@ -3,20 +3,18 @@
 @{
     ViewData["Title"] = "Create new currency";
 }
-@{ 
-    <div class="container">
-        <div class="row">
-            <h2>Create a new currency</h2>
-        </div>
-        <div class="row">
-            <form method="post">
-                <div class="form-group">
-                    <label asp-for="CurrencyName"></label>
-                    <input asp-for="CurrencyName" class="form-control" />
-                    <span asp-validation-for="CurrencyName" class="text-warning"></span>
-                </div>
-                <button type="submit" class="btn btn-primary mt-4">Create</button>
-            </form>
-        </div>
+@{
+    <div class="row">
+        <h2>Create a new currency</h2>
+    </div>
+    <div class="row">
+        <form method="post">
+            <div class="form-group mb-0">
+                <label asp-for="CurrencyName"></label>
+                <input asp-for="CurrencyName" class="form-control" />
+                <span asp-validation-for="CurrencyName" class="text-warning"></span>
+            </div>
+            <button type="submit" class="btn btn-primary mt-4">Create</button>
+        </form>
     </div>
 }

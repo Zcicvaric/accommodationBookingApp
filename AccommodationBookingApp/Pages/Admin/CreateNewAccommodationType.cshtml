@@ -3,20 +3,18 @@
 @{
     ViewData["Title"] = "Create new accommodation type";
 }
-@{ 
-    <div class="container">
-        <div class="row">
-            <h2>Create a new accommodation type</h2>
-        </div>
-        <div class="row">
-            <form method="post">
-                <div class="form-group">
-                    <label asp-for="AccommodationTypeName"></label>
-                    <input asp-for="AccommodationTypeName" class="form-control"/>
-                    <span asp-validation-for="AccommodationTypeName" class="text-warning"></span>
-                </div>
-                <button type="submit" class="btn btn-primary mt-4">Create</button>
-            </form>
-        </div>
+@{
+    <div class="row">
+        <h2>Create a new accommodation type</h2>
+    </div>
+    <div class="row">
+        <form method="post">
+            <div class="form-group mb-0">
+                <label asp-for="AccommodationTypeName"></label>
+                <input asp-for="AccommodationTypeName" class="form-control" />
+                <span asp-validation-for="AccommodationTypeName" class="text-warning"></span>
+            </div>
+            <button type="submit" class="btn btn-primary mt-4">Create</button>
+        </form>
     </div>
 }

@@ -94,7 +94,11 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
 
                 Directory.CreateDirectory(headerPhotoDirectoryPath);
 
-                await accommodationHeaderPhoto.CopyToAsync(new FileStream(headerPhotoFilePath, FileMode.Create));
+                FileStream fileStream = new FileStream(headerPhotoFilePath, FileMode.Create);
+
+                await accommodationHeaderPhoto.CopyToAsync(fileStream);
+
+                fileStream.Close();
 
                 return true;
             }
@@ -117,7 +121,12 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
                 {
                     var photoFileName = Guid.NewGuid().ToString() + "_" + formFile.FileName;
                     var photoFilePath = Path.Combine(photosForAccommodationDirectoryPath, photoFileName);
-                    await formFile.CopyToAsync(new FileStream(photoFilePath, FileMode.Create));
+
+                    FileStream fileStream = new FileStream(photoFilePath, FileMode.Create);
+
+                    await formFile.CopyToAsync(fileStream);
+
+                    fileStream.Close();
                 }
 
                 return true;
@@ -144,30 +153,24 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
             return true;
         }
 
-        public async Task<bool> UpdateAccommodationAsync(int accommodationId, string name, int numberOfBeds, int pricePerNight,
+        public async Task<bool> UpdateAccommodationAsync(int accommodationId, string newName, int numberOfBeds, int pricePerNight,
                                                          int currencyId, bool requireApproval, bool userCanCancelBooking,
                                                          string checkInTime, string checkOutTime, string oldName, string accommodationImagesFolderPath)
         {
-            bool updateResult = await accommodationFunctions.UpdateAccommodationAsync(accommodationId, name, numberOfBeds, pricePerNight, currencyId,
+            bool updateResult = await accommodationFunctions.UpdateAccommodationAsync(accommodationId, newName, numberOfBeds, pricePerNight, currencyId,
                                                                                       requireApproval, userCanCancelBooking, checkInTime, checkOutTime);
 
             if (updateResult)
             {
                 var oldAccommodationPhotosDirectoryPath = Path.Combine(accommodationImagesFolderPath, (oldName + "_" + accommodationId.ToString()));
-                var newAccommodationPhotosDirectoryName = name + "_" + accommodationId;
+                var newAccommodationPhotosDirectoryName = newName + "_" + accommodationId;
 
                 try
                 {
-                    FileSystem.RenameDirectory(oldAccommodationPhotosDirectoryPath, newAccommodationPhotosDirectoryName);
-                }
-                catch (DirectoryNotFoundException)
-                {
-                    return false;
-                }
-                // Sometimes the directory can get locked by another process
-                catch (IOException)
-                {
-                    return true;
+                    if (newName != oldName)
+                    {
+                        FileSystem.RenameDirectory(oldAccommodationPhotosDirectoryPath, newAccommodationPhotosDirectoryName);
+                    }
                 }
                 catch
                 {
@@ -192,17 +195,8 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
 
             try
             {
+                
                 Directory.Delete(accommodationPhotosDirectoryPath, true);
-            }
-            catch (DirectoryNotFoundException)
-            {
-                return true;
-            }
-            // Sometimes the directory or a file in the directory get locked by another process and can't be deleted
-            // in that case an IOException is raised
-            catch (IOException e)
-            {
-                return true;
             }
             catch
             {
@@ -338,6 +332,11 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
             }
 
             return true;
+        }
+
+        public string GetPhotosFolderPathForAccommodation(Accommodation accommodation)
+        {
+            return "wwwroot/accommodationPhotos/" + accommodation.Name + "_" + accommodation.Id.ToString() + "/";
         }
     }
 }

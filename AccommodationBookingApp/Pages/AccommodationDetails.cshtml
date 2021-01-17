@@ -4,14 +4,17 @@
     ViewData["Title"] = Model.Accommodation.Name;
 }
 @{
-
-    <img src="@Model.HeaderPhotoPath" asp-append-version="true" alt="headerPhoto"/>
     <div class="row">
+        <div class="col-4 mt-2">
+            <img src="@Model.HeaderPhotoPath" asp-append-version="true" class="img-fluid" alt="headerPhoto" />
+        </div>
         @foreach(var imagePath in Model.AccommodationPhotos)
         {
             //cleaning wwwroot prefix
             var imagePathCleaned = imagePath.Remove(0, 7);
-            <img src="@imagePathCleaned" alt="photo"/>
+            <div class="col-4 mt-2">
+                <img src="@imagePathCleaned" class="img-fluid" alt="photo"/>
+            </div>
         }
     </div>
     <div>
@@ -19,27 +22,37 @@
         <label>@Model.Accommodation.Name</label>
         <h4>City:</h4>
         <label>@Model.Accommodation.City</label>
-        <h4>Address</h4>
+        <h4>Address:</h4>
         <label>@Model.Accommodation.Address</label>
         <h4>Check-in time:</h4>
         <label>@Model.Accommodation.CheckInTime</label>
         <h4>Check-out time:</h4>
         <label>@Model.Accommodation.CheckOutTime</label>
-        <h4>Number of beds</h4>
+        <h4>Number of beds:</h4>
         <label>@Model.Accommodation.NumberOfBeds</label>
-        <h4>Price per night</h4>
+        <h4>Price per night:</h4>
         <label>@Model.Accommodation.PricePerNight @Model.Accommodation.Currency.Name</label>
     </div>
     @if (User.Identity.IsAuthenticated && !User.IsInRole("Admin") && (Model.CurrentUser.Id != Model.Accommodation.ApplicationUser.Id))
     {
         <form method="post">
-            <h4>Check-in date:</h4>
-            <input data-provide="datepicker" asp-for="CheckInDateString" onchange="clickedOnTheCalendar(this.value)" class="checkInDatepicker" autocomplete="off"/>
-            <span asp-validation-for="CheckInDateString" class="text-warning"></span>
-            <h4>Check-out date:</h4>
-            <input data-provide="datepicker" asp-for="CheckOutDateString" class="checkOutDatepicker" autocomplete="off"/>
-            <span asp-validation-for="CheckOutDateString" class="text-warning"></span>
-            <button type="submit">Book</button>
+            <div class="form-row">
+                <h4>Check-in date:</h4>
+            </div>
+            <div class="form-row">
+                <input data-provide="datepicker" asp-for="CheckInDateString" onchange="clickedOnTheCalendar(this.value)" class="checkInDatepicker form-control col-md-2 col-sm-12" autocomplete="off"/>
+                <span asp-validation-for="CheckInDateString" class="text-warning"></span>
+            </div>
+            <div class="form-row">
+                <h4>Check-out date:</h4>
+            </div>
+            <div class="form-row">
+                <input data-provide="datepicker" asp-for="CheckOutDateString" class="checkOutDatepicker form-control col-md-2 col-sm-12" autocomplete="off"/>
+                <span asp-validation-for="CheckOutDateString" class="text-warning"></span>
+            </div>
+            <div class="form-row pt-2">
+                <button type="submit" class="btn btn-primary">Book</button>
+            </div>
         </form>
     }
     @if (Model.Accommodation.RequireApproval)

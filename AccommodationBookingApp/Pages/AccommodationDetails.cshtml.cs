@@ -96,13 +96,17 @@ namespace AccommodationBookingApp.Pages
 
             DatesOccupiedArray = listOfDatesOccupied.ToArray();
 
-            HeaderPhotoPath = "~/accommodationPhotos/" + Accommodation.Name + "_" + Accommodation.Id.ToString() + "/Header/" + Accommodation.HeaderPhotoFileName;
+            var accommodationPhotosFolder = AccommodationLogic.GetPhotosFolderPathForAccommodation(Accommodation);
 
-            var accommodationImagesFolder = "wwwroot/accommodationPhotos/" + Accommodation.Name + "_" + Accommodation.Id.ToString() + "/";
+            HeaderPhotoPath = accommodationPhotosFolder + "Header/" + Accommodation.HeaderPhotoFileName;
+
+            //removing wwwroot prefix
+            HeaderPhotoPath = HeaderPhotoPath.Substring(7);
+
 
             try
             {
-                AccommodationPhotos = Directory.GetFiles(accommodationImagesFolder, "*", SearchOption.TopDirectoryOnly).ToList();
+                AccommodationPhotos = Directory.GetFiles(accommodationPhotosFolder, "*", SearchOption.TopDirectoryOnly).ToList();
             }
             catch (Exception)
             {

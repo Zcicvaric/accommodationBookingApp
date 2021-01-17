@@ -1,41 +1,56 @@
 ﻿@page
 @model AccommodationBookingApp.Pages.Admin.AccommodationsListModel
-@{ 
+@{
     ViewData["Title"] = "Accommodations List";
 }
 @{
-    <div class="container">
-        @if (Model.Accommodations == null && Model.Accommodations.Count == 0)
+    @if (Model.Accommodations == null && Model.Accommodations.Count == 0)
+    {
+        <div class="row">
+            <h2>No accommodations yet</h2>
+        </div>
+    }
+    else
+    {
+        @foreach (var accommodation in Model.Accommodations)
         {
-            <div class="row">
-                <h2>No accommodations yet</h2>
+            var collapseId = accommodation.Name + accommodation.Id.ToString();
+
+            <div class="row mt-2">
+                <label>Name:</label>
+                <p>&nbsp;@accommodation.Name</p>
             </div>
-        }
-        else
-        {
-            @foreach (var accommodation in Model.Accommodations)
-            {
-                <div class="row">
-                    <label>Name</label>
-                    <p>@accommodation.Name</p>
-                    <label>City</label>
-                    <p>@accommodation.City</p>
-                    <label>Type</label>
-                    <p>@accommodation.AccommodationType.Name</p>
-                    <label>Number of beds</label>
-                    <p>@accommodation.NumberOfBeds</p>
-                    <label>Accommodation owner</label>
-                    <p>@accommodation.ApplicationUser.UserName</p>
-                </div>
+            <div class="row">
+                <label>City:</label>
+                <p>&nbsp;@accommodation.City</p>
+            </div>
+            <div class="row">
+                <label>Type:</label>
+                <p>&nbsp;@accommodation.AccommodationType.Name</p>
+            </div>
+            <div class="row">
+                <label>Number of beds:</label>
+                <p>&nbsp;@accommodation.NumberOfBeds</p>
+            </div>
+            <div class="row">
+                <label>Accommodation owner:</label>
+                <p>&nbsp;@accommodation.ApplicationUser.UserName</p>
+            </div>
+            <div class="row mt-1 d-lg-none">
+                <a class="btn btn-info" data-toggle="collapse" data-target="#@collapseId">See all actions</a>
+            </div>
+            <div class=" collapse d-lg-block" id="@collapseId">
                 <div class="row">
                     <a asp-page="/Reservations" asp-page-handler="ForAccommodation"
-                       asp-route-accommodationId="@accommodation.Id" class="btn btn-info">See all reservations for this accommodation</a>
-                    <a asp-page="/DeleteAccommodation" asp-route-accommodationId =" @accommodation.Id"
-                       class="btn btn-info">Delete this accommodation</a>
-                    <a asp-page="/Account/Details" asp-page-handler="AccountDetailsForUser" 
-                       asp-route-username="@accommodation.ApplicationUser.UserName" class="btn btn-info">Accommodation owner details</a>
+                       asp-route-accommodationId="@accommodation.Id" class="btn btn-info ml-1 col-lg-2 mt-1 mt-lg-0">See all reservations</a>
+                    <a asp-page="/AccommodationDetails" asp-route-accommodationId="@accommodation.Id"
+                       class="btn btn-info ml-1 col-lg-2 mt-1 mt-lg-0">Details page</a>
+                    <a asp-page="/Account/Details" asp-page-handler="AccountDetailsForUser"
+                       asp-route-username="@accommodation.ApplicationUser.UserName" class="btn btn-info ml-1 col-lg-3 mt-1 mt-lg-0">Accommodation owner details</a>
+                    <a asp-page="/DeleteAccommodation" asp-route-accommodationId="@accommodation.Id"
+                       class="btn btn-danger ml-1 col-lg-3 mt-1 mt-lg-0">Delete this accommodation</a>
                 </div>
-            }
+            </div>
         }
-    </div>
+    }
 }

@@ -10,7 +10,7 @@ namespace AccommodationBookingApp.Pages.Admin
     [Authorize(Roles = "Admin")]
     public class CreateNewAccommodationTypeModel : PageModel
     {
-        [Required]
+        [Required(ErrorMessage = "Please enter a name")]
         [BindProperty]
         [MaxLength(50)]
         [Display(Name = "Accommodation Type Name")]
@@ -29,7 +29,7 @@ namespace AccommodationBookingApp.Pages.Admin
 
                 if (result)
                 {
-                    return RedirectToPage("/Admin/AccommodationTypeCreated");
+                    return RedirectToPage("/Admin/AccommodationTypeCreated", "AccommodationTypeCreated");
                 }
                 ModelState.AddModelError("AccommodationTypeName", "This name is already in use");
                 return Page();

@@ -17,7 +17,7 @@ namespace AccommodationBookingApp
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddRazorPages();
+            services.AddRazorPages().AddRazorRuntimeCompilation();
             // When DbContextPooling is used, DbContext instances can be resused, instead of creating new ones for each request
             services.AddDbContextPool<DatabaseContext>(options =>
                 options.UseSqlServer("Server=DESKTOP-HJRJMK9\\SQLEXPRESS;Database=AccommodationBookingApp;Trusted_Connection=True;MultipleActiveResultSets=True"/*AppConfiguration.sqlConnectionString*/));
@@ -53,6 +53,8 @@ namespace AccommodationBookingApp
                 // This dosen't redirect you to the error page, but instead issues a proper 404/400 error and keeps the original URL
                 app.UseStatusCodePagesWithReExecute("/ErrorPages/{0}");
             }
+
+            app.UseBrowserLink();
 
             app.UseHttpsRedirection();
 

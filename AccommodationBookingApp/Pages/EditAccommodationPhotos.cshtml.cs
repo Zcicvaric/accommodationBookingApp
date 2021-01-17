@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -45,9 +46,13 @@ namespace AccommodationBookingApp.Pages
                 return Unauthorized();
             }
 
-            HeaderPhotoPath = "~/accommodationPhotos/" + Accommodation.Name + "_" + Accommodation.Id.ToString() + "/Header/" + Accommodation.HeaderPhotoFileName;
+            var accommodationPhotosFolder = accommodationLogic.GetPhotosFolderPathForAccommodation(Accommodation);
 
-            var accommodationPhotosFolder = "wwwroot/accommodationPhotos/" + Accommodation.Name + "_" + Accommodation.Id.ToString() + "/";
+            //removing the wwwroot prefix
+            HeaderPhotoPath = accommodationPhotosFolder + "Header/" + Accommodation.HeaderPhotoFileName;
+
+            HeaderPhotoPath = HeaderPhotoPath.Substring(7);
+
 
             try
             {

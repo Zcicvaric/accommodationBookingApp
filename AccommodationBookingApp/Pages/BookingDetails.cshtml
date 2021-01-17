@@ -1,6 +1,6 @@
 ﻿@page
 @model AccommodationBookingApp.Pages.BookingDetailsModel
-@{ 
+@{
     if (Model.Booking.ApplicationUser.UserName == User.Identity.Name)
     {
         ViewData["Title"] = "Your stay at " + Model.Accommodation.Name;
@@ -11,85 +11,78 @@
     }
 }
 @{
-    <div class="container">
-        <div class="row">
-            <h2>Booking details</h2>
-        </div>
-        <div class="row">
-            <label>Accommodation name</label>
-            <p>@Model.Accommodation.Name</p>
-        </div>
-        <div class="row">
-            <label>Booking status</label>
-            <p>@Model.Booking.ApprovalStatus</p>
-        </div>
-        <div class="row">
-            <label>Check-in time</label>
-            <p>@Model.Booking.CheckInDate.ToShortDateString() at @Model.Accommodation.CheckInTime</p>
-        </div>
-        <div class="row">
-            <label>Check-out time</label>
-            <p>@Model.Booking.CheckOutDate.ToShortDateString() at @Model.Accommodation.CheckOutTime</p>
-        </div>
-        <div class="row">
-            <label>Address</label>
-            <p>@Model.Accommodation.Address</p>
-        </div>
-        
-        @if (User.IsInRole("User"))
-        { 
-            <div class="row">
-                <label>Host mobile phone number</label>
-                <p>@Model.Accommodation.ApplicationUser.PhoneNumber</p>
-            </div>
-
-            @if (@Model.Accommodation.UserCanCancelBooking && @Model.Booking.CheckInDate > DateTime.Now.Date &&
-                (@Model.Booking.ApprovalStatus == DataAccess.Entities.ApprovalStatus.Approved || @Model.Booking.ApprovalStatus == DataAccess.Entities.ApprovalStatus.Pending))
-            {
-                <div class="row">
-                    <form method="post">
-                        <button type="submit" class="btn btn-danger" asp-page-handler="UserCancelBooking" asp-route-bookingId="@Model.Booking.Id">Cancel Booking</button>
-                    </form>
-                </div>
-            }
-        }
-        @if (User.IsInRole("Host"))
-        {
-            <div class="row">
-                <label>Guest</label>
-                <p>@Model.Booking.ApplicationUser.FirstName @Model.Booking.ApplicationUser.LastName</p>
-            </div>
-            <div class="row">
-                <label>Guest's Email</label>
-                <p>@Model.Booking.ApplicationUser.Email</p>
-            </div>
-            @if (@Model.Accommodation.ApplicationUser.UserName == User.Identity.Name && Model.Booking.CheckInDate >= DateTime.Now.Date)
-            {
-                <div class="row">
-                    <p>Manage booking</p>
-                    <form method="post">
-                        @if (@Model.Booking.ApprovalStatus == DataAccess.Entities.ApprovalStatus.Pending)
-                        {
-                            <button type="submit" class="btn btn-success" asp-page-handler="HostApproveBooking" asp-route-bookingId="@Model.Booking.Id">Approve booking</button>
-                            <button type="submit" class="btn btn-warning" asp-page-handler="HostDeclineBooking" asp-route-bookingId="@Model.Booking.Id">Decline booking</button>
-                        }
-                        @if (Model.Booking.ApprovalStatus == DataAccess.Entities.ApprovalStatus.Approved)
-                        {
-                            <button type="submit" class="btn btn-danger" asp-page-handler="HostCancelBooking" asp-route-bookingId ="@Model.Booking.Id">Cancel booking</button>
-                        }
-                    </form>
-                </div>
-            }
-        }
-        @if (User.IsInRole("Admin"))
-        {
-            <div class="row">
-                <a asp-page="/Admin/DeleteBooking" asp-route-bookingId="@Model.Booking.Id" class="btn btn-danger">Delete booking</a>
-            </div>
-        }
-
-        <div class="row">
-            <a asp-page="/AccommodationDetails" asp-route-accommodationId="@Model.Accommodation.Id">Click here to go to the accommodation page</a>
-        </div>
+    <div class="row">
+        <h2>Booking details</h2>
     </div>
+    <div class="row">
+        <label>Accommodation name:</label>
+        <p><a asp-page="/AccommodationDetails" asp-route-accommodationId="@Model.Accommodation.Id" class="text-decoration-none">&nbsp;@Model.Accommodation.Name</a></p>
+    </div>
+    <div class="row">
+        <label>Booking status:</label>
+        <p>&nbsp;@Model.Booking.ApprovalStatus</p>
+    </div>
+    <div class="row">
+        <label>Check-in time:</label>
+        <p>&nbsp;@Model.Booking.CheckInDate.ToShortDateString() at @Model.Accommodation.CheckInTime</p>
+    </div>
+    <div class="row">
+        <label>Check-out time:</label>
+        <p>&nbsp;@Model.Booking.CheckOutDate.ToShortDateString() at @Model.Accommodation.CheckOutTime</p>
+    </div>
+    <div class="row">
+        <label>Address:</label>
+        <p>&nbsp;@Model.Accommodation.Address</p>
+    </div>
+
+    @if (User.IsInRole("User"))
+    {
+        <div class="row">
+            <label>Host mobile phone number:</label>
+            <p>&nbsp;@Model.Accommodation.ApplicationUser.PhoneNumber</p>
+        </div>
+
+        @if (@Model.Accommodation.UserCanCancelBooking && @Model.Booking.CheckInDate > DateTime.Now.Date &&
+           (@Model.Booking.ApprovalStatus == DataAccess.Entities.ApprovalStatus.Approved || @Model.Booking.ApprovalStatus == DataAccess.Entities.ApprovalStatus.Pending))
+        {
+            <div class="row">
+                <form method="post">
+                    <button type="submit" class="btn btn-danger" asp-page-handler="UserCancelBooking" asp-route-bookingId="@Model.Booking.Id">Cancel Booking</button>
+                </form>
+            </div>
+        }
+    }
+    @if (User.IsInRole("Host"))
+    {
+        <div class="row">
+            <label>Guest:</label>
+            <p>&nbsp;@Model.Booking.ApplicationUser.FirstName @Model.Booking.ApplicationUser.LastName</p>
+        </div>
+        <div class="row">
+            <label>Guest's Email:</label>
+            <p>&nbsp;@Model.Booking.ApplicationUser.Email</p>
+        </div>
+        @if (@Model.Accommodation.ApplicationUser.UserName == User.Identity.Name && Model.Booking.CheckInDate >= DateTime.Now.Date)
+        {
+            <div class="row">
+                <form method="post">
+                    @if (@Model.Booking.ApprovalStatus == DataAccess.Entities.ApprovalStatus.Pending)
+                    {
+                        <button type="submit" class="btn btn-success" asp-page-handler="HostApproveBooking" asp-route-bookingId="@Model.Booking.Id">Approve booking</button>
+                        <button type="submit" class="btn btn-warning" asp-page-handler="HostDeclineBooking" asp-route-bookingId="@Model.Booking.Id">Decline booking</button>
+                    }
+                    @if (Model.Booking.ApprovalStatus == DataAccess.Entities.ApprovalStatus.Approved)
+                    {
+                        <button type="submit" class="btn btn-danger" asp-page-handler="HostCancelBooking" asp-route-bookingId="@Model.Booking.Id">Cancel booking</button>
+                    }
+                </form>
+            </div>
+        }
+    }
+    @if (User.IsInRole("Admin"))
+    {
+        <div class="row">
+            <a asp-page="/Admin/DeleteBooking" asp-route-bookingId="@Model.Booking.Id" class="btn btn-danger">Delete booking</a>
+        </div>
+    }
 }

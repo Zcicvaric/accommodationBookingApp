@@ -16,46 +16,51 @@
     <script src="~/lib/moment.js/moment.js"></script>
     <script src="~/lib/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
     <header>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="navbar-nav">
-                <a class="nav-item nav-link pr-4" asp-page="/Index">Home Page</a>
-                <a class="nav-item nav-link" asp-page="/Search">Search</a>
-                @if (User.IsInRole("Admin"))
-                {
-                    <a class="nav-item nav-link" asp-page="/Admin/Accounts">Accounts</a>
-                    <a class="nav-item nav-link" asp-page="/Admin/AccommodationsList">All accommodations</a>
-                    <a class="nav-item nav-link" asp-page="/Admin/CreateNewAccommodationType">New accommodation type</a>
-                    <a class="nav-item nav-link" asp-page="/Admin/CreateNewCurrency">New currency</a>
-                }
-                @if (User.IsInRole("Host"))
-                {
-                    <a class="nav-item nav-link" asp-page="/Accommodations">Your Accomodations</a>
-                }
-                @if (User.Identity.IsAuthenticated && !User.IsInRole("Admin"))
-                {
-                    <a class="nav-item nav-link" asp-page="/Bookings">Your Bookings</a>
-                }
-                @if (User.IsInRole("Host"))
-                {
-                    <a class="nav-item nav-link" asp-page="/CreateAccommodation">Create new Accommodation</a>
-                    <a class="nav-item nav-link" asp-page="/Reservations">Reservations Summary</a>
-                }
-            </div>
-            <div class="navbar-nav ml-auto">
-                @if (User.Identity.IsAuthenticated)
-                {
-                    <a class="nav-item nav-link" asp-page="/Account/Details">Welcome @User.Identity.Name</a>
-                    <a class="nav-item nav-link" asp-page="/LogOut">Log out</a>
-                }
-                else
-                {
-                    <a class="nav-item nav-link" asp-page="/LogIn">Log in</a>
-                    <a class="nav-item nav-link" asp-page="/Register">Register</a>
-                }
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarId">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarId">
+                <div class="navbar-nav mr-auto">
+                    <a class="navbar-brand d-none d-lg-inline-block" asp-page="/Index">Accommodation booking app</a>
+                    <a class="nav-item nav-link" asp-page="/Search">Search</a>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a class="nav-item nav-link" asp-page="/Admin/Accounts">Accounts</a>
+                        <a class="nav-item nav-link" asp-page="/Admin/AccommodationsList">All accommodations</a>
+                        <a class="nav-item nav-link" asp-page="/Admin/CreateNewAccommodationType">New accommodation type</a>
+                        <a class="nav-item nav-link" asp-page="/Admin/CreateNewCurrency">New currency</a>
+                    }
+                    @if (User.IsInRole("Host"))
+                    {
+                        <a class="nav-item nav-link" asp-page="/Accommodations">Your Accomodations</a>
+                    }
+                    @if (User.Identity.IsAuthenticated && !User.IsInRole("Admin"))
+                    {
+                        <a class="nav-item nav-link" asp-page="/Bookings">Your Bookings</a>
+                    }
+                    @if (User.IsInRole("Host"))
+                    {
+                        <a class="nav-item nav-link" asp-page="/CreateAccommodation">Create new Accommodation</a>
+                        <a class="nav-item nav-link" asp-page="/Reservations">Reservations Summary</a>
+                    }
+                </div>
+                <div class="navbar-nav ml-auto">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <a class="nav-item nav-link" asp-page="/Account/Details">My Account</a>
+                        <a class="nav-item nav-link" asp-page="/LogOut">Log out</a>
+                    }
+                    else
+                    {
+                        <a class="nav-item nav-link" asp-page="/LogIn">Log in</a>
+                        <a class="nav-item nav-link" asp-page="/Register">Register</a>
+                    }
+                </div>
             </div>
         </nav>
     </header>
-    <div class="container">
+    <div class="container mt-2">
         @RenderBody()
     </div>
 

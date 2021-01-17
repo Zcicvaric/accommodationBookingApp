@@ -12,8 +12,9 @@
             <form enctype="multipart/form-data" method="post">
                 <label>Upload a new header photo?</label>
                 <input type="hidden" asp-for="AccommodationId" value="@Model.Accommodation.Id" />
-                <input asp-for="HeaderPhotoToUpload" accept="image/jpeg, image/png" class="form-control-file" />
-                <button type="submit" asp-page-handler="UploadNewHeaderPhoto" class="btn btn-secondary">Upload</button>
+                <input asp-for="HeaderPhotoToUpload" required accept="image/jpeg, image/png" class="form-control-file" />
+                <span asp-validation-for="HeaderPhotoToUpload" class="text-warning"></span>
+                <button type="submit" asp-page-handler="UploadNewHeaderPhoto" class="btn btn-primary">Upload</button>
             </form>
         </div>
         <div class="row">
@@ -40,10 +41,11 @@
             }
         <div class="row">
             <form enctype="multipart/form-data" method="post">
-                <label>Upload more photographs</label>
-                <input type="hidden" asp-for="@Model.AccommodationId" value="@Model.Accommodation.Id" />
-                <input asp-for="@Model.PhotosToUpload" accept="image/jpeg, image/png" multiple class="form-control-file" />
-                <button type="submit" asp-page-handler="UploadPhotos" class="btn btn-secondary">Upload selected photos</button>
+                <label>Upload more photographs?</label>
+                <input type="hidden" asp-for="AccommodationId" value="@Model.Accommodation.Id" />
+                <input asp-for="PhotosToUpload" required accept="image/jpeg, image/png" multiple class="form-control-file" />
+                <span asp-validation-for="PhotosToUpload" class="text-warning"></span>
+                <button type="submit" asp-page-handler="UploadPhotos" class="btn btn-primary">Upload selected photos</button>
             </form>
         </div>
     </div>

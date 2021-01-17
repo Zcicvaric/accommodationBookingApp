@@ -11,77 +11,76 @@
     }
 }
 @{
-    <div class="container">
-        <div class="row">
-            <h2>Account details</h2>
-        </div>
-        <div class="row">
-            <h4>First Name</h4>
-        </div>
-        <div class="row">
-            <p>@Model.ApplicationUser.FirstName</p>
-        </div>
-        <div class="row">
-            <h4>Last Name</h4>
-        </div>
-        <div class="row">
-            <p>@Model.ApplicationUser.LastName</p>
-        </div>
-        <div class="row">
-            <h4>Email</h4>
-        </div>
-        <div class="row">
-            <p>@Model.ApplicationUser.Email</p>
-        </div>
-        <div class="row">
-            <h4>Type of account</h4>
-        </div>
-        <div class="row">
-            <p>@Model.UserRole account</p>
-        </div>
-        
-        @if (Model.UserRole == "Host")
-        {
-            <div class="row">
-                <h4>Address</h4>
-            </div>
-            <div class="row">
-                <p>@Model.ApplicationUser.Address</p>
-            </div>
-            <div class="row">
-                <h4>City</h4>
-            </div>
-            <div class="row">
-                <p>@Model.ApplicationUser.City</p>
-            </div>
-            <div class="row">
-                <h4>Country</h4>
-            </div>
-            <div class="row">
-                <p>@Model.ApplicationUser.Country</p>
-            </div>
-            <div class="row">
-                <h4>Mobile phone number</h4>
-            </div>
-            <div class="row">
-                <p>@Model.ApplicationUser.PhoneNumber</p>
-            </div>
-        }
-        @if (User.Identity.Name == Model.ApplicationUser.UserName)
-        {
-            <div class="row">
-                <a asp-page="/Account/ChangePassword" class="btn btn-warning">Change password</a>
-            </div>
-        }
-        <div class="row">
-        @if (User.IsInRole("User"))
-        {
-            <a asp-page="/Account/UpdateAccount" class="btn btn-outline-warning">Update personal information</a>
-        }
-        @if (User.IsInRole("Host"))
-        {
-            <a asp-page="/Account/UpdateHostAccount" class="btn btn-outline-warning">Update personal information</a>
-        }
-        </div>
+    <div class="row">
+        <h2>Account details</h2>
     </div>
+    <div class="row">
+        <h4>First Name</h4>
+    </div>
+    <div class="row">
+        <p>@Model.ApplicationUser.FirstName</p>
+    </div>
+    <div class="row">
+        <h4>Last Name</h4>
+    </div>
+    <div class="row">
+        <p>@Model.ApplicationUser.LastName</p>
+    </div>
+    <div class="row">
+        <h4>Email</h4>
+    </div>
+    <div class="row">
+        <p>@Model.ApplicationUser.Email</p>
+    </div>
+    <div class="row">
+        <h4>Type of account</h4>
+    </div>
+    <div class="row">
+        <p>@Model.UserRole account</p>
+    </div>
+
+    @if (Model.UserRole == "Host")
+    {
+        <div class="row">
+            <h4>Address</h4>
+        </div>
+        <div class="row">
+            <p>@Model.ApplicationUser.Address</p>
+        </div>
+        <div class="row">
+            <h4>City</h4>
+        </div>
+        <div class="row">
+            <p>@Model.ApplicationUser.City</p>
+        </div>
+        <div class="row">
+            <h4>Country</h4>
+        </div>
+        <div class="row">
+            <p>@Model.ApplicationUser.Country</p>
+        </div>
+        <div class="row">
+            <h4>Mobile phone number</h4>
+        </div>
+        <div class="row">
+            <p>@Model.ApplicationUser.PhoneNumber</p>
+        </div>
+    }
+    <div class="row">
+        <h2>Manage account:</h2>
+    </div>
+        <div class="btn-group">
+            @if (User.Identity.Name == Model.ApplicationUser.UserName)
+            {
+                    <a asp-page="/Account/ChangePassword" class="btn btn-warning pr-2 mr-2">Change password</a>
+            }
+            @if (User.IsInRole("User"))
+            {
+                <a asp-page="/Account/UpdateAccount" class="btn btn-warning">Update personal information</a>
+            }
+            @if (User.IsInRole("Host"))
+            {
+                <a asp-page="/Account/UpdateHostAccount" class="btn btn-warning">Update personal information</a>
+            }
+        </div>
 }

@@ -109,6 +109,11 @@ namespace AccommodationBookingApp.Pages
 
                 Accommodation = await accommodationLogic.GetAccommodationByIdAsync(AccommodationId);
 
+                if (Accommodation.ApplicationUser.UserName != User.Identity.Name)
+                {
+                    return Unauthorized();
+                }
+
                 var result = await accommodationLogic.UpdateAccommodationAsync(AccommodationId, Name, NumberOfBeds, PricePerNight, CurrencyId,
                                                                                RequireApproval, UserCanCancelBooking, CheckInTime, CheckOutTime, 
                                                                                Accommodation.Name, accommodationImagesFolderPath);

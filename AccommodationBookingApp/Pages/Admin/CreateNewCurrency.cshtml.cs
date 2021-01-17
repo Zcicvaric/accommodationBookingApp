@@ -10,7 +10,7 @@ namespace AccommodationBookingApp.Pages.Admin
     [Authorize(Roles = "Admin")]
     public class CreateNewCurrencyModel : PageModel
     {
-        [Required]
+        [Required (ErrorMessage = "Please enter a name")]
         [BindProperty]
         [Display(Name = "Currency Name")]
         [MaxLength(3)]
@@ -31,7 +31,7 @@ namespace AccommodationBookingApp.Pages.Admin
 
                 if (result)
                 {
-                    return RedirectToPage("/Admin/CurrencyCreated");
+                    return RedirectToPage("/Admin/CurrencyCreated", "CurrencyCreated");
                 }
                 ModelState.AddModelError("CurrencyName", "This currency name is already in use");
 

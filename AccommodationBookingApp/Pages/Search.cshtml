@@ -6,40 +6,50 @@
 @{
     <h4 class="mt-2">Search:</h4>
     <form method="post" class="mt-4">
-        <label asp-for="AccommodationCity"></label>
-        <input type="text" placeholder="City" asp-for="AccommodationCity" />
-        <span asp-validation-for="AccommodationCity" class="text-warning"></span>
-        <label asp-for="NumberOfGuests"></label>
-        <input type="number" min="1" value="1" asp-for="NumberOfGuests" />
-        <span asp-validation-for="NumberOfGuests" class="text-warning"></span>
-        <label asp-for="CheckInDateString"></label>
-        <input data-provide="datepicker" asp-for="CheckInDateString" onchange="checkInCalendarClicked()" class="checkInDatepicker" autocomplete="off" />
-        <span asp-validation-for="CheckInDateString" class="text-warning"></span>
-        <label asp-for="CheckOutDateString"></label>
-        <input data-provide="datepicker" asp-for="CheckOutDateString" class="checkOutDatepicker" autocomplete="off" />
-        <span asp-validation-for="CheckOutDateString" class="text-warning"></span>
+        <div class="form-row">
+            <div class="col-12 col-md-3">
+                <label asp-for="AccommodationCity"></label>
+                <input type="text" class="form-control" placeholder="City" asp-for="AccommodationCity" />
+                <span asp-validation-for="AccommodationCity" class="text-warning"></span>
+            </div>
+            <div class="col-12 col-md-3">
+                <label asp-for="NumberOfGuests"></label>
+                <input type="number" class="form-control" min="1" value="1" asp-for="NumberOfGuests" />
+                <span asp-validation-for="NumberOfGuests" class="text-warning"></span>
+            </div>
+            <div class="col-12 col-md-3">
+                <label asp-for="CheckInDateString"></label>
+                <input data-provide="datepicker" asp-for="CheckInDateString" onchange="checkInCalendarClicked()" class="checkInDatepicker form-control" autocomplete="off" />
+                <span asp-validation-for="CheckInDateString" class="text-warning"></span>
+            </div>
+            <div class="col-12 col-md-3">
+                <label asp-for="CheckOutDateString"></label>
+                <input data-provide="datepicker" asp-for="CheckOutDateString" class="checkOutDatepicker form-control" autocomplete="off" />
+                <span asp-validation-for="CheckOutDateString" class="text-warning"></span>
+            </div>
+        </div>
         <p>
-            <a class="btn btn-primary" data-toggle="collapse" href="#moreFilters" role="button" aria-expanded="false" aria-controls="moreFilters">
+            <a class="btn btn-sm btn-info mt-2" data-toggle="collapse" href="#moreFilters">
                 More filters
             </a>
         </p>
-        <div class="collapse" id="moreFilters">
-            <div class="card">
+        <div class="collapse form-row" id="moreFilters">
+            <div class="card col-lg-6 col-12">
                 <label>Accommodation type:</label>
                 <div class="input-group mb-2">
-                    <select asp-items="@(new SelectList(Model.AccommodationTypes, "Id", "Name"))" asp-for="AccommodationTypeId">
+                    <select class="form-control" asp-items="@(new SelectList(Model.AccommodationTypes, "Id", "Name"))" asp-for="AccommodationTypeId">
                         <option selected hidden value="0">Please select the accommodation type</option>
                     </select>
                 </div>
                 <label>Check-in time no later than:</label>
                 <div class="input-group mb-2">
-                    <select asp-items="@(new SelectList(Model.TimeOfTheDayList))" asp-for="LatestCheckInTime">
+                    <select class="form-control" asp-items="@(new SelectList(Model.TimeOfTheDayList))" asp-for="LatestCheckInTime">
                     <option selected disabled hidden>Latest check-in time</option>
                     </select>
                 </div>
                 <label>Check-out time no earlier than:</label>
                 <div class="input-group mb-2">
-                    <select asp-items="@(new SelectList(Model.TimeOfTheDayList))" asp-for="EarliestCheckOutTime">
+                    <select class="form-control" asp-items="@(new SelectList(Model.TimeOfTheDayList))" asp-for="EarliestCheckOutTime">
                     <option selected disabled hidden>Earliest check-out time</option>
                     </select>
                 </div>
@@ -53,7 +63,7 @@
                 </div>
             </div>
         </div>
-        <button type="submit">Search</button>
+        <button type="submit" class="btn btn-primary">Search</button>
     </form>
 
     @if (Model.Accommodations != null)
@@ -63,15 +73,19 @@
         {
             var imagePath = "~/accommodationPhotos/" + @accommodation.Name + "_" + accommodation.Id.ToString() + "/Header/" + accommodation.HeaderPhotoFileName;
 
-            <div>
-                <h2><a asp-page="/AccommodationDetails" asp-route-accommodationId="@accommodation.Id"
+            <div class="row">
+                <h2 class="col-12"><a asp-page="/AccommodationDetails" asp-route-accommodationId="@accommodation.Id"
                        asp-route-checkInDate="@Model.CheckInDateString" asp-route-checkOutDate="@Model.CheckOutDateString">@accommodation.Name</a></h2>
-                <p>Number of beds: @accommodation.NumberOfBeds</p>
-                <p>Price per night: @accommodation.PricePerNight @accommodation.Currency.Name</p>
-                <p>Address: @accommodation.Address</p>
-                <p>City: @accommodation.City</p>
-                <a asp-page="/AccommodationDetails" asp-route-accommodationId="@accommodation.Id"
+            </div>
+            <div class="row">
+                <a class="col-lg-4 col-md-12" asp-page="/AccommodationDetails" asp-route-accommodationId="@accommodation.Id"
                    asp-route-checkInDate="@Model.CheckInDateString" asp-route-checkOutDate="@Model.CheckOutDateString"><img src="@imagePath" alt="accommodationPhoto" asp-append-version="true" /></a>
+                <div class="col-lg-4 col-md-12">
+                    <p>Number of beds: @accommodation.NumberOfBeds</p>
+                    <p>Price per night: @accommodation.PricePerNight @accommodation.Currency.Name</p>
+                    <p>Address: @accommodation.Address</p>
+                    <p>City: @accommodation.City</p>
+                </div>
             </div>
         }
     }
