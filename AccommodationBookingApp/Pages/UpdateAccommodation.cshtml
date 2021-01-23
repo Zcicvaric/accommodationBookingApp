@@ -4,65 +4,65 @@
     ViewData["Title"] = "Update Accommodation";
 }
 @{
-    <div class="container">
-        <form method="post">
-            <div class="form-group row">
-                <label asp-for="Name"></label>
-                <input asp-for="Name" class="form-control" value="@Model.Accommodation.Name" />
-                <span asp-validation-for="Name" class="text-warning"></span>
-            </div>
-            <div class="form-group row">
-                <label asp-for="NumberOfBeds"></label>
-                <input asp-for="NumberOfBeds" class="form-control" value="@Model.Accommodation.NumberOfBeds" />
-                <span asp-validation-for="NumberOfBeds" class="text-warning"></span>
-            </div>
-            <div class="form-group row">
-                <label asp-for="PricePerNight"></label>
-                <input asp-for="PricePerNight" class="form-control mr-1" style="width: 80%;" value="@Model.Accommodation.PricePerNight" />
-                <select asp-for="CurrencyId"
-                        asp-items="@(new SelectList(Model.Currencies, "Id", "Name"))">
-                </select>
-                <span asp-validation-for="PricePerNight" class="text-warning"></span>
-            </div>
-            <div class="form-group row">
-                <label>Require your approval before booking is confirmed?</label>
-                @if (Model.Accommodation.RequireApproval)
-                {
-                    <input asp-for="RequireApproval" class="form-control" checked />
-                }
-                @if (!Model.Accommodation.RequireApproval)
-                {
-                    <input asp-for="RequireApproval" class="form-control" />
-                }
-            </div>
-            <div class="form-group row">
-                <label>Allow the users to cancel their booking before arrival?</label>
-                @if (Model.Accommodation.UserCanCancelBooking)
-                {
-                    <input asp-for="UserCanCancelBooking" class="form-control" checked />
-                }
-                @if (!Model.Accommodation.UserCanCancelBooking)
-                {
-                    <input asp-for="UserCanCancelBooking" class="form-control" />
-                }
-            </div>
-            <div class="form-group row">
-                <label asp-for="CheckInTime"></label>
-                <select asp-for="CheckInTime"
-                        asp-items="@(new SelectList(Model.TimesList))">
-                    <option value="" selected disabled hidden>Please select a check-in time</option>
-                </select>
-                <span asp-validation-for="CheckInTime" class="text-warning"></span>
-                <label asp-for="CheckOutTime"></label>
-                <select asp-for="CheckOutTime"
-                        asp-items="@(new SelectList(Model.TimesList))">
-                    <option value="" selected disabled hidden>Please select a check-out time</option>
-                </select>
-                <span asp-validation-for="CheckOutTime" class="text-warning"></span>
-            </div>
+    <form method="post">
+        <div class="form-group row">
+            <label asp-for="Name"></label>
+            <input asp-for="Name" class="form-control" value="@Model.Accommodation.Name" />
+            <span asp-validation-for="Name" class="text-warning"></span>
+        </div>
+        <div class="form-group row">
+            <label asp-for="NumberOfBeds"></label>
+            <input asp-for="NumberOfBeds" class="form-control" value="@Model.Accommodation.NumberOfBeds" />
+            <span asp-validation-for="NumberOfBeds" class="text-warning"></span>
+        </div>
+        <div class="form-group row">
+            <label asp-for="PricePerNight" class="col-12 pl-0"></label>
+            <input asp-for="PricePerNight" class="form-control col-lg-11 col-md-10 col-sm-9" value="@Model.Accommodation.PricePerNight" />
+            <select asp-for="CurrencyId" class="form-control col-lg-1 col-md-2 col-sm-3"
+                    asp-items="@(new SelectList(Model.Currencies, "Id", "Name"))">
+            </select>
+            <span asp-validation-for="PricePerNight" class="text-warning"></span>
+        </div>
+        <div class="form-group row">
+            <label class="col-12 pl-0">Require your approval before booking is confirmed?</label>
+            @if (Model.Accommodation.RequireApproval)
+            {
+                <input asp-for="RequireApproval" class="form-control col-1" checked />
+            }
+            @if (!Model.Accommodation.RequireApproval)
+            {
+                <input asp-for="RequireApproval" class="form-control col-1" />
+            }
+        </div>
+        <div class="form-group row">
+            <label class="col-12 pl-0">Allow the users to cancel their booking before arrival?</label>
+            @if (Model.Accommodation.UserCanCancelBooking)
+            {
+                <input asp-for="UserCanCancelBooking" class="form-control col-1" checked />
+            }
+            @if (!Model.Accommodation.UserCanCancelBooking)
+            {
+                <input asp-for="UserCanCancelBooking" class="form-control col-1" />
+            }
+        </div>
+        <div class="form-group row">
+            <label asp-for="CheckInTime" class="col-12 pl-0"></label>
+            <select asp-for="CheckInTime" class="form-control"
+                    asp-items="@(new SelectList(Model.TimesList))">
+                <option value="" selected disabled hidden>Please select a check-in time</option>
+            </select>
+            <span asp-validation-for="CheckInTime" class="text-warning"></span>
+        </div>
+        <div class="form-group row">
+            <label asp-for="CheckOutTime" class="col-12 pl-0"></label>
+            <select asp-for="CheckOutTime" class="form-control"
+                    asp-items="@(new SelectList(Model.TimesList))">
+                <option value="" selected disabled hidden>Please select a check-out time</option>
+            </select>
+            <span asp-validation-for="CheckOutTime" class="text-warning"></span>
+        </div>
 
-            <button type="submit" class="btn btn-primary">Update</button>
+        <button type="submit" class="btn btn-primary">Update</button>
 
-        </form>
-    </div>
+    </form>
 }

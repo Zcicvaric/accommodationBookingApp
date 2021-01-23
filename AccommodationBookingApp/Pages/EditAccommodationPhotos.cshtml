@@ -1,52 +1,50 @@
 ﻿@page
 @model AccommodationBookingApp.Pages.EditAccommodationPhotosModel
 @{
-    <div class="container">
-        <div class="row">
-            <h2>Header Photo:</h2>
-        </div>
-        <div class="row">
-            <img src="@Model.HeaderPhotoPath" asp-append-version="true" alt="headerPhoto" />
-        </div>
-        <div class="row">
-            <form enctype="multipart/form-data" method="post">
-                <label>Upload a new header photo?</label>
-                <input type="hidden" asp-for="AccommodationId" value="@Model.Accommodation.Id" />
-                <input asp-for="HeaderPhotoToUpload" required accept="image/jpeg, image/png" class="form-control-file" />
-                <span asp-validation-for="HeaderPhotoToUpload" class="text-warning"></span>
-                <button type="submit" asp-page-handler="UploadNewHeaderPhoto" class="btn btn-primary">Upload</button>
-            </form>
-        </div>
-        <div class="row">
-            <h2>Other Photos:</h2>
-        </div>
-        @foreach(var photoPath in Model.AccommodationPhotos)
-        {
-            //cleaning wwwroot prefix
-            var photoPathCleared = photoPath.Remove(0, 7);
+    <div class="row">
+        <h2>Header Photo:</h2>
+    </div>
+    <div class="row">
+        <img src="@Model.HeaderPhotoPath" asp-append-version="true" alt="headerPhoto" />
+    </div>
+    <div class="row">
+        <form enctype="multipart/form-data" method="post">
+            <label class="col-form-label">Upload a new header photo?</label>
+            <input type="hidden" asp-for="AccommodationId" value="@Model.Accommodation.Id" />
+            <input asp-for="HeaderPhotoToUpload" required accept="image/jpeg, image/png" class="form-control-file" />
+            <span asp-validation-for="HeaderPhotoToUpload" class="text-warning row ml-0"></span>
+            <button type="submit" asp-page-handler="UploadNewHeaderPhoto" class="btn btn-primary mt-2">Upload</button>
+        </form>
+    </div>
+    <div class="row">
+        <h2>Other Photos:</h2>
+    </div>
+    @foreach (var photoPath in Model.AccommodationPhotos)
+    {
+        //cleaning wwwroot prefix
+        var photoPathCleared = photoPath.Remove(0, 7);
 
-            <div class="row">
-                <img src="@photoPathCleared" alt="accommodationPhoto" />
-            </div>
-            @if (Model.AccommodationPhotos.Count > 1)
-            {
-                <div class="row">
-                    <form method="post">
-                        <input type="hidden" asp-for="@Model.PhotoToDelete" value="@photoPath" />
-                        <input type="hidden" asp-for="@Model.AccommodationId" value="@Model.Accommodation.Id" />
-                        <button type="submit" asp-page-handler="DeletePhoto" class="btn btn-danger">Delete this photo</button>
-                    </form>
-                </div>
-            }
-            }
         <div class="row">
-            <form enctype="multipart/form-data" method="post">
-                <label>Upload more photographs?</label>
-                <input type="hidden" asp-for="AccommodationId" value="@Model.Accommodation.Id" />
-                <input asp-for="PhotosToUpload" required accept="image/jpeg, image/png" multiple class="form-control-file" />
-                <span asp-validation-for="PhotosToUpload" class="text-warning"></span>
-                <button type="submit" asp-page-handler="UploadPhotos" class="btn btn-primary">Upload selected photos</button>
-            </form>
+            <img src="@photoPathCleared" alt="accommodationPhoto" />
         </div>
+        @if (Model.AccommodationPhotos.Count > 1)
+        {
+            <div class="row">
+                <form method="post">
+                    <input type="hidden" asp-for="@Model.PhotoToDelete" value="@photoPath" />
+                    <input type="hidden" asp-for="@Model.AccommodationId" value="@Model.Accommodation.Id" />
+                    <button type="submit" asp-page-handler="DeletePhoto" class="btn btn-danger mb-2">Delete this photo</button>
+                </form>
+            </div>
+        }
+    }
+    <div class="row">
+        <form enctype="multipart/form-data" method="post">
+            <label class="col-form-label">Upload more photographs?</label>
+            <input type="hidden" asp-for="AccommodationId" value="@Model.Accommodation.Id" />
+            <input asp-for="PhotosToUpload" required accept="image/jpeg, image/png" multiple class="form-control-file" />
+            <span asp-validation-for="PhotosToUpload" class="text-warning row ml-0"></span>
+            <button type="submit" asp-page-handler="UploadPhotos" class="btn btn-primary mt-2">Upload selected photos</button>
+        </form>
     </div>
 }

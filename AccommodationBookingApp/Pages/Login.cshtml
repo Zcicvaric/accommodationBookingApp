@@ -4,25 +4,25 @@
     ViewData["Title"] = "Login";
 }
 
-    <form method="post" class="mt-2">
-        @if(Model.ErrorMessage != null)
-        {
-            <span class="text-danger">@Model.ErrorMessage</span>
-        }
-        <div class="form-group">
-            <label>Email</label>
-            <input asp-for="Username" class="form-control" />
-            <span asp-validation-for="Username" class="text-warning"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="Password"></label>
-            <input asp-for="Password" class="form-control" />
-            <span asp-validation-for="Password" class="text-warning"></span>
-        </div>
-        <div class="form-group">
-            <label>Remember me?</label>
-            <input asp-for="PermanentCookie" class="custom-checkbox"/>
-        </div>
-        <button type="submit" class="btn btn-primary mt-4">Login</button>
-    </form>
+<form method="post" class="mt-2">
+    @if (Model.ErrorMessage != null)
+    {
+        <span class="text-danger">@Model.ErrorMessage</span>
+    }
+    <div class="form-group">
+        <label>Email</label>
+        <input asp-for="Username" class="form-control" />
+        <span asp-validation-for="Username" class="text-warning"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Password"></label>
+        <input asp-for="Password" class="form-control" />
+        <span asp-validation-for="Password" class="text-warning"></span>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-12 col-md-2">Remember me?</label>
+        <input asp-for="PermanentCookie" class="form-control col-sm-12 col-md-1"/>
+    </div>
+    <button type="submit" class="btn btn-primary mt-4">Login</button>
+</form>
 

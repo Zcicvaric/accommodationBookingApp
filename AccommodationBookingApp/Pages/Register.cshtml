@@ -32,9 +32,9 @@
         <input asp-for="ConfirmPassword" class="form-control" />
         <span asp-validation-for="ConfirmPassword" class="text-warning"></span>
     </div>
-    <div class="form-group">
-        <label>Do you want to register as a Host?</label>
-        <a asp-page="/RegisterAsHost">Click here to register as host</a>
+    <div class="form-group row">
+        <label class="col-sm-12 col-md-3">Do you want to register as a Host?</label>
+        <a asp-page="/RegisterAsHost" class="col-sm-12 col-md-4 pl-md-0">Click here for the host registration form</a>
     </div>
-    <button type="submit" class="btn btn-primary mt-4">Register</button>
+    <button type="submit" class="btn btn-primary">Register</button>
 </form>

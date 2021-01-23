@@ -4,7 +4,6 @@
     ViewData["Title"] = "Search";
 }
 @{
-    <h4 class="mt-2">Search:</h4>
     <form method="post" class="mt-4">
         <div class="form-row">
             <div class="col-12 col-md-3">
@@ -44,22 +43,22 @@
                 <label>Check-in time no later than:</label>
                 <div class="input-group mb-2">
                     <select class="form-control" asp-items="@(new SelectList(Model.TimeOfTheDayList))" asp-for="LatestCheckInTime">
-                    <option selected disabled hidden>Latest check-in time</option>
+                        <option selected disabled hidden>Latest check-in time</option>
                     </select>
                 </div>
                 <label>Check-out time no earlier than:</label>
                 <div class="input-group mb-2">
                     <select class="form-control" asp-items="@(new SelectList(Model.TimeOfTheDayList))" asp-for="EarliestCheckOutTime">
-                    <option selected disabled hidden>Earliest check-out time</option>
+                        <option selected disabled hidden>Earliest check-out time</option>
                     </select>
                 </div>
                 <label>Show only accommodations that don't require host's approval?</label>
                 <div class="input-group mb-2">
-                    <input asp-for="@Model.ShowOnlyAccommodationsWithInstantBooking" class="form-control"/>
+                    <input asp-for="@Model.ShowOnlyAccommodationsWithInstantBooking" class="form-control" />
                 </div>
                 <label>Cancellation allowed after booking is confirmed?</label>
                 <div class="input-group mb-2">
-                    <input asp-for="@Model.ShowOnlyAccommodationsWhereUserCanCancelBooking" class="form-control"/>
+                    <input asp-for="@Model.ShowOnlyAccommodationsWhereUserCanCancelBooking" class="form-control" />
                 </div>
             </div>
         </div>
@@ -74,8 +73,10 @@
             var imagePath = "~/accommodationPhotos/" + @accommodation.Name + "_" + accommodation.Id.ToString() + "/Header/" + accommodation.HeaderPhotoFileName;
 
             <div class="row">
-                <h2 class="col-12"><a asp-page="/AccommodationDetails" asp-route-accommodationId="@accommodation.Id"
-                       asp-route-checkInDate="@Model.CheckInDateString" asp-route-checkOutDate="@Model.CheckOutDateString">@accommodation.Name</a></h2>
+                <h2 class="col-12">
+                    <a asp-page="/AccommodationDetails" asp-route-accommodationId="@accommodation.Id"
+                       asp-route-checkInDate="@Model.CheckInDateString" asp-route-checkOutDate="@Model.CheckOutDateString">@accommodation.Name</a>
+                </h2>
             </div>
             <div class="row">
                 <a class="col-lg-4 col-md-12" asp-page="/AccommodationDetails" asp-route-accommodationId="@accommodation.Id"
