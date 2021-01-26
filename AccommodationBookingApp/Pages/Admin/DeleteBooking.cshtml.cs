@@ -14,9 +14,16 @@ namespace AccommodationBookingApp.Pages.Admin
 
         private readonly BookingLogic bookingLogic = new BookingLogic();
 
-        public void OnGet(int bookingId)
+        public IActionResult OnGet(int bookingId)
         {
+            if (bookingId == 0)
+            {
+                return BadRequest();
+            }
+
             BookingId = bookingId;
+
+            return Page();
         }
 
         public async Task<IActionResult> OnPostAsync(int bookingId)

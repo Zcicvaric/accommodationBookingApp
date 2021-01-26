@@ -8,7 +8,7 @@ namespace AccommodationBookingApp.Pages
 
         public IActionResult OnGet()
         {
-            return Page();
+            return RedirectToPage("/Search");
         }
     }
 }

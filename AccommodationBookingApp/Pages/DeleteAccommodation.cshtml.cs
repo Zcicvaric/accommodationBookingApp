@@ -28,6 +28,12 @@ namespace AccommodationBookingApp.Pages
         public async Task<IActionResult> OnGetAsync(int accommodationId)
         {
             AccommodationId = accommodationId;
+
+            if (accommodationId == 0)
+            {
+                return BadRequest();
+            }
+
             var accommodation = await accommodationLogic.GetAccommodationByIdAsync(accommodationId);
 
             if (accommodation == null)
@@ -61,13 +67,17 @@ namespace AccommodationBookingApp.Pages
 
                 var deleteSuccessful = await accommodationLogic.DeleteAccommodationAsync(accommodationToBeDeleted, accommodationPhotosFolder);
 
-                if (!deleteSuccessful)
+                if (deleteSuccessful)
                 {
-                    return BadRequest();
+                    if (User.IsInRole("Admin"))
+                    {
+                        return RedirectToPage("/Admin/AccommodationsList");
+                    }
+                    return RedirectToPage("/Accommodations");
                 }
 
             }
-            return RedirectToPage("/Accommodations");
+            return BadRequest();
         }
     }
 }

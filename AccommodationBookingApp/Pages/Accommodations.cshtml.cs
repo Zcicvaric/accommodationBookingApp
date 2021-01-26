@@ -36,6 +36,11 @@ namespace AccommodationBookingApp.Pages
                 return RedirectToPage("/Login");
             }
 
+            if (User.IsInRole("Admin"))
+            {
+                return NotFound();
+            }
+
             Accommodations = await AccommodationLogic.GetAccommodationsWithUserIdAsync(user.Id);
 
             return Page();
@@ -46,6 +51,11 @@ namespace AccommodationBookingApp.Pages
             if (!User.IsInRole("Admin"))
             {
                 return Unauthorized();
+            }
+
+            if (username == null)
+            {
+                return BadRequest();
             }
 
             var user = await UserManager.FindByNameAsync(username);

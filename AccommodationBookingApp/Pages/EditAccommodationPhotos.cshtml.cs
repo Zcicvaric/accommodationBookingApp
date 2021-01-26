@@ -39,6 +39,11 @@ namespace AccommodationBookingApp.Pages
 
         public async Task<IActionResult> OnGetAsync(int accommodationId)
         {
+            if (accommodationId == 0)
+            {
+                return BadRequest();
+            }
+
             Accommodation = await accommodationLogic.GetAccommodationByIdAsync(accommodationId);
 
             if (Accommodation.ApplicationUser.UserName != User.Identity.Name)

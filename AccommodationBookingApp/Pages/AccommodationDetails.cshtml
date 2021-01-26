@@ -57,8 +57,7 @@
     }
     @if (Model.Accommodation.RequireApproval)
     {
-        <br />
-        <label>This accommodation requires approval from host before booking is finalized</label>
+        <label class="blockquote">This accommodation requires approval from host before booking is finalized</label>
     }
     @if (!User.Identity.IsAuthenticated)
     {

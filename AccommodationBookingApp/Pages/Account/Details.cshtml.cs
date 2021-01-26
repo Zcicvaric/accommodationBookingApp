@@ -38,6 +38,11 @@ namespace AccommodationBookingApp.Pages
 
         public async Task<IActionResult> OnGetAccountDetailsForUserAsync(string username)
         {
+            if (username == null)
+            {
+                return BadRequest();
+            }
+
             if (!User.IsInRole("Admin"))
             {
                 return Unauthorized();

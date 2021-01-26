@@ -54,6 +54,11 @@ namespace AccommodationBookingApp.Pages
                 return Unauthorized();
             }
 
+            if (username == null)
+            {
+                return BadRequest();
+            }
+
             ApplicationUser = await UserManager.FindByNameAsync(username);
 
             if (ApplicationUser == null)
