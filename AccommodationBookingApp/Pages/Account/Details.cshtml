@@ -66,6 +66,8 @@
             <p>@Model.ApplicationUser.PhoneNumber</p>
         </div>
     }
+    @if (!User.IsInRole("Admin"))
+    {
     <div class="row">
         <h2>Manage account:</h2>
     </div>
@@ -83,4 +85,5 @@
                 <a asp-page="/Account/UpdateHostAccount" class="btn btn-warning">Update personal information</a>
             }
         </div>
-}
+        }
+    }

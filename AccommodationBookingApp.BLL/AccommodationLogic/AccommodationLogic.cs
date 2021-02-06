@@ -258,26 +258,24 @@ namespace AccommodationBookingApp.BLL.AccommodationLogic
                         if (checkInDate < booking.CheckOutDate && checkOutDate > booking.CheckInDate)
                         {
                             accommodationsToRemove.Add(accommodation);
-                            continue;
                         }
-                        if (latestCheckInTime != null)
-                        {
-                            var accommodationCheckInTimeInt = int.Parse(accommodation.CheckInTime.Split(":")[0]);
-                            if (accommodationCheckInTimeInt > int.Parse(latestCheckInTime.Split(":")[0]))
-                            {
-                                accommodationsToRemove.Add(accommodation);
-                                continue;
-                            }
-                        }
-                        if (earliestCheckOutTime != null)
-                        {
-                            var accommodationCheckOutTimeInt = int.Parse(accommodation.CheckOutTime.Split(":")[0]);
-                            if (accommodationCheckOutTimeInt < int.Parse(earliestCheckOutTime.Split(":")[0]))
-                            {
-                                accommodationsToRemove.Add(accommodation);
-                                continue;
-                            }
-                        }
+                    }
+                }
+                if (latestCheckInTime != null)
+                {
+                    var accommodationCheckInTimeInt = int.Parse(accommodation.CheckInTime.Split(":")[0]);
+                    if (accommodationCheckInTimeInt > int.Parse(latestCheckInTime.Split(":")[0]))
+                    {
+                        accommodationsToRemove.Add(accommodation);
+                        continue;
+                    }
+                }
+                if (earliestCheckOutTime != null)
+                {
+                    var accommodationCheckOutTimeInt = int.Parse(accommodation.CheckOutTime.Split(":")[0]);
+                    if (accommodationCheckOutTimeInt < int.Parse(earliestCheckOutTime.Split(":")[0]))
+                    {
+                        accommodationsToRemove.Add(accommodation);
                     }
                 }
             }

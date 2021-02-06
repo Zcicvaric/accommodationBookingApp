@@ -21,7 +21,6 @@ namespace AccommodationBookingApp.DataAccess.Entities
         [Required]
         public Currency Currency { get; set; }
         [Required]
-        //require the booking to be confirmed by the host before its finalized
         public bool RequireApproval { get; set; }
         [Required]
         public AccommodationType AccommodationType { get; set; }
