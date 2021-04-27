@@ -82,7 +82,6 @@ namespace AccommodationBookingApp.DataAccess.Functions
             return accommodations;
         }
 
-        // Mos na ovo napravit prezentaciju kako radi 
         public async Task<List<Accommodation>> GetFilteredAccommodationsAsync(string accommodationCity, int numberOfGuests)
         {
             var accommodations = await Context.Accommodations.Include("AccommodationType").Include("ApplicationUser")

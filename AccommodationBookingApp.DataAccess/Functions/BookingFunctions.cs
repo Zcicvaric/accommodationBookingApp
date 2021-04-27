@@ -69,7 +69,6 @@ namespace AccommodationBookingApp.DataAccess.Functions
 
         public async Task<List<Booking>> GetAllPreviousStaysForUserAsync(string userId)
         {
-            //with the .include(FK entity) we include the objects related
             var allPreviousBookingWithUserId = await Context.Bookings.Include("Accommodation").Include("ApplicationUser").
                                                      Where(booking => booking.ApplicationUser.Id == userId
                                                      && booking.CheckInDate.Date < DateTime.Now.Date
@@ -82,7 +81,6 @@ namespace AccommodationBookingApp.DataAccess.Functions
 
         public async Task<List<Booking>> GetAllUpcomingStaysForUserAsync(string userId)
         {
-            //with the .include(FK entity) we include the objects related
             var allUpcomingBookingsWithUserId = await Context.Bookings.Include("Accommodation").Include("ApplicationUser").
                                                 Where(booking => booking.ApplicationUser.Id == userId
                                                 && booking.CheckInDate.Date >= DateTime.Now.Date
